@@ -2,684 +2,673 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>CodeKids — Learn to Code!</title>
+<meta name="theme-color" content="#020617">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Fira+Code:wght@400;500&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════
-   CSS RESET & VARIABLES
-   ═══════════════════════════════════════ */
+/* ═══════════════════ RESET ═══════════════════ */
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow:hidden}
 
 :root{
-  --accent:#00d4ff;
-  --accent2:#7c3aed;
-  --bg:linear-gradient(135deg,#0a0e27 0%,#1a1a4e 40%,#2d1b69 100%);
-  --sidebar:rgba(10,14,39,0.95);
-  --card:rgba(30,30,80,0.8);
-  --text:#e0e7ff;
-  --muted:#818cf8;
-  --editor-bg:#0d1117;
-  --btn-grad:linear-gradient(135deg,#00d4ff,#7c3aed);
-  --pattern:radial-gradient(circle at 20% 80%,rgba(0,212,255,0.08) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(124,58,237,0.08) 0%,transparent 50%);
-  --radius:12px;
-  --font:'Fredoka',sans-serif;
-  --mono:'Fira Code',monospace;
-  --dir:ltr;
+  --bg:#020617;--panel:rgba(15,23,42,0.96);
+  --card:rgba(15,23,42,0.96);--card-border:rgba(148,163,184,0.3);
+  --accent:#22c55e;--accent-soft:rgba(34,197,94,0.15);
+  --accent-strong:rgba(34,197,94,0.7);--accent2:#3b82f6;
+  --text:#f9fafb;--muted:#9ca3af;--border:#1f2937;
+  --editor-bg:rgba(2,6,23,0.8);
+  --btn-grad:linear-gradient(135deg,#22c55e,#16a34a);
+  --glow1:rgba(34,197,94,0.18);--glow2:rgba(59,130,246,0.2);
+  --shadow:rgba(15,23,42,0.85);
+  --pill-bg:rgba(15,23,42,0.9);--pill-border:rgba(148,163,184,0.6);
+  --font:'Fredoka',sans-serif;--mono:'Fira Code',monospace;
 }
 
-/* ═══════════════════════════════════════
-   APP SHELL
-   ═══════════════════════════════════════ */
+/* ═══════════════════ APP SHELL ═══════════════════ */
 #app{
-  font-family:var(--font);
-  background:var(--bg);
-  color:var(--text);
-  height:100vh;
-  display:flex;
-  direction:var(--dir);
-  position:relative;
-  overflow:hidden;
-}
-#app::before{
-  content:'';position:fixed;inset:0;
-  background:var(--pattern);
-  pointer-events:none;z-index:0;
+  font-family:var(--font);color:var(--text);height:100vh;
+  display:flex;position:relative;overflow:hidden;
+  background:radial-gradient(circle at top left,var(--glow1),transparent 50%),
+    radial-gradient(circle at bottom right,var(--glow2),transparent 55%),var(--bg);
 }
 
-/* ═══════════════════════════════════════
-   STAR CANVAS
-   ═══════════════════════════════════════ */
-#starfield{
-  position:fixed;inset:0;
-  pointer-events:none;z-index:0;
-}
+/* ═══════════════════ STAR CANVAS ═══════════════════ */
+#starfield{position:fixed;inset:0;pointer-events:none;z-index:0}
 
-/* ═══════════════════════════════════════
-   SIDEBAR
-   ═══════════════════════════════════════ */
+/* ═══════════════════ SIDEBAR ═══════════════════ */
 #sidebar{
-  width:280px;min-width:280px;
-  background:var(--sidebar);
-  backdrop-filter:blur(20px);
-  display:flex;flex-direction:column;
-  z-index:10;position:relative;
+  width:290px;min-width:290px;
+  background:var(--panel);backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;z-index:10;
+  border-right:1px solid var(--card-border);
   transition:margin .3s ease,opacity .3s ease;
-  border-right:1px solid rgba(255,255,255,0.08);
+  position:relative;
 }
-#sidebar.closed{margin-left:-280px;opacity:0}
-.rtl #sidebar{border-right:none;border-left:1px solid rgba(255,255,255,0.08)}
-.rtl #sidebar.closed{margin-left:0;margin-right:-280px}
+#sidebar.closed{margin-left:-290px;opacity:0}
+.rtl #sidebar{border-right:none;border-left:1px solid var(--card-border)}
+.rtl #sidebar.closed{margin-left:0;margin-right:-290px}
 
+/* Logo Header */
 .sb-header{
-  padding:20px;text-align:center;
-  border-bottom:1px solid rgba(255,255,255,0.08);
+  padding:16px 18px 14px;text-align:center;
+  border-bottom:1px solid var(--border);
 }
-.sb-header .icon{font-size:40px;line-height:1;margin-bottom:4px}
-.sb-header h1{
-  font-size:28px;font-weight:700;
-  background:var(--btn-grad);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
+.logo-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
+.logo-row svg{height:22px;width:auto}
+.logo-row h1{
+  font-size:22px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--btn-grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;
 }
-.sb-header p{font-size:13px;color:var(--muted);margin-top:4px}
+.sb-header .subtitle{
+  font-size:.72rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;
+}
+.sb-header .chip{
+  display:inline-flex;align-items:center;gap:5px;
+  border-radius:999px;border:1px solid var(--accent-strong);
+  padding:3px 10px;margin-top:8px;
+  background:radial-gradient(circle at top left,var(--accent-soft),transparent 60%),var(--pill-bg);
+  font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);
+}
+.chip-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent-strong)}
+
+/* Track Selector */
+.track-row{
+  display:flex;border-bottom:1px solid var(--border);
+}
+.track-btn{
+  flex:1;padding:10px 8px;border:none;background:transparent;
+  color:var(--muted);font-family:var(--font);font-size:.78rem;
+  font-weight:600;cursor:pointer;letter-spacing:.05em;
+  text-transform:uppercase;transition:all .2s;
+  border-bottom:2px solid transparent;
+}
+.track-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--accent-soft)}
+.track-btn:hover:not(.active){background:rgba(255,255,255,0.03)}
 
 /* Controls */
 .ctrl-row{
-  display:flex;gap:6px;padding:12px 14px;
-  border-bottom:1px solid rgba(255,255,255,0.06);
-  flex-wrap:wrap;
+  display:flex;gap:5px;padding:10px 12px;
+  border-bottom:1px solid var(--border);flex-wrap:wrap;
 }
 .ctrl-cell{
-  flex:1;min-width:70px;
-  padding:5px 6px;
-  border:1px solid rgba(255,255,255,0.12);
-  border-radius:8px;
-  background:rgba(255,255,255,0.05);
+  flex:1;min-width:60px;padding:4px;
+  border:1px solid var(--card-border);border-radius:8px;
+  background:rgba(255,255,255,0.03);
 }
 .ctrl-cell select{
   width:100%;background:transparent;border:none;
-  color:var(--text);font-family:var(--font);font-size:12px;
+  color:var(--text);font-family:var(--font);font-size:.72rem;
   cursor:pointer;outline:none;text-align:center;
 }
-.ctrl-cell select option{background:#222;color:#fff}
+.ctrl-cell select option{background:#0f172a;color:#fff}
 
 /* Progress */
 .star-row{
-  padding:10px 16px;display:flex;align-items:center;gap:8px;
-  font-size:14px;color:var(--muted);
-  border-bottom:1px solid rgba(255,255,255,0.06);
+  padding:8px 14px;display:flex;align-items:center;gap:8px;
+  font-size:.75rem;color:var(--muted);border-bottom:1px solid var(--border);
 }
-.star-row .num{color:gold;font-weight:700;font-size:18px}
-.track{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,0.1);overflow:hidden}
-.track-fill{height:100%;border-radius:3px;background:var(--btn-grad);transition:width .5s ease}
+.star-row .num{color:gold;font-weight:700;font-size:16px}
+.track-p{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,0.08);overflow:hidden}
+.track-p-fill{height:100%;border-radius:3px;background:var(--btn-grad);transition:width .5s ease}
 
 /* Lesson List */
-.lessons-scroll{flex:1;overflow-y:auto;padding:4px 0}
-.cat-label{
-  padding:12px 16px 6px;font-size:12px;font-weight:600;
+.lessons-scroll{flex:1;overflow-y:auto;padding:2px 0}
+.tier-label{
+  padding:10px 14px 4px;font-size:.68rem;font-weight:600;
   color:var(--accent);text-transform:uppercase;letter-spacing:1.2px;
+  display:flex;align-items:center;gap:6px;
 }
+.tier-label .tier-dot{
+  width:8px;height:8px;border-radius:50%;
+  box-shadow:0 0 6px currentColor;
+}
+.tier-label .tier-dot.green{background:#22c55e;color:#22c55e}
+.tier-label .tier-dot.blue{background:#3b82f6;color:#3b82f6}
+.tier-label .tier-dot.red{background:#ef4444;color:#ef4444}
+.tier-label .tier-dot.yellow{background:#eab308;color:#eab308}
+
 .les-btn{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 14px;margin:2px 8px;
-  border-radius:10px;border:none;
-  background:transparent;color:var(--text);
-  font-family:var(--font);font-size:14px;
-  cursor:pointer;width:calc(100% - 16px);
-  transition:all .2s;text-align:left;
+  display:flex;align-items:center;gap:8px;
+  padding:8px 12px;margin:1px 6px;border-radius:10px;
+  border:none;background:transparent;color:var(--text);
+  font-family:var(--font);font-size:.8rem;cursor:pointer;
+  width:calc(100% - 12px);transition:all .2s;text-align:left;
 }
 .rtl .les-btn{text-align:right}
-.les-btn:hover{background:rgba(255,255,255,0.08)}
+.les-btn:hover{background:rgba(255,255,255,0.05)}
 .les-btn.active{
   background:var(--card);
   box-shadow:inset 0 0 0 1px var(--accent),0 2px 8px rgba(0,0,0,0.2);
 }
 .les-btn .dot{
-  width:22px;height:22px;border-radius:50%;flex-shrink:0;
-  border:2px solid rgba(255,255,255,0.2);
+  width:20px;height:20px;border-radius:50%;flex-shrink:0;
+  border:2px solid rgba(255,255,255,0.15);
   display:flex;align-items:center;justify-content:center;
-  font-size:11px;transition:all .3s;
+  font-size:10px;transition:all .3s;
 }
 .les-btn .dot.done{background:var(--btn-grad);border-color:transparent}
 
-/* ═══════════════════════════════════════
-   MAIN AREA
-   ═══════════════════════════════════════ */
+/* ═══════════════════ MAIN ═══════════════════ */
 #main{flex:1;display:flex;flex-direction:column;z-index:5;position:relative;min-width:0}
 
-/* Topbar */
 .topbar{
-  display:flex;align-items:center;gap:12px;
-  padding:12px 20px;
-  background:rgba(0,0,0,0.2);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(255,255,255,0.06);
+  display:flex;align-items:center;gap:10px;padding:10px 16px;
+  background:var(--panel);border-bottom:1px solid var(--border);
 }
 .menu-btn{
-  width:36px;height:36px;border-radius:8px;
-  background:none;border:1px solid rgba(255,255,255,0.15);
-  color:var(--text);font-size:20px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .2s;
+  width:34px;height:34px;border-radius:8px;
+  background:none;border:1px solid var(--card-border);
+  color:var(--text);font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
 }
-.menu-btn:hover{background:rgba(255,255,255,0.1)}
-.les-info{flex:1}
-.les-info h2{font-size:20px;font-weight:600}
-.les-info p{font-size:13px;color:var(--muted)}
-.nav-btns{display:flex;gap:8px}
+.menu-btn:hover{background:rgba(255,255,255,0.06)}
+.les-info{flex:1;min-width:0}
+.les-info h2{font-size:1rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.les-info p{font-size:.72rem;color:var(--muted)}
+.tier-badge{
+  font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:999px;
+  border:1px solid var(--accent-strong);color:var(--accent);
+  background:var(--accent-soft);text-transform:uppercase;letter-spacing:.08em;
+  white-space:nowrap;
+}
+.nav-btns{display:flex;gap:6px}
 .nav-b{
-  padding:8px 14px;border-radius:8px;
-  border:1px solid rgba(255,255,255,0.15);
-  background:rgba(255,255,255,0.05);
-  color:var(--text);font-family:var(--font);font-size:13px;
+  padding:6px 12px;border-radius:8px;
+  border:1px solid var(--card-border);background:rgba(255,255,255,0.03);
+  color:var(--text);font-family:var(--font);font-size:.75rem;
   cursor:pointer;transition:all .2s;
 }
-.nav-b:hover:not(:disabled){background:rgba(255,255,255,0.1);border-color:var(--accent)}
+.nav-b:hover:not(:disabled){background:rgba(255,255,255,0.08);border-color:var(--accent)}
 .nav-b:disabled{opacity:.3;cursor:default}
 
-/* Editor Layout */
+/* Editor */
 .editor-wrap{flex:1;display:flex;overflow:hidden}
 .panel{flex:1;display:flex;flex-direction:column;min-width:0}
-.panel-code{border-right:1px solid rgba(255,255,255,0.08)}
-.rtl .panel-code{border-right:none;border-left:1px solid rgba(255,255,255,0.08)}
+.panel-code{border-right:1px solid var(--border)}
+.rtl .panel-code{border-right:none;border-left:1px solid var(--border)}
 .panel-head{
-  padding:10px 16px;font-size:13px;font-weight:600;
-  color:var(--muted);background:rgba(0,0,0,0.15);
+  padding:8px 14px;font-size:.72rem;font-weight:600;
+  color:var(--muted);background:rgba(0,0,0,0.2);
+  text-transform:uppercase;letter-spacing:.08em;
   display:flex;align-items:center;justify-content:space-between;
 }
 
 textarea#codeEditor{
-  flex:1;width:100%;padding:16px;
+  flex:1;width:100%;padding:14px;
   background:var(--editor-bg);color:var(--accent);
   border:none;outline:none;resize:none;
-  font-family:var(--mono);font-size:14px;line-height:1.6;
+  font-family:var(--mono);font-size:13px;line-height:1.6;
   tab-size:2;direction:ltr!important;text-align:left!important;
 }
 
-/* Action Bar */
-.action-bar{display:flex;gap:8px;padding:10px 16px;background:rgba(0,0,0,0.15)}
+.action-bar{display:flex;gap:6px;padding:8px 12px;background:rgba(0,0,0,0.2)}
 .run-btn{
-  flex:1;padding:12px;border:none;border-radius:var(--radius);
+  flex:1;padding:10px;border:none;border-radius:999px;
   background:var(--btn-grad);color:#fff;
-  font-family:var(--font);font-size:16px;font-weight:700;
-  cursor:pointer;transition:all .2s;letter-spacing:.5px;
+  font-family:var(--font);font-size:.85rem;font-weight:700;
+  cursor:pointer;transition:all .2s;letter-spacing:.05em;
+  text-transform:uppercase;
 }
-.run-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.run-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px var(--shadow)}
 .run-btn:active{transform:scale(.97)}
 .sec-btn{
-  padding:12px 16px;border-radius:var(--radius);
-  border:1px solid rgba(255,255,255,0.15);
-  background:rgba(255,255,255,0.05);
-  color:var(--text);font-family:var(--font);font-size:14px;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid var(--card-border);background:rgba(255,255,255,0.03);
+  color:var(--text);font-family:var(--font);font-size:.78rem;
   cursor:pointer;transition:all .2s;
 }
-.sec-btn:hover{background:rgba(255,255,255,0.1)}
+.sec-btn:hover{background:rgba(255,255,255,0.08)}
 .hint-btn{color:var(--muted)}
 .hint-btn:hover{color:var(--accent)!important}
 
 .hint-box{
-  padding:10px 16px;
-  background:rgba(255,204,0,0.1);
-  border-top:1px solid rgba(255,204,0,0.2);
-  font-size:13px;color:gold;
-  display:none;
+  padding:8px 14px;background:rgba(234,179,8,0.08);
+  border-top:1px solid rgba(234,179,8,0.2);
+  font-size:.78rem;color:#eab308;display:none;
 }
 .hint-box.show{display:block}
 
 iframe#preview{flex:1;border:none;background:#fff;width:100%}
 
-/* ═══════════════════════════════════════
-   TOAST
-   ═══════════════════════════════════════ */
+/* Toast */
 .toast{
-  position:fixed;top:20px;left:50%;
+  position:fixed;top:16px;left:50%;
   transform:translateX(-50%) translateY(-20px) scale(.9);
-  padding:14px 28px;background:var(--btn-grad);
-  color:#fff;font-family:var(--font);font-size:18px;font-weight:700;
-  border-radius:16px;z-index:999;opacity:0;
-  box-shadow:0 8px 30px rgba(0,0,0,0.4);
-  pointer-events:none;
+  padding:10px 24px;background:var(--btn-grad);
+  color:#fff;font-family:var(--font);font-size:1rem;font-weight:700;
+  border-radius:999px;z-index:999;opacity:0;
+  box-shadow:0 8px 30px var(--shadow);pointer-events:none;
   transition:all .4s cubic-bezier(.34,1.56,.64,1);
+  letter-spacing:.05em;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
 
-/* ═══════════════════════════════════════
-   MOBILE
-   ═══════════════════════════════════════ */
+/* Mobile */
 @media(max-width:800px){
   #sidebar{position:fixed;top:0;left:0;height:100vh;z-index:100}
-  #sidebar.closed{left:-280px;margin:0}
+  #sidebar.closed{left:-290px;margin:0}
   .rtl #sidebar{left:auto;right:0}
-  .rtl #sidebar.closed{right:-280px;margin:0}
+  .rtl #sidebar.closed{right:-290px;margin:0}
   .editor-wrap{flex-direction:column}
-  .panel-code{border-right:none!important;border-left:none!important;border-bottom:1px solid rgba(255,255,255,0.08);min-height:40vh}
+  .panel-code{border-right:none!important;border-left:none!important;border-bottom:1px solid var(--border);min-height:38vh}
   .panel-preview{min-height:35vh}
   .nav-btns{display:none}
+  .tier-badge{display:none}
 }
 </style>
 </head>
 <body>
-
 <div id="app">
-  <canvas id="starfield"></canvas>
+<canvas id="starfield"></canvas>
 
-  <!-- ══════ SIDEBAR ══════ -->
-  <aside id="sidebar">
-    <div class="sb-header">
-      <div class="icon" id="themeIcon">🛸</div>
-      <h1 id="brandTitle">CodeKids</h1>
-      <p id="brandSub">Learn to code like a superhero!</p>
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sb-header">
+    <div class="logo-row">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-92.82 179.97 6 3.22" height="22">
+        <path fill="var(--accent)" d="M-90.269 180.707c-.001-.003-.012-.152-.024-.331-.012-.179-.023-.334-.024-.344l-.003-.018h.023c.013 0 .038-.002.056-.004.018-.002.049-.004.068-.005l-.035-.002-.009.128c-.004.071-.009.139-.01.151l-.003.022-.06-.098a41 41 0 0 0-.098-.158l-.037-.061-.036.002c-.02.001-.058.004-.086.006-.028.002-.058.004-.067.004l-.016.001.112.169.112.169-.14.176c-.078.096-.141.177-.141.178 0 .002-.002.003-.004.003-.017 0-.197.012-.202.014-.004.001-.035-.036-.11-.133-.057-.074-.105-.133-.107-.132-.002.001-.009.012-.015.023l-.012.021-.008.115c-.006.085-.007.116-.01.118-.005.003-.043.007-.117.01-.047.002-.057.002-.058-.003z"/>
+        <path fill="var(--accent)" d="M-89.191 180.769a.64.64 0 0 1-.17-.052.8.8 0 0 1-.12-.076l-.01-.005.034-.148c.006-.023.018-.02.042.01a.45.45 0 0 0 .215.132c.036.006.04.006.06 0 .036-.012.054-.038.048-.07-.004-.022-.04-.052-.101-.084-.072-.037-.094-.051-.127-.082a.2.2 0 0 1-.057-.183c.017-.082.069-.132.16-.158a.3.3 0 0 1 .154-.001.6.6 0 0 1 .21.088l.033.024-.001.009-.021.077c-.018.065-.017.068-.026.067-.006-.001-.013-.006-.017-.012-.011-.016-.058-.06-.077-.074-.052-.035-.118-.058-.161-.053-.053.004-.083.042-.064.081.009.018.033.036.098.071.104.055.155.098.178.149.013.028.016.08.007.117-.028.108-.117.171-.242.17a.3.3 0 0 1-.055-.008z"/>
+        <path fill="var(--accent)" d="M-91.104 180.904a5 5 0 0 1-.142-.318l-.085-.194c-.002-.002-.083-.04-.197-.09a2 2 0 0 1-.132-.054c.08-.025.155-.014.204.03.024.022.042.051.057.094a.3.3 0 0 0 .012.071c.001.03.003.041.012.063.011.03.03.065.039.072l.006.003.006.002c-.069.037-.237.138-.237.138l.124.123-.127-.022.066.034c.052.023.098.042.103.043.005 0 .07-.034.146-.075l.138-.075.026.012.027.013-.022.051c-.028.061-.051.114-.051.117l.002.005.076.04c.043.02.08.035.082.035l.03-.062zm.11-.319c.066-.031.091-.058.091-.1 0-.036-.024-.079-.05-.09-.03-.011-.052-.007-.121.023l-.022.01c-.001 0 .073.168.075.168z"/>
+        <path fill="var(--accent)" d="M-88.329 181.181a1 1 0 0 1-.071-.05l.086-.128c.048-.07.087-.128.085-.129l-.17-.12-.087.126c-.048.069-.09.126-.091.126l-.146-.1c0-.002.18-.26.36-.52l.04-.054-.146.099c-.001 0 .031.046.07.101.038.056.07.103.071.106l-.09.069a1 1 0 0 1-.098.065l.075-.101c.039-.056.072-.108.074-.108l-.145-.102c0 .005-.395.574-.399.573l.373-.05z"/>
+        <path fill="var(--accent)" d="M-91.754 181.531a.41.41 0 0 1-.329-.309.29.29 0 0 1 .002-.153.42.42 0 0 1 .257-.252.25.25 0 0 1 .16.002.5.5 0 0 1 .18.113c.054.053.09.108.11.166a.29.29 0 0 0 .014.082c-.002.051.003.079.019.121.024.063.087.138.151.18.069.046.139.062.224.05zm.149-.168a.14.14 0 0 0 .06-.157.37.37 0 0 0-.234-.234.16.16 0 0 0-.124.033.14.14 0 0 0-.043.081c-.008.057.027.13.095.197a.28.28 0 0 0 .162.109.12.12 0 0 0 .084-.03z"/>
+        <path fill="var(--accent)" d="M-90.371 181.625a.1.1 0 0 1-.046-.076c-.058-.127-.058-.128-.072-.13l-.12-.003-.008.015a.16.16 0 0 1-.071.064.14.14 0 0 1-.183-.032.17.17 0 0 1-.032-.058.2.2 0 0 1 .012-.061.2.2 0 0 1 .077-.077.17.17 0 0 1 .06-.013.22.22 0 0 1 .137.068l.018.026h.139l.139.001-.02.01a.3.3 0 0 0-.044.054l-.037.079c-.023.051-.044.097-.047.102-.011.018-.005.02-.053.02a.5.5 0 0 1-.058-.002z"/>
+      </svg>
+      <h1>CodeKids</h1>
     </div>
+    <div class="subtitle" id="brandSub">Play • Learn • Create</div>
+    <div class="chip"><div class="chip-dot"></div><span id="chipText">Ready!</span></div>
+  </div>
 
-    <div class="ctrl-row">
-      <div class="ctrl-cell">
-        <select id="langSelect" onchange="switchLang(this.value)">
-          <option value="en">🇬🇧 English</option>
-          <option value="fr">🇫🇷 Français</option>
-          <option value="ar">🇸🇦 العربية</option>
-        </select>
-      </div>
-      <div class="ctrl-cell">
-        <select id="themeSelect" onchange="switchTheme(this.value)"></select>
-      </div>
+  <!-- Track Selector -->
+  <div class="track-row">
+    <button class="track-btn active" data-track="basics" onclick="switchTrack('basics')">📖 <span id="trackLabel1">Basics</span></button>
+    <button class="track-btn" data-track="science" onclick="switchTrack('science')">🔬 <span id="trackLabel2">Science</span></button>
+  </div>
+
+  <!-- Controls -->
+  <div class="ctrl-row">
+    <div class="ctrl-cell"><select id="langSelect" onchange="switchLang(this.value)">
+      <option value="en">🇬🇧 EN</option><option value="fr">🇫🇷 FR</option><option value="ar">🇸🇦 AR</option>
+    </select></div>
+    <div class="ctrl-cell"><select id="themeSelect" onchange="switchTheme(this.value)"></select></div>
+  </div>
+
+  <!-- Progress -->
+  <div class="star-row">
+    <span>⭐</span><span class="num" id="starCount">0</span><span id="starTotal">/ 13</span>
+    <div class="track-p"><div class="track-p-fill" id="trackFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="lessons-scroll" id="lessonList"></div>
+</aside>
+
+<!-- MAIN -->
+<main id="main">
+  <div class="topbar">
+    <button class="menu-btn" id="menuBtn" onclick="toggleSidebar()">☰</button>
+    <div class="les-info"><h2 id="lesTitle"></h2><p id="lesDesc"></p></div>
+    <span class="tier-badge" id="tierBadge"></span>
+    <div class="nav-btns">
+      <button class="nav-b" id="prevBtn" onclick="go(-1)">◀</button>
+      <button class="nav-b" id="nextBtn" onclick="go(1)">▶</button>
     </div>
-
-    <div class="star-row">
-      <span>⭐</span>
-      <span class="num" id="starCount">0</span>
-      <span id="starTotal">/ 9</span>
-      <div class="track"><div class="track-fill" id="trackFill" style="width:0%"></div></div>
+  </div>
+  <div class="editor-wrap">
+    <div class="panel panel-code">
+      <div class="panel-head"><span id="labelTry">TRY IT</span></div>
+      <textarea id="codeEditor" spellcheck="false"></textarea>
+      <div class="action-bar">
+        <button class="run-btn" id="runBtn" onclick="runCode()">🚀 Launch</button>
+        <button class="sec-btn" onclick="resetCode()" id="resetBtn">↺ Reset</button>
+        <button class="sec-btn hint-btn" onclick="toggleHint()" id="hintBtn">💡</button>
+      </div>
+      <div class="hint-box" id="hintBox"></div>
     </div>
-
-    <div class="lessons-scroll" id="lessonList"></div>
-  </aside>
-
-  <!-- ══════ MAIN ══════ -->
-  <main id="main">
-    <div class="topbar">
-      <button class="menu-btn" id="menuBtn" onclick="toggleSidebar()">☰</button>
-      <div class="les-info">
-        <h2 id="lesTitle"></h2>
-        <p id="lesDesc"></p>
-      </div>
-      <div class="nav-btns">
-        <button class="nav-b" id="prevBtn" onclick="go(-1)">◀ Back</button>
-        <button class="nav-b" id="nextBtn" onclick="go(1)">Next ▶</button>
-      </div>
+    <div class="panel panel-preview">
+      <div class="panel-head"><span id="labelOut">RESULT</span></div>
+      <iframe id="preview" sandbox="allow-scripts allow-modals" title="preview"></iframe>
     </div>
-
-    <div class="editor-wrap">
-      <div class="panel panel-code">
-        <div class="panel-head"><span id="labelTry">Try It Yourself!</span></div>
-        <textarea id="codeEditor" spellcheck="false"></textarea>
-        <div class="action-bar">
-          <button class="run-btn" id="runBtn" onclick="runCode()">🚀 Launch!</button>
-          <button class="sec-btn" onclick="resetCode()" id="resetBtn">🔄 Reset</button>
-          <button class="sec-btn hint-btn" onclick="toggleHint()" id="hintBtn">💡 Hint</button>
-        </div>
-        <div class="hint-box" id="hintBox"></div>
-      </div>
-      <div class="panel panel-preview">
-        <div class="panel-head"><span id="labelOut">Result</span></div>
-        <iframe id="preview" sandbox="allow-scripts allow-modals" title="preview"></iframe>
-      </div>
-    </div>
-  </main>
-
-  <div class="toast" id="toast"></div>
+  </div>
+</main>
+<div class="toast" id="toast"></div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════════
-   DATA — THEMES
-   ═══════════════════════════════════════════════════════ */
-const THEMES = {
-  space: {
-    name:{en:"🚀 Space Commander",fr:"🚀 Commandant Spatial",ar:"🚀 قائد الفضاء"},
-    vars:{"--accent":"#00d4ff","--accent2":"#7c3aed","--bg":"linear-gradient(135deg,#0a0e27,#1a1a4e 40%,#2d1b69)","--sidebar":"rgba(10,14,39,0.95)","--card":"rgba(30,30,80,0.8)","--text":"#e0e7ff","--muted":"#818cf8","--editor-bg":"#0d1117","--btn-grad":"linear-gradient(135deg,#00d4ff,#7c3aed)","--pattern":"radial-gradient(circle at 20% 80%,rgba(0,212,255,0.08) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(124,58,237,0.08) 0%,transparent 50%)"},
-    icon:"🛸",stars:true
-  },
-  ninja: {
-    name:{en:"🥷 Ninja Dojo",fr:"🥷 Dojo Ninja",ar:"🥷 دوجو النينجا"},
-    vars:{"--accent":"#ff4444","--accent2":"#ff8c00","--bg":"linear-gradient(135deg,#1a1a1a,#2d2d2d 50%,#1a0a0a)","--sidebar":"rgba(20,20,20,0.97)","--card":"rgba(40,40,40,0.85)","--text":"#f0f0f0","--muted":"#ff8c8c","--editor-bg":"#111","--btn-grad":"linear-gradient(135deg,#ff4444,#ff8c00)","--pattern":"repeating-linear-gradient(45deg,transparent,transparent 35px,rgba(255,68,68,0.03) 35px,rgba(255,68,68,0.03) 70px)"},
-    icon:"⚔️",stars:false
-  },
-  ocean: {
-    name:{en:"🌊 Ocean Explorer",fr:"🌊 Explorateur Océan",ar:"🌊 مستكشف المحيط"},
-    vars:{"--accent":"#00e5ff","--accent2":"#18ffff","--bg":"linear-gradient(180deg,#006994,#003d5b 40%,#001f3f)","--sidebar":"rgba(0,31,63,0.95)","--card":"rgba(0,60,100,0.6)","--text":"#e0f7fa","--muted":"#80deea","--editor-bg":"#001a2c","--btn-grad":"linear-gradient(135deg,#00e5ff,#0091ea)","--pattern":"radial-gradient(ellipse at 50% 100%,rgba(0,229,255,0.06) 0%,transparent 60%)"},
-    icon:"🐙",stars:false
-  },
-  dragon: {
-    name:{en:"🐉 Dragon Quest",fr:"🐉 Quête du Dragon",ar:"🐉 مهمة التنين"},
-    vars:{"--accent":"#ff6600","--accent2":"#ffcc00","--bg":"linear-gradient(135deg,#1a0a2e,#2d0a3e 40%,#4a0e0e)","--sidebar":"rgba(26,10,46,0.97)","--card":"rgba(60,20,60,0.7)","--text":"#ffeedd","--muted":"#ffaa66","--editor-bg":"#120820","--btn-grad":"linear-gradient(135deg,#ff6600,#ffcc00)","--pattern":"radial-gradient(circle at 70% 90%,rgba(255,102,0,0.08) 0%,transparent 50%)"},
-    icon:"🔥",stars:true
-  },
-  cyber: {
-    name:{en:"🤖 Cyber Hacker",fr:"🤖 Cyber Hacker",ar:"🤖 هاكر سايبر"},
-    vars:{"--accent":"#00ff41","--accent2":"#39ff14","--bg":"linear-gradient(135deg,#0a0a0a,#0d1a0d 50%,#0a0a0a)","--sidebar":"rgba(5,15,5,0.97)","--card":"rgba(0,40,0,0.5)","--text":"#b0ffb0","--muted":"#00ff41","--editor-bg":"#050505","--btn-grad":"linear-gradient(135deg,#00ff41,#00cc33)","--pattern":"repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,0.02) 2px,rgba(0,255,65,0.02) 4px)"},
-    icon:"💻",stars:false
-  },
-  arctic: {
-    name:{en:"🏔️ Arctic Mission",fr:"🏔️ Mission Arctique",ar:"🏔️ مهمة القطب"},
-    vars:{"--accent":"#0077b6","--accent2":"#00b4d8","--bg":"linear-gradient(180deg,#e8f4f8,#b8d8e8 40%,#8ab8d0)","--sidebar":"rgba(230,242,248,0.97)","--card":"rgba(255,255,255,0.7)","--text":"#1a3a4a","--muted":"#4a7a8a","--editor-bg":"#f0f8fc","--btn-grad":"linear-gradient(135deg,#0077b6,#00b4d8)","--pattern":"radial-gradient(circle at 30% 20%,rgba(0,119,182,0.05) 0%,transparent 40%)"},
-    icon:"❄️",stars:false
-  },
-  volcano: {
-    name:{en:"🌋 Volcano Base",fr:"🌋 Base Volcanique",ar:"🌋 قاعدة البركان"},
-    vars:{"--accent":"#ff3d00","--accent2":"#ff9100","--bg":"linear-gradient(180deg,#1a0000,#3d0000 40%,#1a0500)","--sidebar":"rgba(30,5,0,0.97)","--card":"rgba(80,10,0,0.5)","--text":"#ffe0cc","--muted":"#ff8a65","--editor-bg":"#120000","--btn-grad":"linear-gradient(135deg,#ff3d00,#ff9100)","--pattern":"radial-gradient(circle at 50% 90%,rgba(255,61,0,0.1) 0%,transparent 50%)"},
-    icon:"🌋",stars:false
-  },
-  jungle: {
-    name:{en:"🌴 Jungle Safari",fr:"🌴 Safari Jungle",ar:"🌴 سفاري الغابة"},
-    vars:{"--accent":"#76ff03","--accent2":"#00e676","--bg":"linear-gradient(180deg,#0a1f0a,#1a3a1a 40%,#0a2a0a)","--sidebar":"rgba(10,25,10,0.97)","--card":"rgba(20,60,20,0.6)","--text":"#c8e6c9","--muted":"#81c784","--editor-bg":"#0a150a","--btn-grad":"linear-gradient(135deg,#76ff03,#00e676)","--pattern":"radial-gradient(circle at 60% 70%,rgba(118,255,3,0.06) 0%,transparent 50%)"},
-    icon:"🦁",stars:false
-  }
+/* ═════════════════════════════════════════════════════
+   THEMES
+   ═════════════════════════════════════════════════════ */
+const TH={
+  stealth:{
+    n:{en:"🌙 Stealth",fr:"🌙 Furtif",ar:"🌙 شبح"},
+    v:{"--bg":"#020617","--panel":"rgba(15,23,42,0.96)","--card":"rgba(15,23,42,0.96)","--card-border":"rgba(148,163,184,0.3)","--accent":"#22c55e","--accent-soft":"rgba(34,197,94,0.15)","--accent-strong":"rgba(34,197,94,0.7)","--accent2":"#3b82f6","--text":"#f9fafb","--muted":"#9ca3af","--border":"#1f2937","--editor-bg":"rgba(2,6,23,0.8)","--btn-grad":"linear-gradient(135deg,#22c55e,#16a34a)","--glow1":"rgba(34,197,94,0.18)","--glow2":"rgba(59,130,246,0.2)","--shadow":"rgba(15,23,42,0.85)","--pill-bg":"rgba(15,23,42,0.9)","--pill-border":"rgba(148,163,184,0.6)"},stars:true},
+  neon:{
+    n:{en:"⚡ Neon",fr:"⚡ Néon",ar:"⚡ نيون"},
+    v:{"--bg":"#0a0a1a","--panel":"rgba(18,18,42,0.96)","--card":"rgba(18,18,42,0.96)","--card-border":"rgba(100,100,255,0.25)","--accent":"#00d4ff","--accent-soft":"rgba(0,212,255,0.15)","--accent-strong":"rgba(0,212,255,0.7)","--accent2":"#ff00ff","--text":"#eeeeff","--muted":"#8888bb","--border":"#1a1a3a","--editor-bg":"rgba(10,10,26,0.8)","--btn-grad":"linear-gradient(135deg,#00d4ff,#0088ff)","--glow1":"rgba(0,212,255,0.2)","--glow2":"rgba(255,0,255,0.15)","--shadow":"rgba(10,10,26,0.9)","--pill-bg":"rgba(18,18,42,0.9)","--pill-border":"rgba(100,100,255,0.4)"},stars:true},
+  arctic:{
+    n:{en:"☁️ Arctic",fr:"☁️ Arctique",ar:"☁️ قطبي"},
+    v:{"--bg":"#e8eef4","--panel":"rgba(255,255,255,0.95)","--card":"rgba(255,255,255,0.95)","--card-border":"rgba(100,130,170,0.25)","--accent":"#2563eb","--accent-soft":"rgba(37,99,235,0.12)","--accent-strong":"rgba(37,99,235,0.6)","--accent2":"#06b6d4","--text":"#1e293b","--muted":"#64748b","--border":"#cbd5e1","--editor-bg":"rgba(241,245,249,0.9)","--btn-grad":"linear-gradient(135deg,#2563eb,#3b82f6)","--glow1":"rgba(37,99,235,0.08)","--glow2":"rgba(6,182,212,0.06)","--shadow":"rgba(100,116,139,0.15)","--pill-bg":"rgba(255,255,255,0.9)","--pill-border":"rgba(100,130,170,0.3)"},stars:false},
+  blaze:{
+    n:{en:"🔥 Blaze",fr:"🔥 Brasier",ar:"🔥 لهب"},
+    v:{"--bg":"#1a0500","--panel":"rgba(30,8,0,0.96)","--card":"rgba(40,12,0,0.9)","--card-border":"rgba(255,100,0,0.2)","--accent":"#ff6600","--accent-soft":"rgba(255,102,0,0.12)","--accent-strong":"rgba(255,102,0,0.7)","--accent2":"#ffcc00","--text":"#ffeedd","--muted":"#ffaa66","--border":"#3d1500","--editor-bg":"rgba(20,5,0,0.8)","--btn-grad":"linear-gradient(135deg,#ff6600,#ff9100)","--glow1":"rgba(255,102,0,0.15)","--glow2":"rgba(255,204,0,0.1)","--shadow":"rgba(20,5,0,0.9)","--pill-bg":"rgba(30,8,0,0.9)","--pill-border":"rgba(255,140,0,0.3)"},stars:false},
+  ocean:{
+    n:{en:"🌊 Ocean",fr:"🌊 Océan",ar:"🌊 محيط"},
+    v:{"--bg":"#001f3f","--panel":"rgba(0,31,63,0.96)","--card":"rgba(0,50,90,0.8)","--card-border":"rgba(0,180,255,0.2)","--accent":"#00e5ff","--accent-soft":"rgba(0,229,255,0.12)","--accent-strong":"rgba(0,229,255,0.6)","--accent2":"#18ffff","--text":"#e0f7fa","--muted":"#80deea","--border":"#003050","--editor-bg":"rgba(0,20,40,0.8)","--btn-grad":"linear-gradient(135deg,#00e5ff,#0091ea)","--glow1":"rgba(0,229,255,0.15)","--glow2":"rgba(0,145,234,0.1)","--shadow":"rgba(0,15,30,0.9)","--pill-bg":"rgba(0,31,63,0.9)","--pill-border":"rgba(0,180,255,0.3)"},stars:false},
+  dragon:{
+    n:{en:"🐉 Dragon",fr:"🐉 Dragon",ar:"🐉 تنين"},
+    v:{"--bg":"#1a0a2e","--panel":"rgba(26,10,46,0.96)","--card":"rgba(45,15,60,0.8)","--card-border":"rgba(168,85,247,0.2)","--accent":"#a855f7","--accent-soft":"rgba(168,85,247,0.12)","--accent-strong":"rgba(168,85,247,0.6)","--accent2":"#ffcc00","--text":"#f3e8ff","--muted":"#c084fc","--border":"#2d0a3e","--editor-bg":"rgba(18,8,32,0.8)","--btn-grad":"linear-gradient(135deg,#a855f7,#7c3aed)","--glow1":"rgba(168,85,247,0.15)","--glow2":"rgba(255,204,0,0.08)","--shadow":"rgba(15,5,30,0.9)","--pill-bg":"rgba(26,10,46,0.9)","--pill-border":"rgba(168,85,247,0.3)"},stars:true},
+  cyber:{
+    n:{en:"🤖 Cyber",fr:"🤖 Cyber",ar:"🤖 سايبر"},
+    v:{"--bg":"#0a0a0a","--panel":"rgba(8,15,8,0.96)","--card":"rgba(0,30,0,0.7)","--card-border":"rgba(0,255,65,0.15)","--accent":"#00ff41","--accent-soft":"rgba(0,255,65,0.1)","--accent-strong":"rgba(0,255,65,0.5)","--accent2":"#39ff14","--text":"#b0ffb0","--muted":"#4ade80","--border":"#0d1a0d","--editor-bg":"rgba(5,10,5,0.8)","--btn-grad":"linear-gradient(135deg,#00ff41,#00cc33)","--glow1":"rgba(0,255,65,0.12)","--glow2":"rgba(57,255,20,0.08)","--shadow":"rgba(0,0,0,0.9)","--pill-bg":"rgba(5,15,5,0.9)","--pill-border":"rgba(0,255,65,0.25)"},stars:false},
+  ninja:{
+    n:{en:"🥷 Ninja",fr:"🥷 Ninja",ar:"🥷 نينجا"},
+    v:{"--bg":"#1a1a1a","--panel":"rgba(20,20,20,0.97)","--card":"rgba(35,35,35,0.9)","--card-border":"rgba(255,68,68,0.2)","--accent":"#ff4444","--accent-soft":"rgba(255,68,68,0.1)","--accent-strong":"rgba(255,68,68,0.6)","--accent2":"#ff8c00","--text":"#f0f0f0","--muted":"#ff8c8c","--border":"#2d2d2d","--editor-bg":"rgba(15,15,15,0.8)","--btn-grad":"linear-gradient(135deg,#ff4444,#ff8c00)","--glow1":"rgba(255,68,68,0.12)","--glow2":"rgba(255,140,0,0.08)","--shadow":"rgba(0,0,0,0.9)","--pill-bg":"rgba(20,20,20,0.9)","--pill-border":"rgba(255,68,68,0.3)"},stars:false},
+  islamic:{
+    n:{en:"🕌 Heritage",fr:"🕌 Héritage",ar:"🕌 تراث إسلامي"},
+    v:{"--bg":"#0a1a0a","--panel":"rgba(10,30,15,0.96)","--card":"rgba(15,45,25,0.85)","--card-border":"rgba(212,175,55,0.25)","--accent":"#d4af37","--accent-soft":"rgba(212,175,55,0.12)","--accent-strong":"rgba(212,175,55,0.6)","--accent2":"#2e8b57","--text":"#f0ead6","--muted":"#c5b358","--border":"#1a3a1a","--editor-bg":"rgba(5,15,8,0.8)","--btn-grad":"linear-gradient(135deg,#d4af37,#b8860b)","--glow1":"rgba(212,175,55,0.12)","--glow2":"rgba(46,139,87,0.1)","--shadow":"rgba(5,15,5,0.9)","--pill-bg":"rgba(10,30,15,0.9)","--pill-border":"rgba(212,175,55,0.3)"},stars:true}
 };
 
-/* ═══════════════════════════════════════════════════════
-   DATA — TRANSLATIONS & LESSONS
-   ═══════════════════════════════════════════════════════ */
-const I18N = {
-  en:{
-    dir:"ltr",subtitle:"Learn to code like a superhero!",
-    run:"🚀 Launch!",reset:"🔄 Reset",tryIt:"Try It Yourself!",output:"Result",
-    prev:"◀ Back",next:"Next ▶",hint:"💡 Hint",congrats:"⭐ Amazing job!",
-    cats:{html:"🏗️ Build It (HTML)",css:"🎨 Style It (CSS)",js:"⚡ Power It (JS)"},
-    lessons:[
-      {cat:"html",t:"🏠 My First Page",d:"Every website starts with HTML tags!",h:"Try changing the text between the tags!",
-       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h1>Hello World!</h1>\n  <p>I made my first webpage!</p>\n  <p>I am learning HTML!</p>\n</body>\n</html>`},
-      {cat:"html",t:"📝 Cool Lists",d:"Make awesome lists of your favorites!",h:"Add more <li> items to your list!",
-       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h2>My Top Games 🎮</h2>\n  <ol>\n    <li>Minecraft</li>\n    <li>Roblox</li>\n    <li>Fortnite</li>\n  </ol>\n  <h2>My Skills 💪</h2>\n  <ul>\n    <li>Coding</li>\n    <li>Gaming</li>\n    <li>Drawing</li>\n  </ul>\n</body>\n</html>`},
-      {cat:"html",t:"🖼️ Images & Links",d:"Add pictures and clickable links!",h:"Change the image URL or link text!",
-       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h1>Cool Space Facts 🚀</h1>\n  <img src="https://placekitten.com/300/200" width="300" alt="Space cat">\n  <p>Did you know?</p>\n  <a href="https://nasa.gov">Visit NASA! 🌍</a>\n</body>\n</html>`},
-      {cat:"css",t:"🎨 Paint Your Page",d:"Use CSS to add awesome colors!",h:"Try crimson, gold, or dodgerblue!",
-       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h1 style="color: dodgerblue;\n    font-size: 48px;\n    text-shadow: 3px 3px orange;">\n    SUPER CODER!\n  </h1>\n  <p style="background: gold;\n    padding: 20px;\n    border-radius: 15px;\n    font-size: 24px;">\n    🏆 Level Up! 🏆\n  </p>\n</body>\n</html>`},
-      {cat:"css",t:"📦 Game Cards",d:"Build RPG-style cards with effects!",h:"Change border-radius to 50% for circles!",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  .card {\n    width: 200px; padding: 20px; margin: 20px;\n    background: linear-gradient(135deg, #667eea, #764ba2);\n    border-radius: 20px; color: white;\n    font-family: Arial; text-align: center;\n    box-shadow: 0 10px 30px rgba(0,0,0,0.3);\n    display: inline-block;\n    transition: transform 0.2s;\n  }\n  .card:hover { transform: scale(1.08) rotate(-2deg); }\n</style></head>\n<body>\n  <div class="card">\n    <h2>⚔️ Warrior</h2>\n    <p>HP: 100</p>\n    <p>ATK: 75</p>\n  </div>\n  <div class="card" style="background:linear-gradient(135deg,#f093fb,#f5576c)">\n    <h2>🧙 Mage</h2>\n    <p>HP: 60</p>\n    <p>MP: 120</p>\n  </div>\n</body>\n</html>`},
-      {cat:"css",t:"🌀 Animations",d:"Make things move and spin!",h:"Change the animation speed!",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  @keyframes spin {\n    from { transform: rotate(0deg); }\n    to { transform: rotate(360deg); }\n  }\n  @keyframes bounce {\n    0%,100% { transform: translateY(0); }\n    50% { transform: translateY(-60px); }\n  }\n  @keyframes rainbow {\n    0%{color:red} 25%{color:orange}\n    50%{color:dodgerblue} 75%{color:lime}\n    100%{color:red}\n  }\n  .spin{display:inline-block;font-size:60px;animation:spin 2s linear infinite}\n  .bounce{display:inline-block;font-size:60px;animation:bounce 1s ease infinite}\n  .rainbow{font-size:36px;font-weight:bold;font-family:Arial;animation:rainbow 2s linear infinite}\n</style></head>\n<body style="text-align:center;padding-top:40px">\n  <div class="spin">⚙️</div>\n  <div class="bounce">🚀</div>\n  <div class="spin">⭐</div>\n  <br><br>\n  <div class="rainbow">I AM A CODER!</div>\n</body>\n</html>`},
-      {cat:"js",t:"⚡ Click Power!",d:"Make buttons that DO things!",h:"Try changing the alert messages!",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  button{padding:15px 30px;font-size:20px;border:none;\n    border-radius:12px;cursor:pointer;margin:10px;\n    color:white;font-weight:bold}\n  .btn1{background:#e74c3c}\n  .btn2{background:#3498db}\n  .btn3{background:#2ecc71}\n</style></head>\n<body style="text-align:center;padding:30px;font-family:Arial">\n  <h1>🎮 Button Quest</h1>\n  <button class="btn1" onclick="alert('🔥 FIRE ATTACK!')">🔥 Fire</button>\n  <button class="btn2" onclick="alert('💧 WATER SHIELD!')">💧 Water</button>\n  <button class="btn3" onclick="alert('🌿 NATURE HEAL!')">🌿 Nature</button>\n  <p id="score">Score: 0</p>\n  <button style="background:#9b59b6" onclick="document.getElementById('score').innerText='Score: '+Math.floor(Math.random()*100)">🎲 Roll Dice!</button>\n</body>\n</html>`},
-      {cat:"js",t:"🧮 Calculator",d:"Build a calculator with JavaScript!",h:"Add a divide (/) button!",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  body{font-family:Arial;text-align:center;padding:20px}\n  input{padding:12px;font-size:20px;width:80px;border-radius:10px;\n    border:3px solid #3498db;text-align:center}\n  button{padding:12px 24px;font-size:18px;border:none;border-radius:10px;\n    background:#e74c3c;color:white;cursor:pointer;margin:5px}\n  #result{font-size:36px;margin:20px;color:#2ecc71}\n</style></head>\n<body>\n  <h1>🧮 Super Calculator</h1>\n  <input id="a" type="number" value="10">\n  <input id="b" type="number" value="5">\n  <br><br>\n  <button onclick="calc('+')">➕ Add</button>\n  <button onclick="calc('-')">➖ Sub</button>\n  <button onclick="calc('*')">✖️ Mul</button>\n  <div id="result">?</div>\n  <script>\n    function calc(op){\n      var a=+document.getElementById('a').value;\n      var b=+document.getElementById('b').value;\n      var r=op==='+'?a+b:op==='-'?a-b:a*b;\n      document.getElementById('result').innerText='= '+r;\n    }\n  <\/script>\n</body>\n</html>`},
-      {cat:"js",t:"🎮 Monster Clicker",d:"Build your own clicker game!",h:"Change points or add new upgrades!",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  body{font-family:Arial;text-align:center;\n    background:#1a1a2e;color:white;padding:20px}\n  h1{font-size:42px}\n  .clicker{font-size:80px;cursor:pointer;user-select:none;\n    transition:transform .1s;display:inline-block}\n  .clicker:active{transform:scale(1.3)}\n  button{padding:12px 24px;font-size:16px;border:none;\n    border-radius:10px;background:#e74c3c;color:white;\n    cursor:pointer;margin:8px}\n  #score{font-size:48px;color:gold}\n</style></head>\n<body>\n  <h1>⚔️ Monster Clicker</h1>\n  <div id="score">0 Gold</div>\n  <div class="clicker" onclick="click1()">👾</div><br><br>\n  <button onclick="buy()">🗡️ Buy Sword (10g)</button>\n  <p id="dps">Damage: 1 per click</p>\n  <script>\n    var gold=0,dmg=1;\n    function click1(){\n      gold+=dmg;\n      document.getElementById('score').innerText=gold+' Gold';\n    }\n    function buy(){\n      if(gold>=10){\n        gold-=10;dmg++;\n        document.getElementById('score').innerText=gold+' Gold';\n        document.getElementById('dps').innerText='Damage: '+dmg+' per click';\n      }\n    }\n  <\/script>\n</body>\n</html>`}
-    ]
-  },
-  fr:{
-    dir:"ltr",subtitle:"Apprends à coder comme un super-héros !",
-    run:"🚀 Lancer !",reset:"🔄 Reset",tryIt:"Essaie toi-même !",output:"Résultat",
-    prev:"◀ Retour",next:"Suivant ▶",hint:"💡 Indice",congrats:"⭐ Bravo, champion !",
-    cats:{html:"🏗️ Construis (HTML)",css:"🎨 Décore (CSS)",js:"⚡ Anime (JS)"},
-    lessons:[
-      {cat:"html",t:"🏠 Ma Première Page",d:"Chaque site commence avec des balises HTML !",h:"Change le texte entre les balises !",
-       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h1>Bonjour le Monde !</h1>\n  <p>J'ai créé ma première page web !</p>\n  <p>J'apprends le HTML !</p>\n</body>\n</html>`},
-      {cat:"html",t:"📝 Listes Cool",d:"Fais des listes de tes trucs préférés !",h:"Ajoute plus de <li> à ta liste !",
-       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h2>Mes Jeux Préférés 🎮</h2>\n  <ol>\n    <li>Minecraft</li>\n    <li>Roblox</li>\n    <li>Fortnite</li>\n  </ol>\n  <h2>Mes Talents 💪</h2>\n  <ul>\n    <li>Coder</li>\n    <li>Jouer</li>\n    <li>Dessiner</li>\n  </ul>\n</body>\n</html>`},
-      {cat:"html",t:"🖼️ Images & Liens",d:"Ajoute des images et des liens !",h:"Change l'URL pour d'autres images !",
-       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h1>L'Espace Cool 🚀</h1>\n  <img src="https://placekitten.com/300/200" width="300" alt="Chat spatial">\n  <p>Le savais-tu ?</p>\n  <a href="https://nasa.gov">Visite la NASA ! 🌍</a>\n</body>\n</html>`},
-      {cat:"css",t:"🎨 Peins Ta Page",d:"Utilise le CSS pour ajouter des couleurs !",h:"Essaie crimson, gold ou dodgerblue !",
-       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h1 style="color: dodgerblue;\n    font-size: 48px;\n    text-shadow: 3px 3px orange;">\n    SUPER CODEUR !\n  </h1>\n  <p style="background: gold;\n    padding: 20px;\n    border-radius: 15px;\n    font-size: 24px;">\n    🏆 Niveau Suivant ! 🏆\n  </p>\n</body>\n</html>`},
-      {cat:"css",t:"📦 Cartes de Jeu",d:"Crée des cartes RPG avec effets !",h:"Change border-radius à 50% !",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  .carte{width:200px;padding:20px;margin:20px;\n    background:linear-gradient(135deg,#667eea,#764ba2);\n    border-radius:20px;color:white;font-family:Arial;\n    text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.3);\n    display:inline-block;transition:transform .2s}\n  .carte:hover{transform:scale(1.08) rotate(-2deg)}\n</style></head>\n<body>\n  <div class="carte"><h2>⚔️ Guerrier</h2><p>PV: 100</p><p>ATQ: 75</p></div>\n  <div class="carte" style="background:linear-gradient(135deg,#f093fb,#f5576c)"><h2>🧙 Mage</h2><p>PV: 60</p><p>PM: 120</p></div>\n</body>\n</html>`},
-      {cat:"css",t:"🌀 Animations",d:"Fais bouger et tourner les choses !",h:"Change la durée de l'animation !",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}\n  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-60px)}}\n  @keyframes rainbow{0%{color:red}25%{color:orange}50%{color:dodgerblue}75%{color:lime}100%{color:red}}\n  .spin{display:inline-block;font-size:60px;animation:spin 2s linear infinite}\n  .bounce{display:inline-block;font-size:60px;animation:bounce 1s ease infinite}\n  .rainbow{font-size:36px;font-weight:bold;font-family:Arial;animation:rainbow 2s linear infinite}\n</style></head>\n<body style="text-align:center;padding-top:40px">\n  <div class="spin">⚙️</div>\n  <div class="bounce">🚀</div>\n  <div class="spin">⭐</div><br><br>\n  <div class="rainbow">JE SUIS UN CODEUR !</div>\n</body>\n</html>`},
-      {cat:"js",t:"⚡ Clique Power !",d:"Crée des boutons qui font des choses !",h:"Change les messages d'alerte !",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  button{padding:15px 30px;font-size:20px;border:none;\n    border-radius:12px;cursor:pointer;margin:10px;\n    color:white;font-weight:bold}\n  .btn1{background:#e74c3c}.btn2{background:#3498db}.btn3{background:#2ecc71}\n</style></head>\n<body style="text-align:center;padding:30px;font-family:Arial">\n  <h1>🎮 Quête des Boutons</h1>\n  <button class="btn1" onclick="alert('🔥 ATTAQUE FEU !')">🔥 Feu</button>\n  <button class="btn2" onclick="alert('💧 BOUCLIER EAU !')">💧 Eau</button>\n  <button class="btn3" onclick="alert('🌿 SOIN NATURE !')">🌿 Nature</button>\n  <p id="score">Score: 0</p>\n  <button style="background:#9b59b6" onclick="document.getElementById('score').innerText='Score: '+Math.floor(Math.random()*100)">🎲 Lance le Dé !</button>\n</body>\n</html>`},
-      {cat:"js",t:"🧮 Calculatrice",d:"Construis une calculatrice en JS !",h:"Ajoute un bouton diviser (/) !",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  body{font-family:Arial;text-align:center;padding:20px}\n  input{padding:12px;font-size:20px;width:80px;border-radius:10px;border:3px solid #3498db;text-align:center}\n  button{padding:12px 24px;font-size:18px;border:none;border-radius:10px;background:#e74c3c;color:white;cursor:pointer;margin:5px}\n  #result{font-size:36px;margin:20px;color:#2ecc71}\n</style></head>\n<body>\n  <h1>🧮 Super Calculatrice</h1>\n  <input id="a" type="number" value="10">\n  <input id="b" type="number" value="5"><br><br>\n  <button onclick="calc('+')">➕ Ajouter</button>\n  <button onclick="calc('-')">➖ Soustraire</button>\n  <button onclick="calc('*')">✖️ Multiplier</button>\n  <div id="result">?</div>\n  <script>\n    function calc(op){var a=+document.getElementById('a').value,b=+document.getElementById('b').value,r=op==='+'?a+b:op==='-'?a-b:a*b;document.getElementById('result').innerText='= '+r}\n  <\/script>\n</body>\n</html>`},
-      {cat:"js",t:"🎮 Clicker Monstre",d:"Construis ton propre jeu clicker !",h:"Change les points ou ajoute des upgrades !",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  body{font-family:Arial;text-align:center;background:#1a1a2e;color:white;padding:20px}\n  h1{font-size:42px}\n  .clicker{font-size:80px;cursor:pointer;user-select:none;transition:transform .1s;display:inline-block}\n  .clicker:active{transform:scale(1.3)}\n  button{padding:12px 24px;font-size:16px;border:none;border-radius:10px;background:#e74c3c;color:white;cursor:pointer;margin:8px}\n  #score{font-size:48px;color:gold}\n</style></head>\n<body>\n  <h1>⚔️ Clicker Monstre</h1>\n  <div id="score">0 Or</div>\n  <div class="clicker" onclick="click1()">👾</div><br><br>\n  <button onclick="buy()">🗡️ Acheter Épée (10g)</button>\n  <p id="dps">Dégâts: 1 par clic</p>\n  <script>\n    var gold=0,dmg=1;\n    function click1(){gold+=dmg;document.getElementById('score').innerText=gold+' Or'}\n    function buy(){if(gold>=10){gold-=10;dmg++;document.getElementById('score').innerText=gold+' Or';document.getElementById('dps').innerText='Dégâts: '+dmg+' par clic'}}\n  <\/script>\n</body>\n</html>`}
-    ]
-  },
-  ar:{
-    dir:"rtl",subtitle:"!تعلّم البرمجة كالأبطال الخارقين",
-    run:"🚀 !إنطلق",reset:"🔄 إعادة",tryIt:"!جرّب بنفسك",output:"النتيجة",
-    prev:"السابق ▶",next:"◀ التالي",hint:"💡 تلميح",congrats:"!⭐ أحسنت يا بطل",
-    cats:{html:"🏗️ (HTML) ابنِ",css:"🎨 (CSS) زيّن",js:"⚡ (JS) حرّك"},
-    lessons:[
-      {cat:"html",t:"🏠 صفحتي الأولى",d:"!كل موقع يبدأ بوسوم HTML",h:"!جرّب تغيير النص بين الوسوم",
-       c:`<!DOCTYPE html>\n<html dir="rtl" lang="ar">\n<body>\n  <h1>!مرحباً بالعالم</h1>\n  <p>!صنعت أول صفحة ويب</p>\n  <p>!أنا أتعلم HTML</p>\n</body>\n</html>`},
-      {cat:"html",t:"📝 قوائم رائعة",d:"!اصنع قوائم بأشيائك المفضلة",h:"!أضف المزيد من عناصر <li>",
-       c:`<!DOCTYPE html>\n<html dir="rtl" lang="ar">\n<body>\n  <h2>🎮 ألعابي المفضلة</h2>\n  <ol><li>ماينكرافت</li><li>روبلوكس</li><li>فورتنايت</li></ol>\n  <h2>💪 مهاراتي</h2>\n  <ul><li>البرمجة</li><li>الألعاب</li><li>الرسم</li></ul>\n</body>\n</html>`},
-      {cat:"html",t:"🖼️ صور وروابط",d:"!أضف صوراً وروابط",h:"!غيّر الرابط لعرض صور مختلفة",
-       c:`<!DOCTYPE html>\n<html dir="rtl" lang="ar">\n<body>\n  <h1>🚀 حقائق عن الفضاء</h1>\n  <img src="https://placekitten.com/300/200" width="300" alt="قطة فضائية">\n  <p>؟هل تعلم</p>\n  <a href="https://nasa.gov">🌍 !زُر ناسا</a>\n</body>\n</html>`},
-      {cat:"css",t:"🎨 لوّن صفحتك",d:"!استخدم CSS لإضافة ألوان رائعة",h:"!جرّب ألوان مثل crimson أو gold",
-       c:`<!DOCTYPE html>\n<html dir="rtl" lang="ar">\n<body>\n  <h1 style="color:dodgerblue;font-size:48px;text-shadow:3px 3px orange">!مبرمج خارق</h1>\n  <p style="background:gold;padding:20px;border-radius:15px;font-size:24px">🏆 !المستوى التالي 🏆</p>\n</body>\n</html>`},
-      {cat:"css",t:"📦 صناديق سحرية",d:"!اصنع صناديق بحدود وظلال",h:"!غيّر border-radius إلى 50% لصنع دائرة",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  .card{width:200px;padding:20px;margin:20px;\n    background:linear-gradient(135deg,#667eea,#764ba2);\n    border-radius:20px;color:white;font-family:Arial;\n    text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.3);\n    display:inline-block;transition:transform .2s}\n  .card:hover{transform:scale(1.08) rotate(-2deg)}\n</style></head>\n<body style="direction:rtl">\n  <div class="card"><h2>⚔️ محارب</h2><p>صحة: 100</p><p>هجوم: 75</p></div>\n  <div class="card" style="background:linear-gradient(135deg,#f093fb,#f5576c)"><h2>🧙 ساحر</h2><p>صحة: 60</p><p>سحر: 120</p></div>\n</body>\n</html>`},
-      {cat:"css",t:"🌀 حركات",d:"!اجعل الأشياء تتحرك وتدور",h:"!غيّر مدة الحركة",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}\n  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-60px)}}\n  @keyframes rainbow{0%{color:red}25%{color:orange}50%{color:dodgerblue}75%{color:lime}100%{color:red}}\n  .spin{display:inline-block;font-size:60px;animation:spin 2s linear infinite}\n  .bounce{display:inline-block;font-size:60px;animation:bounce 1s ease infinite}\n  .rainbow{font-size:36px;font-weight:bold;font-family:Arial;animation:rainbow 2s linear infinite}\n</style></head>\n<body style="text-align:center;padding-top:40px">\n  <div class="spin">⚙️</div>\n  <div class="bounce">🚀</div>\n  <div class="spin">⭐</div><br><br>\n  <div class="rainbow">!أنا مبرمج</div>\n</body>\n</html>`},
-      {cat:"js",t:"⚡ !قوة النقر",d:"!اصنع أزرار تفعل أشياء",h:"!جرّب تغيير رسالة التنبيه",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  button{padding:15px 30px;font-size:20px;border:none;border-radius:12px;cursor:pointer;margin:10px;color:white;font-weight:bold}\n  .btn1{background:#e74c3c}.btn2{background:#3498db}.btn3{background:#2ecc71}\n</style></head>\n<body style="text-align:center;padding:30px;font-family:Arial">\n  <h1>🎮 مهمة الأزرار</h1>\n  <button class="btn1" onclick="alert('🔥 !هجوم ناري')">🔥 نار</button>\n  <button class="btn2" onclick="alert('💧 !درع مائي')">💧 ماء</button>\n  <button class="btn3" onclick="alert('🌿 !علاج طبيعي')">🌿 طبيعة</button>\n  <p id="score">النقاط: 0</p>\n  <button style="background:#9b59b6" onclick="document.getElementById('score').innerText='النقاط: '+Math.floor(Math.random()*100)">🎲 !ارمِ النرد</button>\n</body>\n</html>`},
-      {cat:"js",t:"🧮 آلة حاسبة",d:"!ابنِ آلة حاسبة بجافاسكريبت",h:"!جرّب إضافة زر القسمة",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  body{font-family:Arial;text-align:center;padding:20px}\n  input{padding:12px;font-size:20px;width:80px;border-radius:10px;border:3px solid #3498db;text-align:center}\n  button{padding:12px 24px;font-size:18px;border:none;border-radius:10px;background:#e74c3c;color:white;cursor:pointer;margin:5px}\n  #result{font-size:36px;margin:20px;color:#2ecc71}\n</style></head>\n<body>\n  <h1>🧮 الآلة الحاسبة الخارقة</h1>\n  <input id="a" type="number" value="10">\n  <input id="b" type="number" value="5"><br><br>\n  <button onclick="calc('+')">➕ جمع</button>\n  <button onclick="calc('-')">➖ طرح</button>\n  <button onclick="calc('*')">✖️ ضرب</button>\n  <div id="result">?</div>\n  <script>\n    function calc(op){var a=+document.getElementById('a').value,b=+document.getElementById('b').value,r=op==='+'?a+b:op==='-'?a-b:a*b;document.getElementById('result').innerText='= '+r}\n  <\/script>\n</body>\n</html>`},
-      {cat:"js",t:"🎮 لعبة صغيرة",d:"!ابنِ لعبة النقر الخاصة بك",h:"!غيّر النقاط أو أضف ترقيات",
-       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  body{font-family:Arial;text-align:center;background:#1a1a2e;color:white;padding:20px}\n  h1{font-size:42px}\n  .clicker{font-size:80px;cursor:pointer;user-select:none;transition:transform .1s;display:inline-block}\n  .clicker:active{transform:scale(1.3)}\n  button{padding:12px 24px;font-size:16px;border:none;border-radius:10px;background:#e74c3c;color:white;cursor:pointer;margin:8px}\n  #score{font-size:48px;color:gold}\n</style></head>\n<body>\n  <h1>⚔️ ناقر الوحوش</h1>\n  <div id="score">0 ذهب</div>\n  <div class="clicker" onclick="click1()">👾</div><br><br>\n  <button onclick="buy()">🗡️ (اشترِ سيفاً (10ذ</button>\n  <p id="dps">الضرر: 1 لكل نقرة</p>\n  <script>\n    var gold=0,dmg=1;\n    function click1(){gold+=dmg;document.getElementById('score').innerText=gold+' ذهب'}\n    function buy(){if(gold>=10){gold-=10;dmg++;document.getElementById('score').innerText=gold+' ذهب';document.getElementById('dps').innerText='الضرر: '+dmg+' لكل نقرة'}}\n  <\/script>\n</body>\n</html>`}
-    ]
-  }
-};
+/* ═════════════════════════════════════════════════════
+   I18N + LESSONS
+   ═════════════════════════════════════════════════════ */
+const B='basics',S='science';
+// Helper: sc = escaped closing script tag
+const sc='<\\/script>';
 
-/* ═══════════════════════════════════════════════════════
+function mkI18N(){
+const UI={
+en:{dir:'ltr',sub:'Play • Learn • Create',run:'🚀 Launch',reset:'↺ Reset',tryIt:'Try it',output:'Result',prev:'◀',next:'▶',hint:'💡',congrats:'⭐ Amazing!',track1:'Basics',track2:'Science',
+tiers:{html:'🏗️ Build (HTML)',css:'🎨 Style (CSS)',js:'⚡ Power (JS)',ctrl:'🎛️ Controls',beg:'🟢 Beginner',exp:'🔵 Explorer',adv:'🔴 Advanced'}},
+fr:{dir:'ltr',sub:'Joue • Apprends • Crée',run:'🚀 Lancer',reset:'↺ Reset',tryIt:'Essaie',output:'Résultat',prev:'◀',next:'▶',hint:'💡',congrats:'⭐ Bravo!',track1:'Bases',track2:'Science',
+tiers:{html:'🏗️ Construis (HTML)',css:'🎨 Décore (CSS)',js:'⚡ Anime (JS)',ctrl:'🎛️ Contrôles',beg:'🟢 Débutant',exp:'🔵 Explorateur',adv:'🔴 Avancé'}},
+ar:{dir:'rtl',sub:'العب • تعلّم • ابتكر',run:'🚀 إنطلق',reset:'↺ إعادة',tryIt:'جرّب',output:'النتيجة',prev:'▶',next:'◀',hint:'💡',congrats:'⭐ أحسنت!',track1:'أساسيات',track2:'علوم',
+tiers:{html:'(HTML) 🏗️ ابنِ',css:'(CSS) 🎨 زيّن',js:'(JS) ⚡ حرّك',ctrl:'🎛️ عناصر تحكم',beg:'🟢 مبتدئ',exp:'🔵 مستكشف',adv:'🔴 متقدم'}}
+};
+// --- BASICS LESSONS ---
+const basicsEN=[
+{g:'html',t:'🏠 My First Page',d:'Start with HTML tags!',h:'Change the text!',
+c:'<!DOCTYPE html>\n<html><body>\n  <h1>Hello World!</h1>\n  <p>My first webpage!</p>\n  <p>I am learning HTML!</p>\n</body></html>'},
+{g:'html',t:'📝 Cool Lists',d:'Make lists of favorites!',h:'Add more <li> items!',
+c:'<!DOCTYPE html>\n<html><body>\n  <h2>My Top Games 🎮</h2>\n  <ol><li>Minecraft</li><li>Roblox</li><li>Fortnite</li></ol>\n  <h2>My Skills 💪</h2>\n  <ul><li>Coding</li><li>Gaming</li><li>Drawing</li></ul>\n</body></html>'},
+{g:'html',t:'🖼️ Images & Links',d:'Add pictures and links!',h:'Change the URL!',
+c:'<!DOCTYPE html>\n<html><body>\n  <h1>Cool Space 🚀</h1>\n  <img src="https://placekitten.com/300/200" width="300">\n  <p>Did you know?</p>\n  <a href="https://nasa.gov">Visit NASA! 🌍</a>\n</body></html>'},
+{g:'css',t:'🎨 Paint Your Page',d:'Add awesome colors!',h:'Try crimson, gold, dodgerblue!',
+c:'<!DOCTYPE html>\n<html><body>\n  <h1 style="color:dodgerblue;font-size:48px;text-shadow:3px 3px orange">SUPER CODER!</h1>\n  <p style="background:gold;padding:20px;border-radius:15px;font-size:24px">🏆 Level Up! 🏆</p>\n</body></html>'},
+{g:'css',t:'📦 Game Cards',d:'RPG cards with effects!',h:'Change border-radius to 50%!',
+c:'<!DOCTYPE html>\n<html><head><style>\n.card{width:200px;padding:20px;margin:20px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:20px;color:#fff;font-family:Arial;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3);display:inline-block;transition:transform .2s}\n.card:hover{transform:scale(1.08) rotate(-2deg)}\n</style></head><body>\n<div class="card"><h2>⚔️ Warrior</h2><p>HP:100</p><p>ATK:75</p></div>\n<div class="card" style="background:linear-gradient(135deg,#f093fb,#f5576c)"><h2>🧙 Mage</h2><p>HP:60</p><p>MP:120</p></div>\n</body></html>'},
+{g:'css',t:'🌀 Animations',d:'Make things spin & bounce!',h:'Change animation duration!',
+c:'<!DOCTYPE html>\n<html><head><style>\n@keyframes spin{to{transform:rotate(360deg)}}\n@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-60px)}}\n@keyframes rainbow{0%{color:red}25%{color:orange}50%{color:dodgerblue}75%{color:lime}100%{color:red}}\n.spin{display:inline-block;font-size:60px;animation:spin 2s linear infinite}\n.bounce{display:inline-block;font-size:60px;animation:bounce 1s ease infinite}\n.rbow{font-size:36px;font-weight:bold;font-family:Arial;animation:rainbow 2s linear infinite}\n</style></head><body style="text-align:center;padding-top:40px">\n<div class="spin">⚙️</div><div class="bounce">🚀</div><div class="spin">⭐</div><br><br>\n<div class="rbow">I AM A CODER!</div>\n</body></html>'},
+{g:'js',t:'⚡ Click Power!',d:'Buttons that DO things!',h:'Change the alert messages!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbtn{padding:15px 30px;font-size:20px;border:none;border-radius:12px;cursor:pointer;margin:10px;color:#fff;font-weight:bold}\n</style></head><body style="text-align:center;padding:30px;font-family:Arial">\n<h1>🎮 Button Quest</h1>\n<button style="background:#e74c3c" onclick="alert(\'🔥 FIRE!\')">🔥 Fire</button>\n<button style="background:#3498db" onclick="alert(\'💧 WATER!\')">💧 Water</button>\n<button style="background:#2ecc71" onclick="alert(\'🌿 HEAL!\')">🌿 Nature</button>\n<p id="s">Score: 0</p>\n<button style="background:#9b59b6;padding:12px 24px;border:none;border-radius:12px;color:#fff;font-size:18px;cursor:pointer" onclick="document.getElementById(\'s\').innerText=\'Score: \'+Math.floor(Math.random()*100)">🎲 Roll!</button>\n</body></html>'},
+{g:'js',t:'🧮 Calculator',d:'Build a calculator!',h:'Add a divide button!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{font-family:Arial;text-align:center;padding:20px}\ninput{padding:12px;font-size:20px;width:80px;border-radius:10px;border:3px solid #3498db;text-align:center}\nbutton{padding:12px 24px;font-size:18px;border:none;border-radius:10px;background:#e74c3c;color:#fff;cursor:pointer;margin:5px}\n#r{font-size:36px;margin:20px;color:#2ecc71}\n</style></head><body>\n<h1>🧮 Super Calc</h1>\n<input id="a" type="number" value="10"> <input id="b" type="number" value="5"><br><br>\n<button onclick="calc(\'+\')">➕</button><button onclick="calc(\'-\')">➖</button><button onclick="calc(\'*\')">✖️</button>\n<div id="r">?</div>\n<script>function calc(o){var a=+document.getElementById("a").value,b=+document.getElementById("b").value;document.getElementById("r").innerText="= "+(o==="+"?a+b:o==="-"?a-b:a*b)}'+sc+'\n</body></html>'},
+{g:'js',t:'🎮 Monster Clicker',d:'Your own clicker game!',h:'Add new upgrades!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{font-family:Arial;text-align:center;background:#1a1a2e;color:#fff;padding:20px}\n.c{font-size:80px;cursor:pointer;user-select:none;transition:transform .1s;display:inline-block}\n.c:active{transform:scale(1.3)}\nbutton{padding:12px 24px;font-size:16px;border:none;border-radius:10px;background:#e74c3c;color:#fff;cursor:pointer;margin:8px}\n#s{font-size:48px;color:gold}\n</style></head><body>\n<h1>⚔️ Monster Clicker</h1>\n<div id="s">0 Gold</div>\n<div class="c" onclick="c()">👾</div><br><br>\n<button onclick="buy()">🗡️ Sword (10g)</button>\n<p id="d">Damage: 1/click</p>\n<script>var g=0,dm=1;function c(){g+=dm;document.getElementById("s").innerText=g+" Gold"}function buy(){if(g>=10){g-=10;dm++;document.getElementById("s").innerText=g+" Gold";document.getElementById("d").innerText="Damage: "+dm+"/click"}}'+sc+'\n</body></html>'},
+{g:'ctrl',t:'🎚️ Slider Control',d:'Sliders change things live!',h:'Add more sliders for width/height!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{font-family:Arial;text-align:center;padding:20px;background:#111;color:#fff}\ninput[type=range]{width:250px;margin:10px}\n.box{width:100px;height:100px;border-radius:10px;margin:20px auto;transition:all .3s}\n</style></head><body>\n<h2>🎚️ Color Mixer</h2>\n<label>Red: <input type="range" id="r" min="0" max="255" value="100" oninput="upd()"></label><br>\n<label>Green: <input type="range" id="g" min="0" max="255" value="200" oninput="upd()"></label><br>\n<label>Blue: <input type="range" id="b" min="0" max="255" value="255" oninput="upd()"></label><br>\n<label>Size: <input type="range" id="sz" min="50" max="300" value="100" oninput="upd()"></label>\n<div class="box" id="box"></div>\n<p id="val"></p>\n<script>function upd(){var r=document.getElementById("r").value,g=document.getElementById("g").value,b=document.getElementById("b").value,s=document.getElementById("sz").value,bx=document.getElementById("box");bx.style.background="rgb("+r+","+g+","+b+")";bx.style.width=s+"px";bx.style.height=s+"px";document.getElementById("val").innerText="rgb("+r+","+g+","+b+") "+s+"px"}upd()'+sc+'\n</body></html>'},
+{g:'ctrl',t:'🕹️ Joystick',d:'Drag to move things!',h:'Change the speed or arena size!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{margin:0;background:#111;overflow:hidden;font-family:Arial}\n#arena{position:relative;width:100vw;height:100vh}\n#dot{position:absolute;width:30px;height:30px;background:#0f0;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 20px #0f0}\n#joy{position:fixed;bottom:30px;right:30px;width:120px;height:120px;background:rgba(255,255,255,0.1);border-radius:50%;border:2px solid rgba(255,255,255,0.3)}\n#knob{position:absolute;width:40px;height:40px;background:#0f0;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);cursor:grab;box-shadow:0 0 15px rgba(0,255,0,0.5)}\n#pos{position:fixed;top:10px;left:10px;color:#0f0;font-size:14px;font-family:monospace}\n</style></head><body>\n<div id="arena"><div id="dot"></div></div>\n<div id="joy"><div id="knob"></div></div>\n<div id="pos">X:0 Y:0</div>\n<script>var dx=0,dy=0,px=window.innerWidth/2,py=window.innerHeight/2,drag=false,knob=document.getElementById("knob"),joy=document.getElementById("joy");joy.onmousedown=joy.ontouchstart=function(e){drag=true;e.preventDefault()};document.onmouseup=document.ontouchend=function(){drag=false;dx=dy=0;knob.style.transform="translate(-50%,-50%)"};document.onmousemove=document.ontouchmove=function(e){if(!drag)return;var t=e.touches?e.touches[0]:e,r=joy.getBoundingClientRect(),cx=r.left+60,cy=r.top+60,ox=t.clientX-cx,oy=t.clientY-cy,d=Math.min(Math.sqrt(ox*ox+oy*oy),40);var a=Math.atan2(oy,ox);dx=Math.cos(a)*d/40*3;dy=Math.sin(a)*d/40*3;knob.style.transform="translate(calc(-50% + "+Math.cos(a)*d+"px),calc(-50% + "+Math.sin(a)*d+"px))"};setInterval(function(){px=Math.max(15,Math.min(window.innerWidth-15,px+dx));py=Math.max(15,Math.min(window.innerHeight-15,py+dy));var dot=document.getElementById("dot");dot.style.left=px+"px";dot.style.top=py+"px";document.getElementById("pos").innerText="X:"+Math.round(px)+" Y:"+Math.round(py)},16)'+sc+'\n</body></html>'},
+{g:'ctrl',t:'📊 Bar Chart',d:'Data becomes visual!',h:'Change the numbers in the array!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{font-family:Arial;background:#111;color:#fff;padding:20px;text-align:center}\n.chart{display:flex;align-items:flex-end;justify-content:center;gap:12px;height:250px;margin:20px auto;padding:10px;border-bottom:2px solid #333}\n.bar-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}\n.bar{width:50px;border-radius:8px 8px 0 0;transition:height .5s,background .5s;cursor:pointer}\n.bar:hover{opacity:0.8}\n.label{font-size:12px;color:#999}\n.val{font-size:14px;font-weight:bold}\n</style></head><body>\n<h2>📊 Game Scores</h2>\n<div class="chart" id="chart"></div>\n<button onclick="randomize()" style="padding:12px 24px;background:#3b82f6;color:#fff;border:none;border-radius:10px;font-size:16px;cursor:pointer;margin:10px">🎲 Randomize</button>\n<script>var names=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],colors=["#ef4444","#f97316","#eab308","#22c55e","#3b82f6","#8b5cf6","#ec4899"],data=[45,72,38,91,56,83,67];function draw(){var c=document.getElementById("chart");c.innerHTML="";var mx=Math.max.apply(null,data);data.forEach(function(v,i){var w=document.createElement("div");w.className="bar-wrap";var b=document.createElement("div");b.className="bar";b.style.height=(v/mx*200)+"px";b.style.background=colors[i];var vl=document.createElement("div");vl.className="val";vl.innerText=v;var lb=document.createElement("div");lb.className="label";lb.innerText=names[i];w.appendChild(vl);w.appendChild(b);w.appendChild(lb);c.appendChild(w)})}function randomize(){data=data.map(function(){return Math.floor(Math.random()*100)+10});draw()}draw()'+sc+'\n</body></html>'},
+{g:'ctrl',t:'🔘 Gauge Meter',d:'A speedometer gauge!',h:'Change max value or colors!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{font-family:Arial;background:#111;color:#fff;text-align:center;padding:30px}\ncanvas{display:block;margin:10px auto}\ninput[type=range]{width:250px;margin:15px}\n</style></head><body>\n<h2>🔘 Speed Gauge</h2>\n<canvas id="g" width="300" height="180"></canvas>\n<div id="val" style="font-size:36px;font-weight:bold;color:#0f0">0</div>\n<input type="range" id="sl" min="0" max="100" value="0" oninput="draw(this.value)">\n<script>var cv=document.getElementById("g"),cx=cv.getContext("2d");function draw(v){cx.clearRect(0,0,300,180);cx.beginPath();cx.arc(150,160,120,Math.PI,2*Math.PI);cx.strokeStyle="#333";cx.lineWidth=20;cx.stroke();var pct=v/100;var col=pct<0.5?"#22c55e":pct<0.8?"#eab308":"#ef4444";cx.beginPath();cx.arc(150,160,120,Math.PI,Math.PI+pct*Math.PI);cx.strokeStyle=col;cx.lineWidth=20;cx.lineCap="round";cx.stroke();cx.beginPath();var a=Math.PI+pct*Math.PI;cx.moveTo(150,160);cx.lineTo(150+Math.cos(a)*100,160+Math.sin(a)*100);cx.strokeStyle="#fff";cx.lineWidth=3;cx.stroke();cx.beginPath();cx.arc(150,160,8,0,2*Math.PI);cx.fillStyle="#fff";cx.fill();document.getElementById("val").innerText=v;document.getElementById("val").style.color=col}draw(0)'+sc+'\n</body></html>'}
+];
+
+// --- SCIENCE LESSONS ---
+const sciEN=[
+{g:'beg',t:'⚡ Ohm\'s Law Lab',d:'V = I × R with animations!',h:'Change the resistance slider!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{font-family:Arial;background:#0a0a2e;color:#fff;text-align:center;padding:20px}\n.row{display:flex;justify-content:center;gap:30px;margin:15px 0;flex-wrap:wrap}\n.gauge{background:rgba(255,255,255,0.05);border-radius:15px;padding:15px 20px;min-width:120px}\n.gauge .val{font-size:32px;font-weight:bold}\n.gauge .lbl{font-size:12px;color:#999;margin-top:4px}\ninput[type=range]{width:200px;margin:8px}\n.wire{height:4px;background:linear-gradient(90deg,#333,#0f0,#333);margin:10px auto;border-radius:2px;position:relative;overflow:hidden;width:250px}\n.electron{position:absolute;width:8px;height:8px;background:#0f0;border-radius:50%;top:-2px;box-shadow:0 0 8px #0f0}\n</style></head><body>\n<h2>⚡ Ohm\'s Law Lab</h2>\n<p style="color:#888">V = I × R</p>\n<div class="row">\n<div class="gauge"><div class="val" id="vV" style="color:#3b82f6">5.0V</div><div class="lbl">Voltage</div></div>\n<div class="gauge"><div class="val" id="vI" style="color:#22c55e">50mA</div><div class="lbl">Current</div></div>\n<div class="gauge"><div class="val" id="vR" style="color:#f97316">100Ω</div><div class="lbl">Resistance</div></div>\n</div>\n<label>🔋 Voltage: <input type="range" id="sV" min="0" max="12" step="0.1" value="5" oninput="calc()"></label><br>\n<label>🔧 Resistance: <input type="range" id="sR" min="10" max="1000" value="100" oninput="calc()"></label>\n<div class="wire" id="wire"></div>\n<div id="led" style="font-size:50px;transition:all .3s">💡</div>\n<script>function calc(){var V=+document.getElementById("sV").value,R=+document.getElementById("sR").value,I=V/R;document.getElementById("vV").innerText=V.toFixed(1)+"V";document.getElementById("vR").innerText=R+"Ω";document.getElementById("vI").innerText=(I*1000).toFixed(1)+"mA";var led=document.getElementById("led");led.style.filter="brightness("+(0.3+I*8)+")";led.style.fontSize=(40+I*200)+"px";updateWire(I)}var els=[];function updateWire(I){var w=document.getElementById("wire");w.innerHTML="";var n=Math.max(1,Math.floor(I*80));for(var i=0;i<n;i++){var e=document.createElement("div");e.className="electron";e.style.left=Math.random()*250+"px";e.style.animation="moveE "+(0.5+1/(I*20+1))+"s linear infinite";w.appendChild(e)}}var st=document.createElement("style");st.textContent="@keyframes moveE{from{transform:translateX(-10px)}to{transform:translateX(260px)}}";document.head.appendChild(st);calc()'+sc+'\n</body></html>'},
+{g:'beg',t:'📻 Morse Code',d:'Text → dots & dashes → beeps!',h:'Try typing your name!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{font-family:Arial;background:#0a0a2e;color:#fff;text-align:center;padding:20px}\ninput{padding:12px;font-size:18px;border-radius:10px;border:2px solid #3b82f6;background:#111;color:#fff;width:250px;text-align:center}\n#out{font-size:24px;letter-spacing:4px;margin:15px;min-height:40px;color:#22c55e;font-family:monospace}\nbutton{padding:12px 24px;background:#22c55e;color:#fff;border:none;border-radius:10px;font-size:16px;cursor:pointer;margin:5px}\n</style></head><body>\n<h2>📻 Morse Code</h2>\n<input id="txt" placeholder="Type a word..." oninput="convert()">\n<div id="out"></div>\n<button onclick="play()">🔊 Play Sound</button>\n<button onclick="document.getElementById(\'txt\').value=\'\';convert()">Clear</button>\n<script>var M={A:".-",B:"-...",C:"-.-.",D:"-..",E:".",F:"..-.",G:"--.",H:"....",I:"..",J:".---",K:"-.-",L:".-..",M:"--",N:"-.",O:"---",P:".--.",Q:"--.-",R:".-.",S:"...",T:"-",U:"..-",V:"...-",W:".--",X:"-..-",Y:"-.--",Z:"--..",1:".----",2:"..---",3:"...--",4:"....-",5:".....",6:"-....",7:"--...",8:"---..",9:"----.",0:"-----"};function convert(){var t=document.getElementById("txt").value.toUpperCase(),r="";for(var i=0;i<t.length;i++){var c=t[i];r+=c===" "?"  / ":M[c]?M[c]+" ":""}document.getElementById("out").innerText=r}function play(){var t=document.getElementById("txt").value.toUpperCase(),ctx=new(window.AudioContext||window.webkitAudioContext),time=ctx.currentTime;for(var i=0;i<t.length;i++){var c=t[i];if(c===" "){time+=0.3;continue}var m=M[c];if(!m)continue;for(var j=0;j<m.length;j++){var o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=600;var dur=m[j]==="."?0.08:0.24;g.gain.setValueAtTime(0.3,time);o.start(time);o.stop(time+dur);time+=dur+0.06}time+=0.15}}'+sc+'\n</body></html>'},
+{g:'beg',t:'💡 Logic Gates',d:'AND, OR, NOT — toggle & see!',h:'Try different input combinations!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{font-family:Arial;background:#0a0a2e;color:#fff;text-align:center;padding:20px}\n.gate{display:inline-block;background:rgba(255,255,255,0.05);border-radius:15px;padding:15px;margin:10px;min-width:150px;border:1px solid #333}\n.gate h3{margin-bottom:10px}\n.toggle{width:50px;height:26px;border-radius:13px;background:#333;position:relative;display:inline-block;cursor:pointer;margin:4px;transition:background .3s}\n.toggle.on{background:#22c55e}\n.toggle::after{content:"";position:absolute;width:22px;height:22px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .3s}\n.toggle.on::after{left:26px}\n.out{font-size:36px;margin-top:10px}\n</style></head><body>\n<h2>💡 Logic Gates</h2>\n<div class="gate"><h3>AND</h3><div class="toggle" id="a1" onclick="tog(this)"></div><div class="toggle" id="a2" onclick="tog(this)"></div><div class="out" id="oAnd">💡</div></div>\n<div class="gate"><h3>OR</h3><div class="toggle" id="o1" onclick="tog(this)"></div><div class="toggle" id="o2" onclick="tog(this)"></div><div class="out" id="oOr">💡</div></div>\n<div class="gate"><h3>NOT</h3><div class="toggle" id="n1" onclick="tog(this)"></div><div class="out" id="oNot">💡</div></div>\n<div class="gate"><h3>XOR</h3><div class="toggle" id="x1" onclick="tog(this)"></div><div class="toggle" id="x2" onclick="tog(this)"></div><div class="out" id="oXor">💡</div></div>\n<script>function tog(el){el.classList.toggle("on");upd()}function gv(id){return document.getElementById(id).classList.contains("on")?1:0}function upd(){var a1=gv("a1"),a2=gv("a2"),o1=gv("o1"),o2=gv("o2"),n1=gv("n1"),x1=gv("x1"),x2=gv("x2");show("oAnd",a1&&a2);show("oOr",o1||o2);show("oNot",!n1);show("oXor",x1!==x2)}function show(id,v){var el=document.getElementById(id);el.innerText=v?"💡":"⚫";el.style.filter=v?"brightness(1.5) drop-shadow(0 0 10px gold)":"none"}upd()'+sc+'\n</body></html>'},
+{g:'beg',t:'📐 Wave Playground',d:'See what radio signals look like!',h:'Try the square wave!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{font-family:Arial;background:#0a0a2e;color:#fff;text-align:center;padding:15px}\ncanvas{display:block;margin:10px auto;border:1px solid #333;border-radius:10px}\nselect,input[type=range]{margin:5px;padding:6px;border-radius:8px;background:#222;color:#fff;border:1px solid #555}\nlabel{margin:0 8px;font-size:14px}\n</style></head><body>\n<h2>📐 Wave Lab</h2>\n<select id="wt" onchange="draw()"><option value="sin">Sine</option><option value="sq">Square</option><option value="saw">Sawtooth</option><option value="tri">Triangle</option></select><br>\n<label>Freq: <input type="range" id="fr" min="1" max="20" value="3" oninput="draw()"><span id="fv">3</span>Hz</label><br>\n<label>Amp: <input type="range" id="am" min="10" max="100" value="60" oninput="draw()"><span id="av">60</span>%</label>\n<canvas id="cv" width="500" height="200"></canvas>\n<script>var cv=document.getElementById("cv"),cx=cv.getContext("2d");function draw(){var f=+document.getElementById("fr").value,a=+document.getElementById("am").value/100,wt=document.getElementById("wt").value;document.getElementById("fv").innerText=f;document.getElementById("av").innerText=Math.round(a*100);cx.clearRect(0,0,500,200);cx.strokeStyle="#333";cx.beginPath();cx.moveTo(0,100);cx.lineTo(500,100);cx.stroke();cx.strokeStyle="#22c55e";cx.lineWidth=2;cx.beginPath();for(var x=0;x<500;x++){var t=x/500*f*2*Math.PI,y;if(wt==="sin")y=Math.sin(t);else if(wt==="sq")y=Math.sin(t)>0?1:-1;else if(wt==="saw")y=2*((t/(2*Math.PI))%1)-1;else y=2*Math.abs(2*((t/(2*Math.PI))%1)-1)-1;var py=100-y*80*a;x===0?cx.moveTo(x,py):cx.lineTo(x,py)}cx.stroke()}draw()'+sc+'\n</body></html>'},
+{g:'exp',t:'🤖 Robot Commander',d:'Program a robot on a grid!',h:'Try LOOP 4 { FORWARD }',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{font-family:monospace;background:#0a0a2e;color:#0f0;padding:15px;text-align:center}\n#grid{display:inline-grid;grid-template-columns:repeat(8,40px);gap:2px;margin:10px}\n.cell{width:40px;height:40px;background:#111;border:1px solid #1a3a1a;display:flex;align-items:center;justify-content:center;font-size:20px}\n.cell.robot{background:#003300}\ntextarea{width:300px;height:80px;background:#111;color:#0f0;border:1px solid #333;border-radius:8px;padding:8px;font-family:monospace;font-size:14px}\nbutton{padding:10px 20px;background:#22c55e;color:#000;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:5px;font-family:monospace}\n</style></head><body>\n<h2>🤖 Robot Commander</h2>\n<div id="grid"></div><br>\n<textarea id="prog" placeholder="FORWARD\\nLEFT\\nFORWARD\\nFORWARD">FORWARD\nFORWARD\nRIGHT\nFORWARD\nFORWARD\nLEFT\nFORWARD</textarea><br>\n<button onclick="run()">▶ RUN</button><button onclick="resetBot()">↺ RESET</button>\n<p id="status" style="margin:8px">Ready</p>\n<script>var rx=0,ry=0,dir=0,dirs=[[0,-1],[1,0],[0,1],[-1,0]],trail=[];function mkGrid(){var g=document.getElementById("grid");g.innerHTML="";for(var y=0;y<8;y++)for(var x=0;x<8;x++){var c=document.createElement("div");c.className="cell";c.id="c"+x+"_"+y;if(trail.indexOf(x+","+y)>=0)c.style.background="#002200";if(x===rx&&y===ry){c.classList.add("robot");c.innerText=["⬆️","➡️","⬇️","⬅️"][dir]}g.appendChild(c)}}function resetBot(){rx=0;ry=0;dir=0;trail=[];mkGrid();document.getElementById("status").innerText="Ready"}function run(){var lines=document.getElementById("prog").value.toUpperCase().split("\\n"),i=0;trail=[[rx,ry].join(",")];function step(){if(i>=lines.length){document.getElementById("status").innerText="✅ Done!";return}var cmd=lines[i].trim();if(cmd==="FORWARD"){rx+=dirs[dir][0];ry+=dirs[dir][1];rx=Math.max(0,Math.min(7,rx));ry=Math.max(0,Math.min(7,ry));trail.push(rx+","+ry)}else if(cmd==="RIGHT")dir=(dir+1)%4;else if(cmd==="LEFT")dir=(dir+3)%4;mkGrid();document.getElementById("status").innerText="→ "+cmd;i++;setTimeout(step,400)}step()}resetBot()'+sc+'\n</body></html>'},
+{g:'exp',t:'🔭 Star Map',d:'Real stars in the night sky!',h:'Use the time slider to rotate!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{margin:0;background:#000;overflow:hidden;font-family:Arial}\ncanvas{display:block}\n#info{position:fixed;bottom:10px;left:10px;color:#aaa;font-size:12px}\n#tsl{position:fixed;bottom:10px;right:10px;width:200px}\n</style></head><body>\n<canvas id="cv"></canvas>\n<div id="info">Click a star for info</div>\n<input type="range" id="tsl" min="0" max="360" value="0" oninput="draw()">\n<script>var cv=document.getElementById("cv"),cx=cv.getContext("2d");cv.width=innerWidth;cv.height=innerHeight;var stars=[{n:"Sirius",ra:101,dec:-16,m:-1.46,c:"#a8c0ff"},{n:"Canopus",ra:96,dec:-52,m:-0.72,c:"#fffde0"},{n:"Arcturus",ra:214,dec:19,m:-0.04,c:"#ffcc88"},{n:"Vega",ra:279,dec:38,m:0.03,c:"#a8c0ff"},{n:"Capella",ra:79,dec:46,m:0.08,c:"#ffee88"},{n:"Rigel",ra:78,dec:-8,m:0.13,c:"#b0c4ff"},{n:"Betelgeuse",ra:88,dec:7,m:0.50,c:"#ffaa88"},{n:"Altair",ra:298,dec:9,m:0.77,c:"#fff"},{n:"Aldebaran",ra:69,dec:16,m:0.85,c:"#ffaa66"},{n:"Spica",ra:201,dec:-11,m:1.04,c:"#aac4ff"},{n:"Antares",ra:247,dec:-26,m:1.09,c:"#ff8866"},{n:"Pollux",ra:116,dec:28,m:1.14,c:"#ffcc88"},{n:"Fomalhaut",ra:344,dec:-29,m:1.16,c:"#c8d8ff"},{n:"Deneb",ra:310,dec:45,m:1.25,c:"#d0e0ff"},{n:"Regulus",ra:152,dec:12,m:1.35,c:"#bbccff"}];for(var i=0;i<120;i++)stars.push({n:"Star",ra:Math.random()*360,dec:Math.random()*140-70,m:2+Math.random()*3,c:"#fff"});function draw(){var rot=+document.getElementById("tsl").value;cx.clearRect(0,0,cv.width,cv.height);cx.fillStyle="#000";cx.fillRect(0,0,cv.width,cv.height);var W=cv.width,H=cv.height;stars.forEach(function(s){var x=((s.ra+rot)%360)/360*W;var y=(90-s.dec)/180*H;var r=Math.max(1,3-s.m*0.5);cx.beginPath();cx.arc(x,y,r,0,Math.PI*2);cx.fillStyle=s.c;cx.globalAlpha=Math.max(0.3,1-s.m/5);cx.fill();cx.globalAlpha=1;if(s.m<1.5){cx.beginPath();cx.arc(x,y,r+4,0,Math.PI*2);cx.fillStyle=s.c;cx.globalAlpha=0.1;cx.fill();cx.globalAlpha=1}})}draw();cv.onclick=function(e){var rot=+document.getElementById("tsl").value,best=null,bd=999;stars.forEach(function(s){var x=((s.ra+rot)%360)/360*cv.width,y=(90-s.dec)/180*cv.height,d=Math.sqrt((e.clientX-x)**2+(e.clientY-y)**2);if(d<bd){bd=d;best=s}});if(best&&bd<20)document.getElementById("info").innerText=best.n+" | Mag: "+best.m.toFixed(2);else document.getElementById("info").innerText="Click a star for info"};onresize=function(){cv.width=innerWidth;cv.height=innerHeight;draw()}'+sc+'\n</body></html>'},
+{g:'exp',t:'📡 Signal Lab',d:'Mix waves & see interference!',h:'Try changing both frequencies!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{font-family:Arial;background:#0a0a2e;color:#fff;text-align:center;padding:10px}\ncanvas{display:block;margin:5px auto;border:1px solid #222;border-radius:6px}\nlabel{font-size:13px;display:block;margin:3px}\ninput[type=range]{width:180px}\n</style></head><body>\n<h2>📡 Signal Lab</h2>\n<label>Wave A freq: <input type="range" id="f1" min="1" max="15" value="3" oninput="draw()"><span id="fv1">3</span>Hz</label>\n<label>Wave B freq: <input type="range" id="f2" min="1" max="15" value="5" oninput="draw()"><span id="fv2">5</span>Hz</label>\n<label>Mix: <select id="mix" onchange="draw()"><option value="add">Add (Interference)</option><option value="am">AM Modulation</option><option value="fm">FM (approx)</option></select></label>\n<canvas id="c1" width="500" height="80"></canvas>\n<canvas id="c2" width="500" height="80"></canvas>\n<canvas id="c3" width="500" height="100"></canvas>\n<script>function wave(cx,w,h,fn,color){cx.clearRect(0,0,w,h);cx.strokeStyle="#222";cx.beginPath();cx.moveTo(0,h/2);cx.lineTo(w,h/2);cx.stroke();cx.strokeStyle=color;cx.lineWidth=2;cx.beginPath();for(var x=0;x<w;x++){var y=h/2-fn(x/w)*h*0.4;x===0?cx.moveTo(x,y):cx.lineTo(x,y)}cx.stroke()}function draw(){var f1=+document.getElementById("f1").value,f2=+document.getElementById("f2").value,mix=document.getElementById("mix").value;document.getElementById("fv1").innerText=f1;document.getElementById("fv2").innerText=f2;var c1=document.getElementById("c1").getContext("2d"),c2=document.getElementById("c2").getContext("2d"),c3=document.getElementById("c3").getContext("2d");wave(c1,500,80,function(t){return Math.sin(t*f1*2*Math.PI)},"#3b82f6");wave(c2,500,80,function(t){return Math.sin(t*f2*2*Math.PI)},"#22c55e");var fn;if(mix==="add")fn=function(t){return Math.sin(t*f1*2*Math.PI)+Math.sin(t*f2*2*Math.PI)};else if(mix==="am")fn=function(t){return Math.sin(t*f1*2*Math.PI)*(1+0.8*Math.sin(t*f2*2*Math.PI))};else fn=function(t){return Math.sin(t*f1*2*Math.PI+3*Math.sin(t*f2*2*Math.PI))};wave(c3,500,100,fn,"#f97316")}draw()'+sc+'\n</body></html>'},
+{g:'exp',t:'⚛️ Periodic Table',d:'All 118 elements interactive!',h:'Click an element for details!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{font-family:Arial;background:#0a0a2e;color:#fff;padding:8px;font-size:11px}\n#grid{display:grid;grid-template-columns:repeat(18,1fr);gap:2px;max-width:900px;margin:0 auto}\n.el{padding:3px;text-align:center;border-radius:4px;cursor:pointer;border:1px solid transparent;transition:all .2s;min-height:36px;display:flex;flex-direction:column;justify-content:center}\n.el:hover{transform:scale(1.3);z-index:10;border-color:#fff}\n.el .num{font-size:8px;color:rgba(255,255,255,0.6)}\n.el .sym{font-weight:bold;font-size:13px}\n.empty{visibility:hidden}\n#info{text-align:center;padding:10px;margin:8px auto;background:rgba(255,255,255,0.05);border-radius:10px;max-width:400px;min-height:50px}\nh2{text-align:center;margin:4px}\n</style></head><body>\n<h2>⚛️ Periodic Table</h2>\n<div id="info">Click an element!</div>\n<div id="grid"></div>\n<script>var E=[["H",1,1,1,"#ef4444","Hydrogen","1.008","1s1"],["He",2,1,18,"#a855f7","Helium","4.003","1s2"],["Li",3,2,1,"#f59e0b","Lithium","6.941","[He]2s1"],["Be",4,2,2,"#eab308","Beryllium","9.012","[He]2s2"],["B",5,2,13,"#84cc16","Boron","10.81","[He]2s2 2p1"],["C",6,2,14,"#ef4444","Carbon","12.01","[He]2s2 2p2"],["N",7,2,15,"#ef4444","Nitrogen","14.01","[He]2s2 2p3"],["O",8,2,16,"#ef4444","Oxygen","16.00","[He]2s2 2p4"],["F",9,2,17,"#22c55e","Fluorine","19.00","[He]2s2 2p5"],["Ne",10,2,18,"#a855f7","Neon","20.18","[He]2s2 2p6"],["Na",11,3,1,"#f59e0b","Sodium","22.99","[Ne]3s1"],["Mg",12,3,2,"#eab308","Magnesium","24.31","[Ne]3s2"],["Al",13,3,13,"#3b82f6","Aluminium","26.98","[Ne]3s2 3p1"],["Si",14,3,14,"#84cc16","Silicon","28.09",""],["P",15,3,15,"#ef4444","Phosphorus","30.97",""],["S",16,3,16,"#ef4444","Sulfur","32.07",""],["Cl",17,3,17,"#22c55e","Chlorine","35.45",""],["Ar",18,3,18,"#a855f7","Argon","39.95",""],["K",19,4,1,"#f59e0b","Potassium","39.10",""],["Ca",20,4,2,"#eab308","Calcium","40.08",""],["Fe",26,4,8,"#06b6d4","Iron","55.85",""],["Cu",29,4,11,"#06b6d4","Copper","63.55",""],["Zn",30,4,12,"#06b6d4","Zinc","65.38",""],["Au",79,6,11,"#06b6d4","Gold","196.97",""],["Ag",47,5,11,"#06b6d4","Silver","107.87",""],["U",92,7,6,"#ec4899","Uranium","238.03",""]];var grid=document.getElementById("grid");for(var row=1;row<=7;row++)for(var col=1;col<=18;col++){var found=E.find(function(e){return e[2]===row&&e[3]===col});var d=document.createElement("div");d.className="el";if(found){d.style.background=found[4]+"33";d.style.borderColor=found[4]+"66";d.innerHTML="<div class=\\"num\\">"+found[1]+"</div><div class=\\"sym\\">"+found[0]+"</div>";d.onclick=(function(e){return function(){document.getElementById("info").innerHTML="<b style=\\"font-size:24px\\">"+e[0]+"</b> "+e[5]+"<br>Atomic #"+e[1]+" | Mass: "+e[6]+(e[7]?"<br><small>"+e[7]+"</small>":"")}})(found)}else{d.className="el empty";d.innerHTML="&nbsp;"}grid.appendChild(d)}'+sc+'\n</body></html>'},
+{g:'adv',t:'📊 Spectrum Analyzer',d:'See sound frequencies live!',h:'Try whistling or clapping!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{margin:0;background:#000;overflow:hidden;font-family:monospace}\ncanvas{display:block}\n#status{position:fixed;top:10px;left:50%;transform:translateX(-50%);color:#0f0;font-size:14px}\nbutton{position:fixed;top:40px;left:50%;transform:translateX(-50%);padding:12px 24px;background:#22c55e;color:#000;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:16px}\n</style></head><body>\n<canvas id="cv"></canvas>\n<div id="status">Click START to begin</div>\n<button onclick="startMic()" id="btn">🎤 START</button>\n<script>var cv=document.getElementById("cv"),cx=cv.getContext("2d"),ctx,analyser,data;cv.width=innerWidth;cv.height=innerHeight;function startMic(){navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){ctx=new AudioContext();var src=ctx.createMediaStreamSource(stream);analyser=ctx.createAnalyser();analyser.fftSize=2048;src.connect(analyser);data=new Uint8Array(analyser.frequencyBinCount);document.getElementById("btn").style.display="none";document.getElementById("status").innerText="🎤 Listening...";draw()}).catch(function(){document.getElementById("status").innerText="Mic access denied"})}function draw(){if(!analyser)return;requestAnimationFrame(draw);analyser.getByteFrequencyData(data);var W=cv.width,H=cv.height,n=data.length,bw=W/n*2;cx.fillStyle="rgba(0,0,0,0.15)";cx.fillRect(0,0,W,H);for(var i=0;i<n/2;i++){var v=data[i]/255;var h=v*H*0.9;var hue=i/n*720;cx.fillStyle="hsl("+hue+",100%,"+(30+v*40)+"%)";cx.fillRect(i*bw,H-h,bw-1,h);cx.fillStyle="hsl("+hue+",100%,"+(20+v*20)+"%)";cx.fillRect(i*bw,0,bw-1,v*3)}}onresize=function(){cv.width=innerWidth;cv.height=innerHeight}'+sc+'\n</body></html>'},
+{g:'adv',t:'📐 Fourier Visualizer',d:'Any wave = sum of sines!',h:'Move the harmonic sliders!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{font-family:Arial;background:#0a0a2e;color:#fff;text-align:center;padding:10px}\ncanvas{display:block;margin:8px auto;border:1px solid #222;border-radius:8px}\n.harmonics{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px}\n.harm{display:flex;flex-direction:column;align-items:center;font-size:11px}\ninput[type=range]{writing-mode:vertical-lr;height:80px;width:20px}\n</style></head><body>\n<h2>📐 Fourier Visualizer</h2>\n<p style="color:#888;font-size:13px">Every wave = sum of sine waves!</p>\n<canvas id="cv" width="500" height="200"></canvas>\n<div class="harmonics" id="hm"></div>\n<script>var N=8,amps=[];var hm=document.getElementById("hm");for(var i=0;i<N;i++){amps[i]=i===0?1:0;var d=document.createElement("div");d.className="harm";var s=document.createElement("input");s.type="range";s.min="-100";s.max="100";s.value=i===0?"100":"0";s.setAttribute("data-i",i);s.oninput=function(){amps[+this.getAttribute("data-i")]=+this.value/100;draw()};var l=document.createElement("div");l.innerText=(i+1)+"x";d.appendChild(s);d.appendChild(l);hm.appendChild(d)}var cv=document.getElementById("cv"),cx=cv.getContext("2d");function draw(){cx.clearRect(0,0,500,200);cx.strokeStyle="#222";cx.beginPath();cx.moveTo(0,100);cx.lineTo(500,100);cx.stroke();for(var h=0;h<N;h++){if(Math.abs(amps[h])<0.01)continue;cx.strokeStyle="hsla("+(h*45)+",80%,60%,0.3)";cx.lineWidth=1;cx.beginPath();for(var x=0;x<500;x++){var t=x/500*2*Math.PI;var y=100-amps[h]*Math.sin(t*(h+1))*70;x===0?cx.moveTo(x,y):cx.lineTo(x,y)}cx.stroke()}cx.strokeStyle="#22c55e";cx.lineWidth=2.5;cx.beginPath();for(var x=0;x<500;x++){var t=x/500*2*Math.PI,y=0;for(var h=0;h<N;h++)y+=amps[h]*Math.sin(t*(h+1));var py=100-y*70/N*2;x===0?cx.moveTo(x,py):cx.lineTo(x,py)}cx.stroke()}draw()'+sc+'\n</body></html>'},
+{g:'adv',t:'🛰️ Satellite Tracker',d:'Watch the ISS orbit Earth!',h:'Adjust the speed slider!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{margin:0;background:#000;overflow:hidden;font-family:Arial}\ncanvas{display:block}\n#hud{position:fixed;top:10px;left:10px;color:#0f0;font-size:13px;font-family:monospace;background:rgba(0,0,0,0.7);padding:10px;border-radius:8px;border:1px solid #1a3a1a}\n#spd{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;color:#888;font-size:13px}\ninput[type=range]{width:150px}\n</style></head><body>\n<canvas id="cv"></canvas>\n<div id="hud">🛰️ ISS Tracker<br><span id="pos">Lat:0 Lon:0</span><br><span id="alt">Alt: 408 km</span></div>\n<div id="spd">Speed: <input type="range" id="sp" min="1" max="20" value="5"> <span id="sv">5x</span></div>\n<script>var cv=document.getElementById("cv"),cx=cv.getContext("2d"),t=0;cv.width=innerWidth;cv.height=innerHeight;function draw(){var W=cv.width,H=cv.height,sp=+document.getElementById("sp").value;document.getElementById("sv").innerText=sp+"x";t+=0.002*sp;cx.fillStyle="rgba(0,0,0,0.08)";cx.fillRect(0,0,W,H);cx.fillStyle="#0a1628";cx.fillRect(0,0,W,H);cx.strokeStyle="#1a3a2a";cx.lineWidth=0.5;for(var i=0;i<12;i++){cx.beginPath();cx.moveTo(i*W/12,0);cx.lineTo(i*W/12,H);cx.stroke()}for(var i=0;i<6;i++){cx.beginPath();cx.moveTo(0,i*H/6);cx.lineTo(W,i*H/6);cx.stroke()}cx.fillStyle="#0a3a2a";cx.beginPath();for(var x=0;x<W;x++){var lon=(x/W)*360-180;var lat=20*Math.sin(lon*Math.PI/60);var y=H/2-lat/90*H/2+Math.sin(lon*0.02)*20;x===0?cx.moveTo(x,y):cx.lineTo(x,y)}cx.lineTo(W,H);cx.lineTo(0,H);cx.fill();var orbitPeriod=2*Math.PI;var issLon=((t*50)%360);var issLat=51.6*Math.sin(t*2);var ix=((issLon+180)/360)*W;var iy=H/2-issLat/90*H/2;cx.strokeStyle="rgba(255,100,0,0.3)";cx.lineWidth=1;cx.beginPath();for(var p=-200;p<200;p++){var pLon=issLon+p;var pLat=51.6*Math.sin(t*2+p*0.02);var px=((pLon+180)%360)/360*W;var py=H/2-pLat/90*H/2;p===-200?cx.moveTo(px,py):cx.lineTo(px,py)}cx.stroke();cx.beginPath();cx.arc(ix,iy,5,0,Math.PI*2);cx.fillStyle="#ff4444";cx.fill();cx.beginPath();cx.arc(ix,iy,12,0,Math.PI*2);cx.strokeStyle="rgba(255,68,68,0.4)";cx.lineWidth=2;cx.stroke();cx.fillStyle="#fff";cx.font="11px monospace";cx.fillText("ISS 🛰️",ix+15,iy+4);document.getElementById("pos").innerText="Lat:"+issLat.toFixed(1)+"° Lon:"+(issLon-180).toFixed(1)+"°";var termX=(((Date.now()/100)%360+180)/360)*W;cx.fillStyle="rgba(0,0,30,0.3)";cx.fillRect(termX,0,W/2,H);requestAnimationFrame(draw)}draw();onresize=function(){cv.width=innerWidth;cv.height=innerHeight}'+sc+'\n</body></html>'},
+{g:'adv',t:'💡 Circuit Builder',d:'Wire up LEDs & resistors!',h:'Click components, then click cells!',
+c:'<!DOCTYPE html>\n<html><head><style>\nbody{font-family:Arial;background:#0a0a2e;color:#fff;text-align:center;padding:10px}\n#board{display:inline-grid;grid-template-columns:repeat(6,64px);gap:4px;margin:10px}\n.cell{width:64px;height:64px;background:rgba(255,255,255,0.03);border:1px solid #222;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;transition:all .2s}\n.cell:hover{background:rgba(255,255,255,0.08);border-color:#555}\n.toolbar{display:flex;justify-content:center;gap:8px;margin:10px;flex-wrap:wrap}\n.tool{padding:8px 14px;background:rgba(255,255,255,0.05);border:1px solid #333;border-radius:8px;cursor:pointer;font-size:16px;transition:all .2s}\n.tool.active{border-color:#22c55e;background:rgba(34,197,94,0.15)}\n#msg{margin:10px;padding:8px;border-radius:8px;font-size:14px}\n</style></head><body>\n<h2>💡 Circuit Builder</h2>\n<div class="toolbar">\n<div class="tool active" onclick="pick(this,\'🔋\')">🔋 Battery</div>\n<div class="tool" onclick="pick(this,\'💡\')">💡 LED</div>\n<div class="tool" onclick="pick(this,\'⚡\')">⚡ Resistor</div>\n<div class="tool" onclick="pick(this,\'🔌\')">🔌 Wire</div>\n<div class="tool" onclick="pick(this,\'❌\')">❌ Erase</div>\n</div>\n<div id="board"></div>\n<button onclick="simulate()" style="padding:10px 24px;background:#22c55e;color:#000;border:none;border-radius:10px;font-weight:bold;cursor:pointer;margin:5px;font-size:16px">⚡ Simulate</button>\n<button onclick="clearBoard()" style="padding:10px 24px;background:#ef4444;color:#fff;border:none;border-radius:10px;cursor:pointer;margin:5px">Clear</button>\n<div id="msg" style="color:#888">Place components, then Simulate!</div>\n<script>var grid=Array(36).fill(""),cur="🔋",board=document.getElementById("board");function mkBoard(){board.innerHTML="";for(var i=0;i<36;i++){var c=document.createElement("div");c.className="cell";c.innerText=grid[i];c.onclick=(function(idx){return function(){grid[idx]=cur==="❌"?"":cur;mkBoard()}})(i);board.appendChild(c)}}function pick(el,t){cur=t;document.querySelectorAll(".tool").forEach(function(e){e.classList.remove("active")});el.classList.add("active")}function clearBoard(){grid=Array(36).fill("");mkBoard();document.getElementById("msg").innerText="Cleared!";document.getElementById("msg").style.color="#888"}function simulate(){var hasBat=grid.indexOf("🔋")>=0,hasLed=grid.indexOf("💡")>=0,hasWire=grid.indexOf("🔌")>=0,hasRes=grid.indexOf("⚡")>=0;var msg=document.getElementById("msg");if(!hasBat){msg.innerText="⚠️ No battery! Add 🔋";msg.style.color="#f97316";return}if(!hasLed){msg.innerText="⚠️ No LED! Add 💡";msg.style.color="#f97316";return}if(hasBat&&hasLed&&!hasRes){msg.innerText="⚠️ No resistor! LED might burn!";msg.style.color="#ef4444"}else if(hasBat&&hasLed&&hasRes){msg.innerText="✅ Circuit works! LED is ON! 💡✨";msg.style.color="#22c55e"}else{msg.innerText="Connect battery → resistor → LED";msg.style.color="#3b82f6"}var cells=board.children;for(var i=0;i<36;i++){if(grid[i]==="💡"&&hasBat){cells[i].style.textShadow="0 0 20px gold";cells[i].style.filter="brightness(1.5)"}}}mkBoard()'+sc+'\n</body></html>'}
+];
+
+// FRENCH
+const basicsFR=basicsEN.map(function(l){
+var m={
+'🏠 My First Page':'🏠 Ma Première Page','Start with HTML tags!':'Commence avec les balises HTML!','Change the text!':'Change le texte!',
+'📝 Cool Lists':'📝 Listes Cool','Make lists of favorites!':'Fais des listes de tes favoris!','Add more <li> items!':'Ajoute des <li>!',
+'🖼️ Images & Links':'🖼️ Images & Liens','Add pictures and links!':'Ajoute des images et liens!','Change the URL!':'Change l\'URL!',
+'🎨 Paint Your Page':'🎨 Peins Ta Page','Add awesome colors!':'Ajoute des couleurs!','Try crimson, gold, dodgerblue!':'Essaie crimson, gold, dodgerblue!',
+'📦 Game Cards':'📦 Cartes de Jeu','RPG cards with effects!':'Cartes RPG avec effets!','Change border-radius to 50%!':'Change border-radius à 50%!',
+'🌀 Animations':'🌀 Animations','Make things spin & bounce!':'Fais tourner et rebondir!','Change animation duration!':'Change la durée!',
+'⚡ Click Power!':'⚡ Clique Power!','Buttons that DO things!':'Des boutons qui font des trucs!','Change the alert messages!':'Change les messages!',
+'🧮 Calculator':'🧮 Calculatrice','Build a calculator!':'Construis une calculatrice!','Add a divide button!':'Ajoute un bouton diviser!',
+'🎮 Monster Clicker':'🎮 Clicker Monstre','Your own clicker game!':'Ton propre jeu clicker!','Add new upgrades!':'Ajoute des améliorations!',
+'🎚️ Slider Control':'🎚️ Curseurs','Sliders change things live!':'Les curseurs changent en direct!','Add more sliders for width/height!':'Ajoute des curseurs!',
+'🕹️ Joystick':'🕹️ Joystick','Drag to move things!':'Glisse pour déplacer!','Change the speed or arena size!':'Change la vitesse!',
+'📊 Bar Chart':'📊 Graphique','Data becomes visual!':'Les données deviennent visuelles!','Change the numbers in the array!':'Change les nombres!',
+'🔘 Gauge Meter':'🔘 Jauge','A speedometer gauge!':'Un compteur de vitesse!','Change max value or colors!':'Change les couleurs!'
+};
+return{g:l.g,t:m[l.t]||l.t,d:m[l.d]||l.d,h:m[l.h]||l.h,c:l.c}});
+
+const sciFR=sciEN.map(function(l){
+var m={
+'⚡ Ohm\'s Law Lab':'⚡ Labo Loi d\'Ohm','V = I × R with animations!':'V = I × R avec animations!','Change the resistance slider!':'Change la résistance!',
+'📻 Morse Code':'📻 Code Morse','Text → dots & dashes → beeps!':'Texte → points et traits → bips!','Try typing your name!':'Tape ton nom!',
+'💡 Logic Gates':'💡 Portes Logiques','AND, OR, NOT — toggle & see!':'ET, OU, NON — bascule et vois!','Try different input combinations!':'Essaie les combinaisons!',
+'📐 Wave Playground':'📐 Labo Ondes','See what radio signals look like!':'Vois les signaux radio!','Try the square wave!':'Essaie l\'onde carrée!',
+'🤖 Robot Commander':'🤖 Commandant Robot','Program a robot on a grid!':'Programme un robot!','Try LOOP 4 { FORWARD }':'Essaie LOOP 4!',
+'🔭 Star Map':'🔭 Carte des Étoiles','Real stars in the night sky!':'Vraies étoiles!','Use the time slider to rotate!':'Utilise le curseur!',
+'📡 Signal Lab':'📡 Labo Signaux','Mix waves & see interference!':'Mélange les ondes!','Try changing both frequencies!':'Change les fréquences!',
+'⚛️ Periodic Table':'⚛️ Tableau Périodique','All 118 elements interactive!':'Tous les éléments!','Click an element for details!':'Clique un élément!',
+'📊 Spectrum Analyzer':'📊 Analyseur Spectre','See sound frequencies live!':'Fréquences sonores en direct!','Try whistling or clapping!':'Siffle ou tape des mains!',
+'📐 Fourier Visualizer':'📐 Visualiseur Fourier','Any wave = sum of sines!':'Onde = somme de sinus!','Move the harmonic sliders!':'Bouge les curseurs!',
+'🛰️ Satellite Tracker':'🛰️ Traqueur Satellite','Watch the ISS orbit Earth!':'L\'ISS en orbite!','Adjust the speed slider!':'Ajuste la vitesse!',
+'💡 Circuit Builder':'💡 Constructeur Circuit','Wire up LEDs & resistors!':'Câble LEDs et résistances!','Click components, then click cells!':'Clique les composants!'
+};
+return{g:l.g,t:m[l.t]||l.t,d:m[l.d]||l.d,h:m[l.h]||l.h,c:l.c}});
+
+const basicsAR=basicsEN.map(function(l){
+var m={
+'🏠 My First Page':'🏠 صفحتي الأولى','Start with HTML tags!':'!ابدأ بوسوم HTML','Change the text!':'!غيّر النص',
+'📝 Cool Lists':'📝 قوائم رائعة','Make lists of favorites!':'!اصنع قوائم','Add more <li> items!':'!أضف عناصر',
+'🖼️ Images & Links':'🖼️ صور وروابط','Add pictures and links!':'!أضف صور وروابط','Change the URL!':'!غيّر الرابط',
+'🎨 Paint Your Page':'🎨 لوّن صفحتك','Add awesome colors!':'!أضف ألوان','Try crimson, gold, dodgerblue!':'!جرّب الألوان',
+'📦 Game Cards':'📦 بطاقات لعب','RPG cards with effects!':'!بطاقات بتأثيرات','Change border-radius to 50%!':'!غيّر الزوايا',
+'🌀 Animations':'🌀 حركات','Make things spin & bounce!':'!اجعلها تدور','Change animation duration!':'!غيّر السرعة',
+'⚡ Click Power!':'⚡ قوة النقر','Buttons that DO things!':'!أزرار تفعل أشياء','Change the alert messages!':'!غيّر الرسائل',
+'🧮 Calculator':'🧮 آلة حاسبة','Build a calculator!':'!ابنِ آلة حاسبة','Add a divide button!':'!أضف زر القسمة',
+'🎮 Monster Clicker':'🎮 ناقر الوحوش','Your own clicker game!':'!لعبتك الخاصة','Add new upgrades!':'!أضف ترقيات',
+'🎚️ Slider Control':'🎚️ تحكم منزلق','Sliders change things live!':'!المنزلقات تغيّر مباشرة','Add more sliders for width/height!':'!أضف منزلقات',
+'🕹️ Joystick':'🕹️ عصا تحكم','Drag to move things!':'!اسحب للتحريك','Change the speed or arena size!':'!غيّر السرعة',
+'📊 Bar Chart':'📊 رسم بياني','Data becomes visual!':'!البيانات تصبح مرئية','Change the numbers in the array!':'!غيّر الأرقام',
+'🔘 Gauge Meter':'🔘 مقياس','A speedometer gauge!':'!عداد سرعة','Change max value or colors!':'!غيّر الألوان'
+};
+return{g:l.g,t:m[l.t]||l.t,d:m[l.d]||l.d,h:m[l.h]||l.h,c:l.c}});
+
+const sciAR=sciEN.map(function(l){
+var m={
+'⚡ Ohm\'s Law Lab':'⚡ مختبر أوم','V = I × R with animations!':'!V=I×R مع حركات','Change the resistance slider!':'!غيّر المقاومة',
+'📻 Morse Code':'📻 شفرة مورس','Text → dots & dashes → beeps!':'!نص ← نقاط وخطوط ← أصوات','Try typing your name!':'!اكتب اسمك',
+'💡 Logic Gates':'💡 بوابات منطقية','AND, OR, NOT — toggle & see!':'!AND OR NOT بدّل وشاهد','Try different input combinations!':'!جرّب التوليفات',
+'📐 Wave Playground':'📐 ملعب الموجات','See what radio signals look like!':'!شاهد إشارات الراديو','Try the square wave!':'!جرّب الموجة المربعة',
+'🤖 Robot Commander':'🤖 قائد الروبوت','Program a robot on a grid!':'!برمج روبوت','Try LOOP 4 { FORWARD }':'!LOOP 4 جرّب',
+'🔭 Star Map':'🔭 خريطة النجوم','Real stars in the night sky!':'!نجوم حقيقية','Use the time slider to rotate!':'!استخدم المنزلق',
+'📡 Signal Lab':'📡 مختبر الإشارات','Mix waves & see interference!':'!امزج الموجات','Try changing both frequencies!':'!غيّر الترددات',
+'⚛️ Periodic Table':'⚛️ الجدول الدوري','All 118 elements interactive!':'!كل العناصر تفاعلية','Click an element for details!':'!انقر على عنصر',
+'📊 Spectrum Analyzer':'📊 محلل الطيف','See sound frequencies live!':'!شاهد الترددات مباشرة','Try whistling or clapping!':'!صفّر أو صفّق',
+'📐 Fourier Visualizer':'📐 محلل فورييه','Any wave = sum of sines!':'!أي موجة = مجموع جيوب','Move the harmonic sliders!':'!حرّك المنزلقات',
+'🛰️ Satellite Tracker':'🛰️ متتبع الأقمار','Watch the ISS orbit Earth!':'!شاهد محطة الفضاء','Adjust the speed slider!':'!اضبط السرعة',
+'💡 Circuit Builder':'💡 بناء الدوائر','Wire up LEDs & resistors!':'!وصّل LEDs والمقاومات','Click components, then click cells!':'!انقر المكونات'
+};
+return{g:l.g,t:m[l.t]||l.t,d:m[l.d]||l.d,h:m[l.h]||l.h,c:l.c}});
+
+return{
+en:{ui:UI.en,basics:basicsEN,science:sciEN},
+fr:{ui:UI.fr,basics:basicsFR,science:sciFR},
+ar:{ui:UI.ar,basics:basicsAR,science:sciAR}
+};
+}// end mkI18N
+
+const I18N=mkI18N();
+
+/* ═════════════════════════════════════════════════════
    STATE
-   ═══════════════════════════════════════════════════════ */
-let lang = 'en';
-let themeKey = 'space';
-let lessonIdx = 0;
-let completed = {};
-let sidebarOpen = true;
-let hintOpen = false;
+   ═════════════════════════════════════════════════════ */
+let lang='en',themeKey='stealth',track='basics',lessonIdx=0;
+let completed={basics:{},science:{}};
+let sidebarOpen=true,hintOpen=false;
+const $=id=>document.getElementById(id);
 
-const $ = id => document.getElementById(id);
-
-/* ═══════════════════════════════════════════════════════
+/* ═════════════════════════════════════════════════════
    STARFIELD
-   ═══════════════════════════════════════════════════════ */
-const canvas = $('starfield');
-const ctx = canvas.getContext('2d');
-const stars = Array.from({length:120},()=>({
-  x:Math.random()*2000,y:Math.random()*2000,
-  r:Math.random()*1.5+.3,speed:Math.random()*.3+.05,
-  opacity:Math.random()
-}));
-let starAnimId;
-
-function resizeCanvas(){canvas.width=innerWidth;canvas.height=innerHeight}
+   ═════════════════════════════════════════════════════ */
+const cv=$('starfield'),ctx2=cv.getContext('2d');
+const strs=Array.from({length:100},()=>({x:Math.random()*2e3,y:Math.random()*2e3,r:Math.random()*1.2+.2,op:Math.random()}));
+let starAnim;
+function resizeCv(){cv.width=innerWidth;cv.height=innerHeight}
 function drawStars(){
-  if(!THEMES[themeKey].stars){cancelAnimationFrame(starAnimId);canvas.style.display='none';return}
-  canvas.style.display='block';
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  stars.forEach(s=>{
-    s.opacity+=s.speed*.02*(Math.random()>.5?1:-1);
-    s.opacity=Math.max(.1,Math.min(1,s.opacity));
-    ctx.beginPath();
-    ctx.arc(s.x%canvas.width,s.y%canvas.height,s.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(255,255,255,${s.opacity})`;
-    ctx.fill();
-  });
-  starAnimId=requestAnimationFrame(drawStars);
-}
-addEventListener('resize',resizeCanvas);
-resizeCanvas();
+  if(!TH[themeKey].stars){cancelAnimationFrame(starAnim);cv.style.display='none';return}
+  cv.style.display='block';ctx2.clearRect(0,0,cv.width,cv.height);
+  strs.forEach(s=>{s.op+=(Math.random()-.5)*.04;s.op=Math.max(.1,Math.min(1,s.op));
+    ctx2.beginPath();ctx2.arc(s.x%cv.width,s.y%cv.height,s.r,0,Math.PI*2);
+    ctx2.fillStyle=`rgba(255,255,255,${s.op})`;ctx2.fill()});
+  starAnim=requestAnimationFrame(drawStars)}
+addEventListener('resize',resizeCv);resizeCv();
 
-/* ═══════════════════════════════════════════════════════
+/* ═════════════════════════════════════════════════════
    RENDER
-   ═══════════════════════════════════════════════════════ */
+   ═════════════════════════════════════════════════════ */
+const tierMap={html:'yellow',css:'yellow',js:'yellow',ctrl:'yellow',beg:'green',exp:'blue',adv:'red'};
+const tierOrder={basics:['html','css','js','ctrl'],science:['beg','exp','adv']};
+
+function getLessons(){return I18N[lang][track]}
+function getUI(){return I18N[lang].ui}
+
 function render(){
-  const t = I18N[lang];
-  const theme = THEMES[themeKey];
-  const lessons = t.lessons;
-  const lesson = lessons[lessonIdx];
-  const isRtl = t.dir === 'rtl';
+  const ui=getUI(),lessons=getLessons(),th=TH[themeKey],lesson=lessons[lessonIdx];
+  const isRtl=ui.dir==='rtl';
 
   // Direction
-  const app = $('app');
-  app.style.direction = t.dir;
-  app.className = isRtl ? 'rtl' : '';
-  document.documentElement.lang = lang;
-  document.body.style.fontFamily = isRtl ? "'Noto Sans Arabic','Fredoka',sans-serif" : "'Fredoka',sans-serif";
+  $('app').className=isRtl?'rtl':'';
+  document.documentElement.lang=lang;
+  document.body.style.fontFamily=isRtl?"'Noto Sans Arabic','Fredoka',sans-serif":"'Fredoka',sans-serif";
 
-  // Theme CSS vars
-  const root = document.documentElement;
-  Object.entries(theme.vars).forEach(([k,v])=>root.style.setProperty(k,v));
+  // Theme vars
+  const r=document.documentElement;
+  Object.entries(th.v).forEach(([k,v])=>r.style.setProperty(k,v));
 
   // Stars
-  cancelAnimationFrame(starAnimId);
-  drawStars();
+  cancelAnimationFrame(starAnim);drawStars();
 
-  // Header
-  $('themeIcon').textContent = theme.icon;
-  $('brandTitle').textContent = 'CodeKids';
-  $('brandSub').textContent = t.subtitle;
+  // Subtitle
+  $('brandSub').textContent=ui.sub;
+
+  // Track btns
+  document.querySelectorAll('.track-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.track===track)});
+  $('trackLabel1').textContent=ui.track1;
+  $('trackLabel2').textContent=ui.track2;
 
   // Theme select
-  const ts = $('themeSelect');
-  ts.innerHTML = '';
-  Object.entries(THEMES).forEach(([k,v])=>{
-    const o = document.createElement('option');
-    o.value=k; o.textContent=v.name[lang]; o.selected=k===themeKey;
-    ts.appendChild(o);
-  });
+  const ts=$('themeSelect');ts.innerHTML='';
+  Object.entries(TH).forEach(([k,v])=>{const o=document.createElement('option');
+    o.value=k;o.textContent=v.n[lang];o.selected=k===themeKey;ts.appendChild(o)});
 
   // Progress
-  const count = Object.keys(completed).length;
-  $('starCount').textContent = count;
-  $('starTotal').textContent = '/ '+lessons.length;
-  $('trackFill').style.width = (count/lessons.length*100)+'%';
+  const comp=completed[track];
+  const cnt=Object.keys(comp).length;
+  $('starCount').textContent=cnt;
+  $('starTotal').textContent='/ '+lessons.length;
+  $('trackFill').style.width=(cnt/lessons.length*100)+'%';
 
   // Lesson list
-  const list = $('lessonList');
-  list.innerHTML = '';
-  const grouped = {};
-  lessons.forEach((l,i)=>{
-    if(!grouped[l.cat]) grouped[l.cat]=[];
-    grouped[l.cat].push({...l,idx:i});
-  });
-  Object.entries(grouped).forEach(([cat,items])=>{
-    const label = document.createElement('div');
-    label.className='cat-label';
-    label.textContent=t.cats[cat];
-    list.appendChild(label);
-    items.forEach(item=>{
-      const btn = document.createElement('button');
+  const list=$('lessonList');list.innerHTML='';
+  const grouped={};
+  lessons.forEach((l,i)=>{if(!grouped[l.g])grouped[l.g]=[];grouped[l.g].push({...l,idx:i})});
+
+  tierOrder[track].forEach(g=>{
+    if(!grouped[g])return;
+    const lbl=document.createElement('div');lbl.className='tier-label';
+    lbl.innerHTML='<span class="tier-dot '+tierMap[g]+'"></span>'+ui.tiers[g];
+    list.appendChild(lbl);
+    grouped[g].forEach(item=>{
+      const btn=document.createElement('button');
       btn.className='les-btn'+(item.idx===lessonIdx?' active':'');
-      const done = completed[item.idx];
-      btn.innerHTML=`<span class="dot${done?' done':''}">${done?'✓':''}</span><span>${item.t}</span>`;
-      btn.onclick=()=>{lessonIdx=item.idx;hintOpen=false;render();loadCode();if(innerWidth<800){sidebarOpen=false;updateSidebar();}};
-      list.appendChild(btn);
-    });
-  });
+      const done=comp[item.idx];
+      btn.innerHTML='<span class="dot'+(done?' done':'')+'">'+
+        (done?'✓':'')+'</span><span>'+item.t+'</span>';
+      btn.onclick=()=>{lessonIdx=item.idx;hintOpen=false;render();loadCode();
+        if(innerWidth<800){sidebarOpen=false;updateSB()}};
+      list.appendChild(btn)})});
 
   // Topbar
-  $('lesTitle').textContent = lesson.t;
-  $('lesDesc').textContent = lesson.d;
-  $('prevBtn').textContent = t.prev;
-  $('nextBtn').textContent = t.next;
-  $('prevBtn').disabled = lessonIdx===0;
-  $('nextBtn').disabled = lessonIdx===lessons.length-1;
+  $('lesTitle').textContent=lesson.t;
+  $('lesDesc').textContent=lesson.d;
+  $('tierBadge').textContent=ui.tiers[lesson.g];
+  $('prevBtn').disabled=lessonIdx===0;
+  $('nextBtn').disabled=lessonIdx===lessons.length-1;
 
   // Labels
-  $('labelTry').textContent = t.tryIt;
-  $('labelOut').textContent = t.output;
-  $('runBtn').textContent = t.run;
-  $('resetBtn').textContent = t.reset;
-  $('hintBtn').textContent = t.hint;
-  $('hintBox').textContent = '💡 '+lesson.h;
-  $('hintBox').className = 'hint-box'+(hintOpen?' show':'');
+  $('labelTry').textContent=ui.tryIt;
+  $('labelOut').textContent=ui.output;
+  $('runBtn').textContent=ui.run;
+  $('resetBtn').textContent=ui.reset;
+  $('hintBtn').textContent=ui.hint;
+  $('hintBox').textContent='💡 '+lesson.h;
+  $('hintBox').className='hint-box'+(hintOpen?' show':'');
+  $('menuBtn').textContent=sidebarOpen?'✕':'☰';
 
-  // Menu btn
-  $('menuBtn').textContent = sidebarOpen?'✕':'☰';
-
-  // Sidebar border direction
-  const sb = $('sidebar');
-  sb.style.borderRight = isRtl?'none':'1px solid rgba(255,255,255,0.08)';
-  sb.style.borderLeft = isRtl?'1px solid rgba(255,255,255,0.08)':'none';
+  // RTL sidebar border
+  const sb=$('sidebar');
+  sb.style.borderRight=isRtl?'none':'1px solid var(--card-border)';
+  sb.style.borderLeft=isRtl?'1px solid var(--card-border)':'none';
 }
 
 function loadCode(){
-  const lesson = I18N[lang].lessons[lessonIdx];
-  $('codeEditor').value = lesson.c;
-  $('preview').srcdoc = lesson.c;
+  const lesson=getLessons()[lessonIdx];
+  $('codeEditor').value=lesson.c;
+  $('preview').srcdoc=lesson.c;
 }
 
-/* ═══════════════════════════════════════════════════════
+/* ═════════════════════════════════════════════════════
    ACTIONS
-   ═══════════════════════════════════════════════════════ */
+   ═════════════════════════════════════════════════════ */
 function runCode(){
-  const code = $('codeEditor').value;
-  $('preview').srcdoc = code;
-  const wasNew = !completed[lessonIdx];
-  completed[lessonIdx] = true;
-  render();
-  if(wasNew) showToast();
-}
+  $('preview').srcdoc=$('codeEditor').value;
+  const wasNew=!completed[track][lessonIdx];
+  completed[track][lessonIdx]=true;
+  render();if(wasNew)showToast()}
+function resetCode(){hintOpen=false;loadCode();render()}
+function toggleHint(){hintOpen=!hintOpen;$('hintBox').className='hint-box'+(hintOpen?' show':'')}
+function toggleSidebar(){sidebarOpen=!sidebarOpen;updateSB()}
+function updateSB(){$('sidebar').className=sidebarOpen?'':'closed';$('menuBtn').textContent=sidebarOpen?'✕':'☰'}
+function go(d){const mx=getLessons().length-1;lessonIdx=Math.max(0,Math.min(mx,lessonIdx+d));hintOpen=false;render();loadCode()}
+function switchLang(l){lang=l;lessonIdx=0;completed={basics:{},science:{}};hintOpen=false;render();loadCode()}
+function switchTheme(t){themeKey=t;render()}
+function switchTrack(t){track=t;lessonIdx=0;hintOpen=false;render();loadCode()}
+function showToast(){const t=$('toast');t.textContent=getUI().congrats;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2e3)}
 
-function resetCode(){
-  hintOpen=false;
-  loadCode();
-  render();
-}
-
-function toggleHint(){
-  hintOpen=!hintOpen;
-  $('hintBox').className='hint-box'+(hintOpen?' show':'');
-}
-
-function toggleSidebar(){
-  sidebarOpen=!sidebarOpen;
-  updateSidebar();
-}
-function updateSidebar(){
-  $('sidebar').className=sidebarOpen?'':'closed';
-  $('menuBtn').textContent=sidebarOpen?'✕':'☰';
-}
-
-function go(dir){
-  const max = I18N[lang].lessons.length - 1;
-  lessonIdx = Math.max(0,Math.min(max,lessonIdx+dir));
-  hintOpen=false;
-  render();
-  loadCode();
-}
-
-function switchLang(l){
-  lang=l;lessonIdx=0;completed={};hintOpen=false;
-  render();loadCode();
-}
-
-function switchTheme(t){
-  themeKey=t;
-  render();
-}
-
-function showToast(){
-  const toast = $('toast');
-  toast.textContent = I18N[lang].congrats;
-  toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'),2000);
-}
-
-/* ═══════════════════════════════════════════════════════
-   TAB KEY SUPPORT IN EDITOR
-   ═══════════════════════════════════════════════════════ */
+/* Tab support in editor */
 $('codeEditor').addEventListener('keydown',function(e){
-  if(e.key==='Tab'){
-    e.preventDefault();
-    const s=this.selectionStart,end=this.selectionEnd;
+  if(e.key==='Tab'){e.preventDefault();const s=this.selectionStart,end=this.selectionEnd;
     this.value=this.value.substring(0,s)+'  '+this.value.substring(end);
-    this.selectionStart=this.selectionEnd=s+2;
-  }
-});
+    this.selectionStart=this.selectionEnd=s+2}});
 
-/* ═══════════════════════════════════════════════════════
-   INIT
-   ═══════════════════════════════════════════════════════ */
-render();
-loadCode();
+/* INIT */
+render();loadCode();
 </script>
 </body>
 </html>

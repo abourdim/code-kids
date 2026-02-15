@@ -199,7 +199,7 @@ html,body{height:100%;overflow:hidden}
   flex-shrink:0;background:rgba(0,0,0,0.15);border-right:1px solid rgba(255,255,255,0.05);overflow:hidden;min-width:24px;white-space:pre}
 .code-content{flex:1;position:relative;min-width:0;overflow:hidden}
 #codeHL{position:absolute;top:0;left:0;right:0;padding:10px 14px;font-family:var(--mono);font-size:var(--editor-font-size);
-  line-height:1.6;color:var(--text);white-space:pre-wrap;word-wrap:break-word;pointer-events:none}
+  line-height:1.6;color:var(--text);pointer-events:none}
 textarea#codeEditor{position:absolute;inset:0;width:100%;height:100%;padding:10px 14px;
   background:transparent;color:transparent;caret-color:var(--accent);border:none;outline:none;resize:none;
   font-family:var(--mono);font-size:var(--editor-font-size);line-height:1.6;tab-size:2;
@@ -215,6 +215,8 @@ textarea#codeEditor::selection{background:rgba(34,197,94,0.25)}
 .hl-cp{color:var(--hl-css-prop)}
 .hl-nm{color:var(--hl-num)}
 .hl-cm{color:var(--hl-comment);font-style:italic}
+.hl-line{display:block;white-space:pre-wrap;word-wrap:break-word;min-height:1.6em}
+.hl-line.active{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
 
 .action-bar{display:flex;gap:5px;padding:7px 10px;background:rgba(0,0,0,0.2);flex-wrap:wrap;align-items:center}
 .run-btn{flex:1;padding:9px;border:none;border-radius:999px;background:var(--btn-grad);color:#fff;
@@ -422,7 +424,7 @@ iframe#preview{flex:1;border:none;background:#fff;width:100%}
     </div>
     <div class="panel panel-preview">
       <div class="panel-head"><span id="labelOut">RESULT</span></div>
-      <iframe id="preview" sandbox="allow-scripts allow-modals" title="preview"></iframe>
+      <iframe id="preview" sandbox="allow-scripts allow-modals allow-same-origin" title="preview"></iframe>
     </div>
   </div>
 </main>
@@ -1123,12 +1125,35 @@ function highlightCode(code){
 
 function updateHighlight(){
   var code=$('codeEditor').value;
-  $('codeHL').innerHTML=highlightCode(code);
-  // Line numbers
   var lines=code.split('\n');
+  // Highlight each line individually
+  var hlLines=lines.map(function(line,i){
+    return '<div class="hl-line" data-ln="'+i+'">'+highlightCode(line)+' </div>';
+  });
+  $('codeHL').innerHTML=hlLines.join('');
+  // Line numbers
   var nums='';
   for(var i=1;i<=lines.length;i++)nums+=i+'\n';
   $('lineNums').textContent=nums;
+  highlightActiveLine();
+}
+
+var activeLine=-1;
+function highlightActiveLine(){
+  var ta=$('codeEditor');
+  var pos=ta.selectionStart;
+  var text=ta.value.substring(0,pos);
+  var line=text.split('\n').length-1;
+  if(line===activeLine)return;
+  activeLine=line;
+  var all=$('codeHL').querySelectorAll('.hl-line');
+  all.forEach(function(el,i){el.classList.toggle('active',i===line)});
+  // Also highlight the line number
+  var nums=$('lineNums').textContent.split('\n');
+  var numHtml=nums.map(function(n,i){
+    return i===line?'<span style="color:var(--accent)">'+n+'</span>':n;
+  }).join('\n');
+  $('lineNums').innerHTML=numHtml;
 }
 
 /* Sync scrolling */
@@ -1138,6 +1163,10 @@ $('codeEditor').addEventListener('scroll',function(){
   $('lineNums').style.transform='translateY('+(-st)+'px)';
 });
 $('codeEditor').addEventListener('input',function(){updateHighlight()});
+$('codeEditor').addEventListener('click',function(){setTimeout(highlightActiveLine,10)});
+$('codeEditor').addEventListener('keyup',function(){setTimeout(highlightActiveLine,10)});
+$('codeEditor').addEventListener('mouseup',function(){setTimeout(highlightActiveLine,10)});
+$('codeEditor').addEventListener('focus',function(){setTimeout(highlightActiveLine,10)});
 
 /* ═════════════════════════════════════════════════════
    MASCOT
@@ -1377,7 +1406,39 @@ function loadCode(){
   code=beautifyCode(code);
   $('codeEditor').value=code;
   updateHighlight();
-  $('preview').srcdoc=lesson.c.replace(/\{\{\/SC\}\}/g,'<\/script>');
+  // Run with interaction script injected
+  runPreview(code);
+}
+
+function getIxScript(){
+  return '<script>'
+    +'var _hEl=null;'
+    +'var _hStyle=document.createElement("style");_hStyle.textContent=".ck-hl-outline{outline:2px solid #22c55e!important;outline-offset:1px}";document.head.appendChild(_hStyle);'
+    +'document.addEventListener("mouseover",function(e){'
+    +'var t=e.target;if(t===document.body||t===document.documentElement)return;'
+    +'if(_hEl)_hEl.classList.remove("ck-hl-outline");_hEl=t;t.classList.add("ck-hl-outline");'
+    +'var tag=t.tagName.toLowerCase();var id=t.id||"";var txt=(t.innerText||"").substring(0,20).trim();'
+    +'parent.postMessage({type:"ck-hover",tag:tag,id:id,txt:txt},"*")});'
+    +'document.addEventListener("mouseout",function(e){'
+    +'if(_hEl){_hEl.classList.remove("ck-hl-outline");_hEl=null}'
+    +'parent.postMessage({type:"ck-out"},"*")});'
+    +'window.addEventListener("message",function(e){'
+    +'if(e.data&&e.data.type==="ck-hl-el"){'
+    +'document.querySelectorAll(".ck-hl-outline").forEach(function(x){x.classList.remove("ck-hl-outline")});'
+    +'var tag=e.data.tag,id=e.data.id;var el=null;'
+    +'if(id){el=document.getElementById(id)}'
+    +'if(!el&&tag){var els=document.querySelectorAll(tag);if(e.data.idx>=0&&e.data.idx<els.length)el=els[e.data.idx]}'
+    +'if(el){el.classList.add("ck-hl-outline");el.scrollIntoView({block:"nearest"})}'
+    +'}if(e.data&&e.data.type==="ck-hl-clear"){'
+    +'document.querySelectorAll(".ck-hl-outline").forEach(function(x){x.classList.remove("ck-hl-outline")})}});'
+    +'<\/script>';
+}
+
+function runPreview(code){
+  var ix=getIxScript();
+  var injected=code.replace(/<\/body>/i,ix+'</body>');
+  if(injected===code)injected=code+ix;
+  $('preview').srcdoc=injected;
 }
 
 /* ═════════════════════════════════════════════════════
@@ -1385,7 +1446,8 @@ function loadCode(){
    ═════════════════════════════════════════════════════ */
 function runCode(){
   var code=$('codeEditor').value;
-  $('preview').srcdoc=code;
+  runPreview(code);
+
   var wasNew=!completed[track][lessonIdx];
   completed[track][lessonIdx]=true;
 
@@ -1434,6 +1496,80 @@ $('codeEditor').addEventListener('keydown',function(e){
   if(e.key==='Tab'){e.preventDefault();var s=this.selectionStart,end=this.selectionEnd;
     this.value=this.value.substring(0,s)+'  '+this.value.substring(end);
     this.selectionStart=this.selectionEnd=s+2;updateHighlight()}});
+
+/* ═══════ BIDIRECTIONAL CODE ↔ PREVIEW INTERACTION ═══════ */
+
+// Direction 1: Preview → Code (hover element in result highlights code line)
+window.addEventListener('message',function(e){
+  if(!e.data||!e.data.type)return;
+  if(e.data.type==='ck-hover'){
+    var tag=e.data.tag,id=e.data.id,txt=e.data.txt;
+    var code=$('codeEditor').value;
+    var lines=code.split('\n');
+    var bestLine=-1,bestScore=0;
+    lines.forEach(function(line,i){
+      var score=0;
+      var lo=line.toLowerCase();
+      if(tag&&lo.indexOf('<'+tag)>=0)score+=3;
+      if(id&&lo.indexOf('id="'+id+'"')>=0)score+=5;
+      if(id&&lo.indexOf("id='"+id+"'")>=0)score+=5;
+      if(txt&&txt.length>2&&lo.indexOf(txt.toLowerCase())>=0)score+=4;
+      if(score>bestScore){bestScore=score;bestLine=i}
+    });
+    if(bestLine>=0){
+      var all=$('codeHL').querySelectorAll('.hl-line');
+      all.forEach(function(el,i){el.classList.toggle('active',i===bestLine)});
+      // Highlight line number
+      var nums=$('lineNums').textContent.split('\n');
+      $('lineNums').innerHTML=nums.map(function(n,i){
+        return i===bestLine?'<span style="color:var(--accent)">'+n+'</span>':n}).join('\n');
+    }
+  }
+  if(e.data.type==='ck-out'){
+    $('codeHL').querySelectorAll('.hl-line.active').forEach(function(el){el.classList.remove('active')});
+    var nums=$('lineNums').textContent.split('\n');
+    $('lineNums').innerHTML=nums.join('\n');
+  }
+});
+
+// Direction 2: Code → Preview (hover code line highlights element in result)
+var _lastHoverLine=-1;
+$('codeEditor').addEventListener('mousemove',function(e){
+  var ta=this;
+  // Calculate which line the mouse is on
+  var rect=ta.getBoundingClientRect();
+  var lineH=parseFloat(getComputedStyle(ta).lineHeight);
+  var scrollTop=ta.scrollTop;
+  var y=e.clientY-rect.top+scrollTop-10; // 10px padding
+  var lineIdx=Math.floor(y/lineH);
+  if(lineIdx===_lastHoverLine)return;
+  _lastHoverLine=lineIdx;
+  var lines=ta.value.split('\n');
+  if(lineIdx<0||lineIdx>=lines.length)return;
+  var line=lines[lineIdx].trim();
+  // Parse tag name and id from this line
+  var tagMatch=line.match(/<(\w[\w-]*)/);
+  var idMatch=line.match(/id=["']([^"']+)["']/);
+  // Count how many tags of this type appear before this line to get index
+  var tag=tagMatch?tagMatch[1].toLowerCase():null;
+  var id=idMatch?idMatch[1]:null;
+  if(tag){
+    var idx=0;
+    for(var i=0;i<lineIdx;i++){
+      var prev=lines[i];
+      var re=new RegExp('<'+tag+'[\\s>]','gi');
+      var m=prev.match(re);if(m)idx+=m.length;
+    }
+    var iframe=$('preview');
+    if(iframe.contentWindow){
+      iframe.contentWindow.postMessage({type:'ck-hl-el',tag:tag,id:id,idx:idx},'*')}
+  }
+});
+$('codeEditor').addEventListener('mouseleave',function(){
+  _lastHoverLine=-1;
+  var iframe=$('preview');
+  if(iframe.contentWindow){iframe.contentWindow.postMessage({type:'ck-hl-clear'},'*')}
+});
 
 /* ═════════════════════════════════════════════════════
    WELCOME SCREEN

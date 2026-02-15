@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeKids — Learn to Code!</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Fira+Code:wght@400;500&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   CSS RESET & VARIABLES
+   ═══════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+
+:root{
+  --accent:#00d4ff;
+  --accent2:#7c3aed;
+  --bg:linear-gradient(135deg,#0a0e27 0%,#1a1a4e 40%,#2d1b69 100%);
+  --sidebar:rgba(10,14,39,0.95);
+  --card:rgba(30,30,80,0.8);
+  --text:#e0e7ff;
+  --muted:#818cf8;
+  --editor-bg:#0d1117;
+  --btn-grad:linear-gradient(135deg,#00d4ff,#7c3aed);
+  --pattern:radial-gradient(circle at 20% 80%,rgba(0,212,255,0.08) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(124,58,237,0.08) 0%,transparent 50%);
+  --radius:12px;
+  --font:'Fredoka',sans-serif;
+  --mono:'Fira Code',monospace;
+  --dir:ltr;
+}
+
+/* ═══════════════════════════════════════
+   APP SHELL
+   ═══════════════════════════════════════ */
+#app{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  height:100vh;
+  display:flex;
+  direction:var(--dir);
+  position:relative;
+  overflow:hidden;
+}
+#app::before{
+  content:'';position:fixed;inset:0;
+  background:var(--pattern);
+  pointer-events:none;z-index:0;
+}
+
+/* ═══════════════════════════════════════
+   STAR CANVAS
+   ═══════════════════════════════════════ */
+#starfield{
+  position:fixed;inset:0;
+  pointer-events:none;z-index:0;
+}
+
+/* ═══════════════════════════════════════
+   SIDEBAR
+   ═══════════════════════════════════════ */
+#sidebar{
+  width:280px;min-width:280px;
+  background:var(--sidebar);
+  backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;
+  z-index:10;position:relative;
+  transition:margin .3s ease,opacity .3s ease;
+  border-right:1px solid rgba(255,255,255,0.08);
+}
+#sidebar.closed{margin-left:-280px;opacity:0}
+.rtl #sidebar{border-right:none;border-left:1px solid rgba(255,255,255,0.08)}
+.rtl #sidebar.closed{margin-left:0;margin-right:-280px}
+
+.sb-header{
+  padding:20px;text-align:center;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.sb-header .icon{font-size:40px;line-height:1;margin-bottom:4px}
+.sb-header h1{
+  font-size:28px;font-weight:700;
+  background:var(--btn-grad);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.sb-header p{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* Controls */
+.ctrl-row{
+  display:flex;gap:6px;padding:12px 14px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  flex-wrap:wrap;
+}
+.ctrl-cell{
+  flex:1;min-width:70px;
+  padding:5px 6px;
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:8px;
+  background:rgba(255,255,255,0.05);
+}
+.ctrl-cell select{
+  width:100%;background:transparent;border:none;
+  color:var(--text);font-family:var(--font);font-size:12px;
+  cursor:pointer;outline:none;text-align:center;
+}
+.ctrl-cell select option{background:#222;color:#fff}
+
+/* Progress */
+.star-row{
+  padding:10px 16px;display:flex;align-items:center;gap:8px;
+  font-size:14px;color:var(--muted);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.star-row .num{color:gold;font-weight:700;font-size:18px}
+.track{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,0.1);overflow:hidden}
+.track-fill{height:100%;border-radius:3px;background:var(--btn-grad);transition:width .5s ease}
+
+/* Lesson List */
+.lessons-scroll{flex:1;overflow-y:auto;padding:4px 0}
+.cat-label{
+  padding:12px 16px 6px;font-size:12px;font-weight:600;
+  color:var(--accent);text-transform:uppercase;letter-spacing:1.2px;
+}
+.les-btn{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;margin:2px 8px;
+  border-radius:10px;border:none;
+  background:transparent;color:var(--text);
+  font-family:var(--font);font-size:14px;
+  cursor:pointer;width:calc(100% - 16px);
+  transition:all .2s;text-align:left;
+}
+.rtl .les-btn{text-align:right}
+.les-btn:hover{background:rgba(255,255,255,0.08)}
+.les-btn.active{
+  background:var(--card);
+  box-shadow:inset 0 0 0 1px var(--accent),0 2px 8px rgba(0,0,0,0.2);
+}
+.les-btn .dot{
+  width:22px;height:22px;border-radius:50%;flex-shrink:0;
+  border:2px solid rgba(255,255,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;transition:all .3s;
+}
+.les-btn .dot.done{background:var(--btn-grad);border-color:transparent}
+
+/* ═══════════════════════════════════════
+   MAIN AREA
+   ═══════════════════════════════════════ */
+#main{flex:1;display:flex;flex-direction:column;z-index:5;position:relative;min-width:0}
+
+/* Topbar */
+.topbar{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 20px;
+  background:rgba(0,0,0,0.2);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.menu-btn{
+  width:36px;height:36px;border-radius:8px;
+  background:none;border:1px solid rgba(255,255,255,0.15);
+  color:var(--text);font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.menu-btn:hover{background:rgba(255,255,255,0.1)}
+.les-info{flex:1}
+.les-info h2{font-size:20px;font-weight:600}
+.les-info p{font-size:13px;color:var(--muted)}
+.nav-btns{display:flex;gap:8px}
+.nav-b{
+  padding:8px 14px;border-radius:8px;
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.05);
+  color:var(--text);font-family:var(--font);font-size:13px;
+  cursor:pointer;transition:all .2s;
+}
+.nav-b:hover:not(:disabled){background:rgba(255,255,255,0.1);border-color:var(--accent)}
+.nav-b:disabled{opacity:.3;cursor:default}
+
+/* Editor Layout */
+.editor-wrap{flex:1;display:flex;overflow:hidden}
+.panel{flex:1;display:flex;flex-direction:column;min-width:0}
+.panel-code{border-right:1px solid rgba(255,255,255,0.08)}
+.rtl .panel-code{border-right:none;border-left:1px solid rgba(255,255,255,0.08)}
+.panel-head{
+  padding:10px 16px;font-size:13px;font-weight:600;
+  color:var(--muted);background:rgba(0,0,0,0.15);
+  display:flex;align-items:center;justify-content:space-between;
+}
+
+textarea#codeEditor{
+  flex:1;width:100%;padding:16px;
+  background:var(--editor-bg);color:var(--accent);
+  border:none;outline:none;resize:none;
+  font-family:var(--mono);font-size:14px;line-height:1.6;
+  tab-size:2;direction:ltr!important;text-align:left!important;
+}
+
+/* Action Bar */
+.action-bar{display:flex;gap:8px;padding:10px 16px;background:rgba(0,0,0,0.15)}
+.run-btn{
+  flex:1;padding:12px;border:none;border-radius:var(--radius);
+  background:var(--btn-grad);color:#fff;
+  font-family:var(--font);font-size:16px;font-weight:700;
+  cursor:pointer;transition:all .2s;letter-spacing:.5px;
+}
+.run-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.run-btn:active{transform:scale(.97)}
+.sec-btn{
+  padding:12px 16px;border-radius:var(--radius);
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.05);
+  color:var(--text);font-family:var(--font);font-size:14px;
+  cursor:pointer;transition:all .2s;
+}
+.sec-btn:hover{background:rgba(255,255,255,0.1)}
+.hint-btn{color:var(--muted)}
+.hint-btn:hover{color:var(--accent)!important}
+
+.hint-box{
+  padding:10px 16px;
+  background:rgba(255,204,0,0.1);
+  border-top:1px solid rgba(255,204,0,0.2);
+  font-size:13px;color:gold;
+  display:none;
+}
+.hint-box.show{display:block}
+
+iframe#preview{flex:1;border:none;background:#fff;width:100%}
+
+/* ═══════════════════════════════════════
+   TOAST
+   ═══════════════════════════════════════ */
+.toast{
+  position:fixed;top:20px;left:50%;
+  transform:translateX(-50%) translateY(-20px) scale(.9);
+  padding:14px 28px;background:var(--btn-grad);
+  color:#fff;font-family:var(--font);font-size:18px;font-weight:700;
+  border-radius:16px;z-index:999;opacity:0;
+  box-shadow:0 8px 30px rgba(0,0,0,0.4);
+  pointer-events:none;
+  transition:all .4s cubic-bezier(.34,1.56,.64,1);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
+
+/* ═══════════════════════════════════════
+   MOBILE
+   ═══════════════════════════════════════ */
+@media(max-width:800px){
+  #sidebar{position:fixed;top:0;left:0;height:100vh;z-index:100}
+  #sidebar.closed{left:-280px;margin:0}
+  .rtl #sidebar{left:auto;right:0}
+  .rtl #sidebar.closed{right:-280px;margin:0}
+  .editor-wrap{flex-direction:column}
+  .panel-code{border-right:none!important;border-left:none!important;border-bottom:1px solid rgba(255,255,255,0.08);min-height:40vh}
+  .panel-preview{min-height:35vh}
+  .nav-btns{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <canvas id="starfield"></canvas>
+
+  <!-- ══════ SIDEBAR ══════ -->
+  <aside id="sidebar">
+    <div class="sb-header">
+      <div class="icon" id="themeIcon">🛸</div>
+      <h1 id="brandTitle">CodeKids</h1>
+      <p id="brandSub">Learn to code like a superhero!</p>
+    </div>
+
+    <div class="ctrl-row">
+      <div class="ctrl-cell">
+        <select id="langSelect" onchange="switchLang(this.value)">
+          <option value="en">🇬🇧 English</option>
+          <option value="fr">🇫🇷 Français</option>
+          <option value="ar">🇸🇦 العربية</option>
+        </select>
+      </div>
+      <div class="ctrl-cell">
+        <select id="themeSelect" onchange="switchTheme(this.value)"></select>
+      </div>
+    </div>
+
+    <div class="star-row">
+      <span>⭐</span>
+      <span class="num" id="starCount">0</span>
+      <span id="starTotal">/ 9</span>
+      <div class="track"><div class="track-fill" id="trackFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="lessons-scroll" id="lessonList"></div>
+  </aside>
+
+  <!-- ══════ MAIN ══════ -->
+  <main id="main">
+    <div class="topbar">
+      <button class="menu-btn" id="menuBtn" onclick="toggleSidebar()">☰</button>
+      <div class="les-info">
+        <h2 id="lesTitle"></h2>
+        <p id="lesDesc"></p>
+      </div>
+      <div class="nav-btns">
+        <button class="nav-b" id="prevBtn" onclick="go(-1)">◀ Back</button>
+        <button class="nav-b" id="nextBtn" onclick="go(1)">Next ▶</button>
+      </div>
+    </div>
+
+    <div class="editor-wrap">
+      <div class="panel panel-code">
+        <div class="panel-head"><span id="labelTry">Try It Yourself!</span></div>
+        <textarea id="codeEditor" spellcheck="false"></textarea>
+        <div class="action-bar">
+          <button class="run-btn" id="runBtn" onclick="runCode()">🚀 Launch!</button>
+          <button class="sec-btn" onclick="resetCode()" id="resetBtn">🔄 Reset</button>
+          <button class="sec-btn hint-btn" onclick="toggleHint()" id="hintBtn">💡 Hint</button>
+        </div>
+        <div class="hint-box" id="hintBox"></div>
+      </div>
+      <div class="panel panel-preview">
+        <div class="panel-head"><span id="labelOut">Result</span></div>
+        <iframe id="preview" sandbox="allow-scripts allow-modals" title="preview"></iframe>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   DATA — THEMES
+   ═══════════════════════════════════════════════════════ */
+const THEMES = {
+  space: {
+    name:{en:"🚀 Space Commander",fr:"🚀 Commandant Spatial",ar:"🚀 قائد الفضاء"},
+    vars:{"--accent":"#00d4ff","--accent2":"#7c3aed","--bg":"linear-gradient(135deg,#0a0e27,#1a1a4e 40%,#2d1b69)","--sidebar":"rgba(10,14,39,0.95)","--card":"rgba(30,30,80,0.8)","--text":"#e0e7ff","--muted":"#818cf8","--editor-bg":"#0d1117","--btn-grad":"linear-gradient(135deg,#00d4ff,#7c3aed)","--pattern":"radial-gradient(circle at 20% 80%,rgba(0,212,255,0.08) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(124,58,237,0.08) 0%,transparent 50%)"},
+    icon:"🛸",stars:true
+  },
+  ninja: {
+    name:{en:"🥷 Ninja Dojo",fr:"🥷 Dojo Ninja",ar:"🥷 دوجو النينجا"},
+    vars:{"--accent":"#ff4444","--accent2":"#ff8c00","--bg":"linear-gradient(135deg,#1a1a1a,#2d2d2d 50%,#1a0a0a)","--sidebar":"rgba(20,20,20,0.97)","--card":"rgba(40,40,40,0.85)","--text":"#f0f0f0","--muted":"#ff8c8c","--editor-bg":"#111","--btn-grad":"linear-gradient(135deg,#ff4444,#ff8c00)","--pattern":"repeating-linear-gradient(45deg,transparent,transparent 35px,rgba(255,68,68,0.03) 35px,rgba(255,68,68,0.03) 70px)"},
+    icon:"⚔️",stars:false
+  },
+  ocean: {
+    name:{en:"🌊 Ocean Explorer",fr:"🌊 Explorateur Océan",ar:"🌊 مستكشف المحيط"},
+    vars:{"--accent":"#00e5ff","--accent2":"#18ffff","--bg":"linear-gradient(180deg,#006994,#003d5b 40%,#001f3f)","--sidebar":"rgba(0,31,63,0.95)","--card":"rgba(0,60,100,0.6)","--text":"#e0f7fa","--muted":"#80deea","--editor-bg":"#001a2c","--btn-grad":"linear-gradient(135deg,#00e5ff,#0091ea)","--pattern":"radial-gradient(ellipse at 50% 100%,rgba(0,229,255,0.06) 0%,transparent 60%)"},
+    icon:"🐙",stars:false
+  },
+  dragon: {
+    name:{en:"🐉 Dragon Quest",fr:"🐉 Quête du Dragon",ar:"🐉 مهمة التنين"},
+    vars:{"--accent":"#ff6600","--accent2":"#ffcc00","--bg":"linear-gradient(135deg,#1a0a2e,#2d0a3e 40%,#4a0e0e)","--sidebar":"rgba(26,10,46,0.97)","--card":"rgba(60,20,60,0.7)","--text":"#ffeedd","--muted":"#ffaa66","--editor-bg":"#120820","--btn-grad":"linear-gradient(135deg,#ff6600,#ffcc00)","--pattern":"radial-gradient(circle at 70% 90%,rgba(255,102,0,0.08) 0%,transparent 50%)"},
+    icon:"🔥",stars:true
+  },
+  cyber: {
+    name:{en:"🤖 Cyber Hacker",fr:"🤖 Cyber Hacker",ar:"🤖 هاكر سايبر"},
+    vars:{"--accent":"#00ff41","--accent2":"#39ff14","--bg":"linear-gradient(135deg,#0a0a0a,#0d1a0d 50%,#0a0a0a)","--sidebar":"rgba(5,15,5,0.97)","--card":"rgba(0,40,0,0.5)","--text":"#b0ffb0","--muted":"#00ff41","--editor-bg":"#050505","--btn-grad":"linear-gradient(135deg,#00ff41,#00cc33)","--pattern":"repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,0.02) 2px,rgba(0,255,65,0.02) 4px)"},
+    icon:"💻",stars:false
+  },
+  arctic: {
+    name:{en:"🏔️ Arctic Mission",fr:"🏔️ Mission Arctique",ar:"🏔️ مهمة القطب"},
+    vars:{"--accent":"#0077b6","--accent2":"#00b4d8","--bg":"linear-gradient(180deg,#e8f4f8,#b8d8e8 40%,#8ab8d0)","--sidebar":"rgba(230,242,248,0.97)","--card":"rgba(255,255,255,0.7)","--text":"#1a3a4a","--muted":"#4a7a8a","--editor-bg":"#f0f8fc","--btn-grad":"linear-gradient(135deg,#0077b6,#00b4d8)","--pattern":"radial-gradient(circle at 30% 20%,rgba(0,119,182,0.05) 0%,transparent 40%)"},
+    icon:"❄️",stars:false
+  },
+  volcano: {
+    name:{en:"🌋 Volcano Base",fr:"🌋 Base Volcanique",ar:"🌋 قاعدة البركان"},
+    vars:{"--accent":"#ff3d00","--accent2":"#ff9100","--bg":"linear-gradient(180deg,#1a0000,#3d0000 40%,#1a0500)","--sidebar":"rgba(30,5,0,0.97)","--card":"rgba(80,10,0,0.5)","--text":"#ffe0cc","--muted":"#ff8a65","--editor-bg":"#120000","--btn-grad":"linear-gradient(135deg,#ff3d00,#ff9100)","--pattern":"radial-gradient(circle at 50% 90%,rgba(255,61,0,0.1) 0%,transparent 50%)"},
+    icon:"🌋",stars:false
+  },
+  jungle: {
+    name:{en:"🌴 Jungle Safari",fr:"🌴 Safari Jungle",ar:"🌴 سفاري الغابة"},
+    vars:{"--accent":"#76ff03","--accent2":"#00e676","--bg":"linear-gradient(180deg,#0a1f0a,#1a3a1a 40%,#0a2a0a)","--sidebar":"rgba(10,25,10,0.97)","--card":"rgba(20,60,20,0.6)","--text":"#c8e6c9","--muted":"#81c784","--editor-bg":"#0a150a","--btn-grad":"linear-gradient(135deg,#76ff03,#00e676)","--pattern":"radial-gradient(circle at 60% 70%,rgba(118,255,3,0.06) 0%,transparent 50%)"},
+    icon:"🦁",stars:false
+  }
+};
+
+/* ═══════════════════════════════════════════════════════
+   DATA — TRANSLATIONS & LESSONS
+   ═══════════════════════════════════════════════════════ */
+const I18N = {
+  en:{
+    dir:"ltr",subtitle:"Learn to code like a superhero!",
+    run:"🚀 Launch!",reset:"🔄 Reset",tryIt:"Try It Yourself!",output:"Result",
+    prev:"◀ Back",next:"Next ▶",hint:"💡 Hint",congrats:"⭐ Amazing job!",
+    cats:{html:"🏗️ Build It (HTML)",css:"🎨 Style It (CSS)",js:"⚡ Power It (JS)"},
+    lessons:[
+      {cat:"html",t:"🏠 My First Page",d:"Every website starts with HTML tags!",h:"Try changing the text between the tags!",
+       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h1>Hello World!</h1>\n  <p>I made my first webpage!</p>\n  <p>I am learning HTML!</p>\n</body>\n</html>`},
+      {cat:"html",t:"📝 Cool Lists",d:"Make awesome lists of your favorites!",h:"Add more <li> items to your list!",
+       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h2>My Top Games 🎮</h2>\n  <ol>\n    <li>Minecraft</li>\n    <li>Roblox</li>\n    <li>Fortnite</li>\n  </ol>\n  <h2>My Skills 💪</h2>\n  <ul>\n    <li>Coding</li>\n    <li>Gaming</li>\n    <li>Drawing</li>\n  </ul>\n</body>\n</html>`},
+      {cat:"html",t:"🖼️ Images & Links",d:"Add pictures and clickable links!",h:"Change the image URL or link text!",
+       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h1>Cool Space Facts 🚀</h1>\n  <img src="https://placekitten.com/300/200" width="300" alt="Space cat">\n  <p>Did you know?</p>\n  <a href="https://nasa.gov">Visit NASA! 🌍</a>\n</body>\n</html>`},
+      {cat:"css",t:"🎨 Paint Your Page",d:"Use CSS to add awesome colors!",h:"Try crimson, gold, or dodgerblue!",
+       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h1 style="color: dodgerblue;\n    font-size: 48px;\n    text-shadow: 3px 3px orange;">\n    SUPER CODER!\n  </h1>\n  <p style="background: gold;\n    padding: 20px;\n    border-radius: 15px;\n    font-size: 24px;">\n    🏆 Level Up! 🏆\n  </p>\n</body>\n</html>`},
+      {cat:"css",t:"📦 Game Cards",d:"Build RPG-style cards with effects!",h:"Change border-radius to 50% for circles!",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  .card {\n    width: 200px; padding: 20px; margin: 20px;\n    background: linear-gradient(135deg, #667eea, #764ba2);\n    border-radius: 20px; color: white;\n    font-family: Arial; text-align: center;\n    box-shadow: 0 10px 30px rgba(0,0,0,0.3);\n    display: inline-block;\n    transition: transform 0.2s;\n  }\n  .card:hover { transform: scale(1.08) rotate(-2deg); }\n</style></head>\n<body>\n  <div class="card">\n    <h2>⚔️ Warrior</h2>\n    <p>HP: 100</p>\n    <p>ATK: 75</p>\n  </div>\n  <div class="card" style="background:linear-gradient(135deg,#f093fb,#f5576c)">\n    <h2>🧙 Mage</h2>\n    <p>HP: 60</p>\n    <p>MP: 120</p>\n  </div>\n</body>\n</html>`},
+      {cat:"css",t:"🌀 Animations",d:"Make things move and spin!",h:"Change the animation speed!",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  @keyframes spin {\n    from { transform: rotate(0deg); }\n    to { transform: rotate(360deg); }\n  }\n  @keyframes bounce {\n    0%,100% { transform: translateY(0); }\n    50% { transform: translateY(-60px); }\n  }\n  @keyframes rainbow {\n    0%{color:red} 25%{color:orange}\n    50%{color:dodgerblue} 75%{color:lime}\n    100%{color:red}\n  }\n  .spin{display:inline-block;font-size:60px;animation:spin 2s linear infinite}\n  .bounce{display:inline-block;font-size:60px;animation:bounce 1s ease infinite}\n  .rainbow{font-size:36px;font-weight:bold;font-family:Arial;animation:rainbow 2s linear infinite}\n</style></head>\n<body style="text-align:center;padding-top:40px">\n  <div class="spin">⚙️</div>\n  <div class="bounce">🚀</div>\n  <div class="spin">⭐</div>\n  <br><br>\n  <div class="rainbow">I AM A CODER!</div>\n</body>\n</html>`},
+      {cat:"js",t:"⚡ Click Power!",d:"Make buttons that DO things!",h:"Try changing the alert messages!",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  button{padding:15px 30px;font-size:20px;border:none;\n    border-radius:12px;cursor:pointer;margin:10px;\n    color:white;font-weight:bold}\n  .btn1{background:#e74c3c}\n  .btn2{background:#3498db}\n  .btn3{background:#2ecc71}\n</style></head>\n<body style="text-align:center;padding:30px;font-family:Arial">\n  <h1>🎮 Button Quest</h1>\n  <button class="btn1" onclick="alert('🔥 FIRE ATTACK!')">🔥 Fire</button>\n  <button class="btn2" onclick="alert('💧 WATER SHIELD!')">💧 Water</button>\n  <button class="btn3" onclick="alert('🌿 NATURE HEAL!')">🌿 Nature</button>\n  <p id="score">Score: 0</p>\n  <button style="background:#9b59b6" onclick="document.getElementById('score').innerText='Score: '+Math.floor(Math.random()*100)">🎲 Roll Dice!</button>\n</body>\n</html>`},
+      {cat:"js",t:"🧮 Calculator",d:"Build a calculator with JavaScript!",h:"Add a divide (/) button!",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  body{font-family:Arial;text-align:center;padding:20px}\n  input{padding:12px;font-size:20px;width:80px;border-radius:10px;\n    border:3px solid #3498db;text-align:center}\n  button{padding:12px 24px;font-size:18px;border:none;border-radius:10px;\n    background:#e74c3c;color:white;cursor:pointer;margin:5px}\n  #result{font-size:36px;margin:20px;color:#2ecc71}\n</style></head>\n<body>\n  <h1>🧮 Super Calculator</h1>\n  <input id="a" type="number" value="10">\n  <input id="b" type="number" value="5">\n  <br><br>\n  <button onclick="calc('+')">➕ Add</button>\n  <button onclick="calc('-')">➖ Sub</button>\n  <button onclick="calc('*')">✖️ Mul</button>\n  <div id="result">?</div>\n  <script>\n    function calc(op){\n      var a=+document.getElementById('a').value;\n      var b=+document.getElementById('b').value;\n      var r=op==='+'?a+b:op==='-'?a-b:a*b;\n      document.getElementById('result').innerText='= '+r;\n    }\n  </script>\n</body>\n</html>`},
+      {cat:"js",t:"🎮 Monster Clicker",d:"Build your own clicker game!",h:"Change points or add new upgrades!",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  body{font-family:Arial;text-align:center;\n    background:#1a1a2e;color:white;padding:20px}\n  h1{font-size:42px}\n  .clicker{font-size:80px;cursor:pointer;user-select:none;\n    transition:transform .1s;display:inline-block}\n  .clicker:active{transform:scale(1.3)}\n  button{padding:12px 24px;font-size:16px;border:none;\n    border-radius:10px;background:#e74c3c;color:white;\n    cursor:pointer;margin:8px}\n  #score{font-size:48px;color:gold}\n</style></head>\n<body>\n  <h1>⚔️ Monster Clicker</h1>\n  <div id="score">0 Gold</div>\n  <div class="clicker" onclick="click1()">👾</div><br><br>\n  <button onclick="buy()">🗡️ Buy Sword (10g)</button>\n  <p id="dps">Damage: 1 per click</p>\n  <script>\n    var gold=0,dmg=1;\n    function click1(){\n      gold+=dmg;\n      document.getElementById('score').innerText=gold+' Gold';\n    }\n    function buy(){\n      if(gold>=10){\n        gold-=10;dmg++;\n        document.getElementById('score').innerText=gold+' Gold';\n        document.getElementById('dps').innerText='Damage: '+dmg+' per click';\n      }\n    }\n  </script>\n</body>\n</html>`}
+    ]
+  },
+  fr:{
+    dir:"ltr",subtitle:"Apprends à coder comme un super-héros !",
+    run:"🚀 Lancer !",reset:"🔄 Reset",tryIt:"Essaie toi-même !",output:"Résultat",
+    prev:"◀ Retour",next:"Suivant ▶",hint:"💡 Indice",congrats:"⭐ Bravo, champion !",
+    cats:{html:"🏗️ Construis (HTML)",css:"🎨 Décore (CSS)",js:"⚡ Anime (JS)"},
+    lessons:[
+      {cat:"html",t:"🏠 Ma Première Page",d:"Chaque site commence avec des balises HTML !",h:"Change le texte entre les balises !",
+       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h1>Bonjour le Monde !</h1>\n  <p>J'ai créé ma première page web !</p>\n  <p>J'apprends le HTML !</p>\n</body>\n</html>`},
+      {cat:"html",t:"📝 Listes Cool",d:"Fais des listes de tes trucs préférés !",h:"Ajoute plus de <li> à ta liste !",
+       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h2>Mes Jeux Préférés 🎮</h2>\n  <ol>\n    <li>Minecraft</li>\n    <li>Roblox</li>\n    <li>Fortnite</li>\n  </ol>\n  <h2>Mes Talents 💪</h2>\n  <ul>\n    <li>Coder</li>\n    <li>Jouer</li>\n    <li>Dessiner</li>\n  </ul>\n</body>\n</html>`},
+      {cat:"html",t:"🖼️ Images & Liens",d:"Ajoute des images et des liens !",h:"Change l'URL pour d'autres images !",
+       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h1>L'Espace Cool 🚀</h1>\n  <img src="https://placekitten.com/300/200" width="300" alt="Chat spatial">\n  <p>Le savais-tu ?</p>\n  <a href="https://nasa.gov">Visite la NASA ! 🌍</a>\n</body>\n</html>`},
+      {cat:"css",t:"🎨 Peins Ta Page",d:"Utilise le CSS pour ajouter des couleurs !",h:"Essaie crimson, gold ou dodgerblue !",
+       c:`<!DOCTYPE html>\n<html>\n<body>\n  <h1 style="color: dodgerblue;\n    font-size: 48px;\n    text-shadow: 3px 3px orange;">\n    SUPER CODEUR !\n  </h1>\n  <p style="background: gold;\n    padding: 20px;\n    border-radius: 15px;\n    font-size: 24px;">\n    🏆 Niveau Suivant ! 🏆\n  </p>\n</body>\n</html>`},
+      {cat:"css",t:"📦 Cartes de Jeu",d:"Crée des cartes RPG avec effets !",h:"Change border-radius à 50% !",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  .carte{width:200px;padding:20px;margin:20px;\n    background:linear-gradient(135deg,#667eea,#764ba2);\n    border-radius:20px;color:white;font-family:Arial;\n    text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.3);\n    display:inline-block;transition:transform .2s}\n  .carte:hover{transform:scale(1.08) rotate(-2deg)}\n</style></head>\n<body>\n  <div class="carte"><h2>⚔️ Guerrier</h2><p>PV: 100</p><p>ATQ: 75</p></div>\n  <div class="carte" style="background:linear-gradient(135deg,#f093fb,#f5576c)"><h2>🧙 Mage</h2><p>PV: 60</p><p>PM: 120</p></div>\n</body>\n</html>`},
+      {cat:"css",t:"🌀 Animations",d:"Fais bouger et tourner les choses !",h:"Change la durée de l'animation !",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}\n  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-60px)}}\n  @keyframes rainbow{0%{color:red}25%{color:orange}50%{color:dodgerblue}75%{color:lime}100%{color:red}}\n  .spin{display:inline-block;font-size:60px;animation:spin 2s linear infinite}\n  .bounce{display:inline-block;font-size:60px;animation:bounce 1s ease infinite}\n  .rainbow{font-size:36px;font-weight:bold;font-family:Arial;animation:rainbow 2s linear infinite}\n</style></head>\n<body style="text-align:center;padding-top:40px">\n  <div class="spin">⚙️</div>\n  <div class="bounce">🚀</div>\n  <div class="spin">⭐</div><br><br>\n  <div class="rainbow">JE SUIS UN CODEUR !</div>\n</body>\n</html>`},
+      {cat:"js",t:"⚡ Clique Power !",d:"Crée des boutons qui font des choses !",h:"Change les messages d'alerte !",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  button{padding:15px 30px;font-size:20px;border:none;\n    border-radius:12px;cursor:pointer;margin:10px;\n    color:white;font-weight:bold}\n  .btn1{background:#e74c3c}.btn2{background:#3498db}.btn3{background:#2ecc71}\n</style></head>\n<body style="text-align:center;padding:30px;font-family:Arial">\n  <h1>🎮 Quête des Boutons</h1>\n  <button class="btn1" onclick="alert('🔥 ATTAQUE FEU !')">🔥 Feu</button>\n  <button class="btn2" onclick="alert('💧 BOUCLIER EAU !')">💧 Eau</button>\n  <button class="btn3" onclick="alert('🌿 SOIN NATURE !')">🌿 Nature</button>\n  <p id="score">Score: 0</p>\n  <button style="background:#9b59b6" onclick="document.getElementById('score').innerText='Score: '+Math.floor(Math.random()*100)">🎲 Lance le Dé !</button>\n</body>\n</html>`},
+      {cat:"js",t:"🧮 Calculatrice",d:"Construis une calculatrice en JS !",h:"Ajoute un bouton diviser (/) !",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  body{font-family:Arial;text-align:center;padding:20px}\n  input{padding:12px;font-size:20px;width:80px;border-radius:10px;border:3px solid #3498db;text-align:center}\n  button{padding:12px 24px;font-size:18px;border:none;border-radius:10px;background:#e74c3c;color:white;cursor:pointer;margin:5px}\n  #result{font-size:36px;margin:20px;color:#2ecc71}\n</style></head>\n<body>\n  <h1>🧮 Super Calculatrice</h1>\n  <input id="a" type="number" value="10">\n  <input id="b" type="number" value="5"><br><br>\n  <button onclick="calc('+')">➕ Ajouter</button>\n  <button onclick="calc('-')">➖ Soustraire</button>\n  <button onclick="calc('*')">✖️ Multiplier</button>\n  <div id="result">?</div>\n  <script>\n    function calc(op){var a=+document.getElementById('a').value,b=+document.getElementById('b').value,r=op==='+'?a+b:op==='-'?a-b:a*b;document.getElementById('result').innerText='= '+r}\n  </script>\n</body>\n</html>`},
+      {cat:"js",t:"🎮 Clicker Monstre",d:"Construis ton propre jeu clicker !",h:"Change les points ou ajoute des upgrades !",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  body{font-family:Arial;text-align:center;background:#1a1a2e;color:white;padding:20px}\n  h1{font-size:42px}\n  .clicker{font-size:80px;cursor:pointer;user-select:none;transition:transform .1s;display:inline-block}\n  .clicker:active{transform:scale(1.3)}\n  button{padding:12px 24px;font-size:16px;border:none;border-radius:10px;background:#e74c3c;color:white;cursor:pointer;margin:8px}\n  #score{font-size:48px;color:gold}\n</style></head>\n<body>\n  <h1>⚔️ Clicker Monstre</h1>\n  <div id="score">0 Or</div>\n  <div class="clicker" onclick="click1()">👾</div><br><br>\n  <button onclick="buy()">🗡️ Acheter Épée (10g)</button>\n  <p id="dps">Dégâts: 1 par clic</p>\n  <script>\n    var gold=0,dmg=1;\n    function click1(){gold+=dmg;document.getElementById('score').innerText=gold+' Or'}\n    function buy(){if(gold>=10){gold-=10;dmg++;document.getElementById('score').innerText=gold+' Or';document.getElementById('dps').innerText='Dégâts: '+dmg+' par clic'}}\n  </script>\n</body>\n</html>`}
+    ]
+  },
+  ar:{
+    dir:"rtl",subtitle:"!تعلّم البرمجة كالأبطال الخارقين",
+    run:"🚀 !إنطلق",reset:"🔄 إعادة",tryIt:"!جرّب بنفسك",output:"النتيجة",
+    prev:"السابق ▶",next:"◀ التالي",hint:"💡 تلميح",congrats:"!⭐ أحسنت يا بطل",
+    cats:{html:"🏗️ (HTML) ابنِ",css:"🎨 (CSS) زيّن",js:"⚡ (JS) حرّك"},
+    lessons:[
+      {cat:"html",t:"🏠 صفحتي الأولى",d:"!كل موقع يبدأ بوسوم HTML",h:"!جرّب تغيير النص بين الوسوم",
+       c:`<!DOCTYPE html>\n<html dir="rtl" lang="ar">\n<body>\n  <h1>!مرحباً بالعالم</h1>\n  <p>!صنعت أول صفحة ويب</p>\n  <p>!أنا أتعلم HTML</p>\n</body>\n</html>`},
+      {cat:"html",t:"📝 قوائم رائعة",d:"!اصنع قوائم بأشيائك المفضلة",h:"!أضف المزيد من عناصر <li>",
+       c:`<!DOCTYPE html>\n<html dir="rtl" lang="ar">\n<body>\n  <h2>🎮 ألعابي المفضلة</h2>\n  <ol><li>ماينكرافت</li><li>روبلوكس</li><li>فورتنايت</li></ol>\n  <h2>💪 مهاراتي</h2>\n  <ul><li>البرمجة</li><li>الألعاب</li><li>الرسم</li></ul>\n</body>\n</html>`},
+      {cat:"html",t:"🖼️ صور وروابط",d:"!أضف صوراً وروابط",h:"!غيّر الرابط لعرض صور مختلفة",
+       c:`<!DOCTYPE html>\n<html dir="rtl" lang="ar">\n<body>\n  <h1>🚀 حقائق عن الفضاء</h1>\n  <img src="https://placekitten.com/300/200" width="300" alt="قطة فضائية">\n  <p>؟هل تعلم</p>\n  <a href="https://nasa.gov">🌍 !زُر ناسا</a>\n</body>\n</html>`},
+      {cat:"css",t:"🎨 لوّن صفحتك",d:"!استخدم CSS لإضافة ألوان رائعة",h:"!جرّب ألوان مثل crimson أو gold",
+       c:`<!DOCTYPE html>\n<html dir="rtl" lang="ar">\n<body>\n  <h1 style="color:dodgerblue;font-size:48px;text-shadow:3px 3px orange">!مبرمج خارق</h1>\n  <p style="background:gold;padding:20px;border-radius:15px;font-size:24px">🏆 !المستوى التالي 🏆</p>\n</body>\n</html>`},
+      {cat:"css",t:"📦 صناديق سحرية",d:"!اصنع صناديق بحدود وظلال",h:"!غيّر border-radius إلى 50% لصنع دائرة",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  .card{width:200px;padding:20px;margin:20px;\n    background:linear-gradient(135deg,#667eea,#764ba2);\n    border-radius:20px;color:white;font-family:Arial;\n    text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.3);\n    display:inline-block;transition:transform .2s}\n  .card:hover{transform:scale(1.08) rotate(-2deg)}\n</style></head>\n<body style="direction:rtl">\n  <div class="card"><h2>⚔️ محارب</h2><p>صحة: 100</p><p>هجوم: 75</p></div>\n  <div class="card" style="background:linear-gradient(135deg,#f093fb,#f5576c)"><h2>🧙 ساحر</h2><p>صحة: 60</p><p>سحر: 120</p></div>\n</body>\n</html>`},
+      {cat:"css",t:"🌀 حركات",d:"!اجعل الأشياء تتحرك وتدور",h:"!غيّر مدة الحركة",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}\n  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-60px)}}\n  @keyframes rainbow{0%{color:red}25%{color:orange}50%{color:dodgerblue}75%{color:lime}100%{color:red}}\n  .spin{display:inline-block;font-size:60px;animation:spin 2s linear infinite}\n  .bounce{display:inline-block;font-size:60px;animation:bounce 1s ease infinite}\n  .rainbow{font-size:36px;font-weight:bold;font-family:Arial;animation:rainbow 2s linear infinite}\n</style></head>\n<body style="text-align:center;padding-top:40px">\n  <div class="spin">⚙️</div>\n  <div class="bounce">🚀</div>\n  <div class="spin">⭐</div><br><br>\n  <div class="rainbow">!أنا مبرمج</div>\n</body>\n</html>`},
+      {cat:"js",t:"⚡ !قوة النقر",d:"!اصنع أزرار تفعل أشياء",h:"!جرّب تغيير رسالة التنبيه",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  button{padding:15px 30px;font-size:20px;border:none;border-radius:12px;cursor:pointer;margin:10px;color:white;font-weight:bold}\n  .btn1{background:#e74c3c}.btn2{background:#3498db}.btn3{background:#2ecc71}\n</style></head>\n<body style="text-align:center;padding:30px;font-family:Arial">\n  <h1>🎮 مهمة الأزرار</h1>\n  <button class="btn1" onclick="alert('🔥 !هجوم ناري')">🔥 نار</button>\n  <button class="btn2" onclick="alert('💧 !درع مائي')">💧 ماء</button>\n  <button class="btn3" onclick="alert('🌿 !علاج طبيعي')">🌿 طبيعة</button>\n  <p id="score">النقاط: 0</p>\n  <button style="background:#9b59b6" onclick="document.getElementById('score').innerText='النقاط: '+Math.floor(Math.random()*100)">🎲 !ارمِ النرد</button>\n</body>\n</html>`},
+      {cat:"js",t:"🧮 آلة حاسبة",d:"!ابنِ آلة حاسبة بجافاسكريبت",h:"!جرّب إضافة زر القسمة",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  body{font-family:Arial;text-align:center;padding:20px}\n  input{padding:12px;font-size:20px;width:80px;border-radius:10px;border:3px solid #3498db;text-align:center}\n  button{padding:12px 24px;font-size:18px;border:none;border-radius:10px;background:#e74c3c;color:white;cursor:pointer;margin:5px}\n  #result{font-size:36px;margin:20px;color:#2ecc71}\n</style></head>\n<body>\n  <h1>🧮 الآلة الحاسبة الخارقة</h1>\n  <input id="a" type="number" value="10">\n  <input id="b" type="number" value="5"><br><br>\n  <button onclick="calc('+')">➕ جمع</button>\n  <button onclick="calc('-')">➖ طرح</button>\n  <button onclick="calc('*')">✖️ ضرب</button>\n  <div id="result">?</div>\n  <script>\n    function calc(op){var a=+document.getElementById('a').value,b=+document.getElementById('b').value,r=op==='+'?a+b:op==='-'?a-b:a*b;document.getElementById('result').innerText='= '+r}\n  </script>\n</body>\n</html>`},
+      {cat:"js",t:"🎮 لعبة صغيرة",d:"!ابنِ لعبة النقر الخاصة بك",h:"!غيّر النقاط أو أضف ترقيات",
+       c:`<!DOCTYPE html>\n<html>\n<head><style>\n  body{font-family:Arial;text-align:center;background:#1a1a2e;color:white;padding:20px}\n  h1{font-size:42px}\n  .clicker{font-size:80px;cursor:pointer;user-select:none;transition:transform .1s;display:inline-block}\n  .clicker:active{transform:scale(1.3)}\n  button{padding:12px 24px;font-size:16px;border:none;border-radius:10px;background:#e74c3c;color:white;cursor:pointer;margin:8px}\n  #score{font-size:48px;color:gold}\n</style></head>\n<body>\n  <h1>⚔️ ناقر الوحوش</h1>\n  <div id="score">0 ذهب</div>\n  <div class="clicker" onclick="click1()">👾</div><br><br>\n  <button onclick="buy()">🗡️ (اشترِ سيفاً (10ذ</button>\n  <p id="dps">الضرر: 1 لكل نقرة</p>\n  <script>\n    var gold=0,dmg=1;\n    function click1(){gold+=dmg;document.getElementById('score').innerText=gold+' ذهب'}\n    function buy(){if(gold>=10){gold-=10;dmg++;document.getElementById('score').innerText=gold+' ذهب';document.getElementById('dps').innerText='الضرر: '+dmg+' لكل نقرة'}}\n  </script>\n</body>\n</html>`}
+    ]
+  }
+};
+
+/* ═══════════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════════ */
+let lang = 'en';
+let themeKey = 'space';
+let lessonIdx = 0;
+let completed = {};
+let sidebarOpen = true;
+let hintOpen = false;
+
+const $ = id => document.getElementById(id);
+
+/* ═══════════════════════════════════════════════════════
+   STARFIELD
+   ═══════════════════════════════════════════════════════ */
+const canvas = $('starfield');
+const ctx = canvas.getContext('2d');
+const stars = Array.from({length:120},()=>({
+  x:Math.random()*2000,y:Math.random()*2000,
+  r:Math.random()*1.5+.3,speed:Math.random()*.3+.05,
+  opacity:Math.random()
+}));
+let starAnimId;
+
+function resizeCanvas(){canvas.width=innerWidth;canvas.height=innerHeight}
+function drawStars(){
+  if(!THEMES[themeKey].stars){cancelAnimationFrame(starAnimId);canvas.style.display='none';return}
+  canvas.style.display='block';
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  stars.forEach(s=>{
+    s.opacity+=s.speed*.02*(Math.random()>.5?1:-1);
+    s.opacity=Math.max(.1,Math.min(1,s.opacity));
+    ctx.beginPath();
+    ctx.arc(s.x%canvas.width,s.y%canvas.height,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${s.opacity})`;
+    ctx.fill();
+  });
+  starAnimId=requestAnimationFrame(drawStars);
+}
+addEventListener('resize',resizeCanvas);
+resizeCanvas();
+
+/* ═══════════════════════════════════════════════════════
+   RENDER
+   ═══════════════════════════════════════════════════════ */
+function render(){
+  const t = I18N[lang];
+  const theme = THEMES[themeKey];
+  const lessons = t.lessons;
+  const lesson = lessons[lessonIdx];
+  const isRtl = t.dir === 'rtl';
+
+  // Direction
+  const app = $('app');
+  app.style.direction = t.dir;
+  app.className = isRtl ? 'rtl' : '';
+  document.documentElement.lang = lang;
+  document.body.style.fontFamily = isRtl ? "'Noto Sans Arabic','Fredoka',sans-serif" : "'Fredoka',sans-serif";
+
+  // Theme CSS vars
+  const root = document.documentElement;
+  Object.entries(theme.vars).forEach(([k,v])=>root.style.setProperty(k,v));
+
+  // Stars
+  cancelAnimationFrame(starAnimId);
+  drawStars();
+
+  // Header
+  $('themeIcon').textContent = theme.icon;
+  $('brandTitle').textContent = 'CodeKids';
+  $('brandSub').textContent = t.subtitle;
+
+  // Theme select
+  const ts = $('themeSelect');
+  ts.innerHTML = '';
+  Object.entries(THEMES).forEach(([k,v])=>{
+    const o = document.createElement('option');
+    o.value=k; o.textContent=v.name[lang]; o.selected=k===themeKey;
+    ts.appendChild(o);
+  });
+
+  // Progress
+  const count = Object.keys(completed).length;
+  $('starCount').textContent = count;
+  $('starTotal').textContent = '/ '+lessons.length;
+  $('trackFill').style.width = (count/lessons.length*100)+'%';
+
+  // Lesson list
+  const list = $('lessonList');
+  list.innerHTML = '';
+  const grouped = {};
+  lessons.forEach((l,i)=>{
+    if(!grouped[l.cat]) grouped[l.cat]=[];
+    grouped[l.cat].push({...l,idx:i});
+  });
+  Object.entries(grouped).forEach(([cat,items])=>{
+    const label = document.createElement('div');
+    label.className='cat-label';
+    label.textContent=t.cats[cat];
+    list.appendChild(label);
+    items.forEach(item=>{
+      const btn = document.createElement('button');
+      btn.className='les-btn'+(item.idx===lessonIdx?' active':'');
+      const done = completed[item.idx];
+      btn.innerHTML=`<span class="dot${done?' done':''}">${done?'✓':''}</span><span>${item.t}</span>`;
+      btn.onclick=()=>{lessonIdx=item.idx;hintOpen=false;render();loadCode();if(innerWidth<800){sidebarOpen=false;updateSidebar();}};
+      list.appendChild(btn);
+    });
+  });
+
+  // Topbar
+  $('lesTitle').textContent = lesson.t;
+  $('lesDesc').textContent = lesson.d;
+  $('prevBtn').textContent = t.prev;
+  $('nextBtn').textContent = t.next;
+  $('prevBtn').disabled = lessonIdx===0;
+  $('nextBtn').disabled = lessonIdx===lessons.length-1;
+
+  // Labels
+  $('labelTry').textContent = t.tryIt;
+  $('labelOut').textContent = t.output;
+  $('runBtn').textContent = t.run;
+  $('resetBtn').textContent = t.reset;
+  $('hintBtn').textContent = t.hint;
+  $('hintBox').textContent = '💡 '+lesson.h;
+  $('hintBox').className = 'hint-box'+(hintOpen?' show':'');
+
+  // Menu btn
+  $('menuBtn').textContent = sidebarOpen?'✕':'☰';
+
+  // Sidebar border direction
+  const sb = $('sidebar');
+  sb.style.borderRight = isRtl?'none':'1px solid rgba(255,255,255,0.08)';
+  sb.style.borderLeft = isRtl?'1px solid rgba(255,255,255,0.08)':'none';
+}
+
+function loadCode(){
+  const lesson = I18N[lang].lessons[lessonIdx];
+  $('codeEditor').value = lesson.c;
+  $('preview').srcdoc = lesson.c;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ACTIONS
+   ═══════════════════════════════════════════════════════ */
+function runCode(){
+  const code = $('codeEditor').value;
+  $('preview').srcdoc = code;
+  const wasNew = !completed[lessonIdx];
+  completed[lessonIdx] = true;
+  render();
+  if(wasNew) showToast();
+}
+
+function resetCode(){
+  hintOpen=false;
+  loadCode();
+  render();
+}
+
+function toggleHint(){
+  hintOpen=!hintOpen;
+  $('hintBox').className='hint-box'+(hintOpen?' show':'');
+}
+
+function toggleSidebar(){
+  sidebarOpen=!sidebarOpen;
+  updateSidebar();
+}
+function updateSidebar(){
+  $('sidebar').className=sidebarOpen?'':'closed';
+  $('menuBtn').textContent=sidebarOpen?'✕':'☰';
+}
+
+function go(dir){
+  const max = I18N[lang].lessons.length - 1;
+  lessonIdx = Math.max(0,Math.min(max,lessonIdx+dir));
+  hintOpen=false;
+  render();
+  loadCode();
+}
+
+function switchLang(l){
+  lang=l;lessonIdx=0;completed={};hintOpen=false;
+  render();loadCode();
+}
+
+function switchTheme(t){
+  themeKey=t;
+  render();
+}
+
+function showToast(){
+  const toast = $('toast');
+  toast.textContent = I18N[lang].congrats;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),2000);
+}
+
+/* ═══════════════════════════════════════════════════════
+   TAB KEY SUPPORT IN EDITOR
+   ═══════════════════════════════════════════════════════ */
+$('codeEditor').addEventListener('keydown',function(e){
+  if(e.key==='Tab'){
+    e.preventDefault();
+    const s=this.selectionStart,end=this.selectionEnd;
+    this.value=this.value.substring(0,s)+'  '+this.value.substring(end);
+    this.selectionStart=this.selectionEnd=s+2;
+  }
+});
+
+/* ═══════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════ */
+render();
+loadCode();
+</script>
+</body>
+</html>

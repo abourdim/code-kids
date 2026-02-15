@@ -1502,30 +1502,6 @@ function loadCode(){
   runPreview(code);
 }
 
-function getIxScript(){
-  return '<script>'
-    +'var _hEl=null;'
-    +'var _hStyle=document.createElement("style");_hStyle.textContent=".ck-hl-outline{outline:2px solid #22c55e!important;outline-offset:1px}";document.head.appendChild(_hStyle);'
-    +'document.addEventListener("mouseover",function(e){'
-    +'var t=e.target;if(t===document.body||t===document.documentElement)return;'
-    +'if(_hEl)_hEl.classList.remove("ck-hl-outline");_hEl=t;t.classList.add("ck-hl-outline");'
-    +'var tag=t.tagName.toLowerCase();var id=t.id||"";var txt=(t.innerText||"").substring(0,20).trim();'
-    +'parent.postMessage({type:"ck-hover",tag:tag,id:id,txt:txt},"*")});'
-    +'document.addEventListener("mouseout",function(e){'
-    +'if(_hEl){_hEl.classList.remove("ck-hl-outline");_hEl=null}'
-    +'parent.postMessage({type:"ck-out"},"*")});'
-    +'window.addEventListener("message",function(e){'
-    +'if(e.data&&e.data.type==="ck-hl-el"){'
-    +'document.querySelectorAll(".ck-hl-outline").forEach(function(x){x.classList.remove("ck-hl-outline")});'
-    +'var tag=e.data.tag,id=e.data.id;var el=null;'
-    +'if(id){el=document.getElementById(id)}'
-    +'if(!el&&tag){var els=document.querySelectorAll(tag);if(e.data.idx>=0&&e.data.idx<els.length)el=els[e.data.idx]}'
-    +'if(el){el.classList.add("ck-hl-outline");el.scrollIntoView({block:"nearest"})}'
-    +'}if(e.data&&e.data.type==="ck-hl-clear"){'
-    +'document.querySelectorAll(".ck-hl-outline").forEach(function(x){x.classList.remove("ck-hl-outline")})}});'
-    +'<\/script>';
-}
-
 function runPreview(code){
   var ix=getIxScript();
   var injected=code.replace(/<\/body>/i,ix+'</body>');
@@ -1670,10 +1646,14 @@ function getLineFromMouse(e,ta){
 /* ═══════ BIDIRECTIONAL INTERACTION ═══════ */
 window.addEventListener('message',function(e){
   if(!e.data||!e.data.type)return;var d=e.data;
+  // Preview → Code: hover always highlights code line
   if(d.type==='ck-hover'){
-    if(!inspectMode)return;var line=findBestLine(d.tag,d.id,d.txt);
-    if(line>=0)hlCodeLine(line);if(d.path)updateBreadcrumb(d.path)}
-  if(d.type==='ck-out'){if(!inspectMode)return;clearCodeHL()}
+    var line=findBestLine(d.tag,d.id,d.txt);
+    if(line>=0)hlCodeLine(line);
+    // Inspect extras: breadcrumb
+    if(inspectMode&&d.path)updateBreadcrumb(d.path)}
+  if(d.type==='ck-out'){clearCodeHL()}
+  // Click in preview → jump cursor to code line (always works)
   if(d.type==='ck-click'){
     var line=findBestLine(d.tag,d.id,d.txt);
     if(line>=0){hlCodeLine(line);
@@ -1682,18 +1662,22 @@ window.addEventListener('message',function(e){
       $('codeEditor').focus();$('codeEditor').selectionStart=$('codeEditor').selectionEnd=pos;
       var lineH=parseFloat(getComputedStyle($('codeEditor')).lineHeight);
       $('codeEditor').scrollTop=Math.max(0,line*lineH-60)}}
+  // Event fired → flash handler line (always works)
   if(d.type==='ck-event'){
     var line=findEventLine(d.evt);if(line>=0)flashCodeLine(line);
     addEventLog(d.evt,d.tag,d.detail||'');
     var pr=$('preview').getBoundingClientRect();
     showEvtTooltip(d.evt+' fired on <'+d.tag+'>!',pr.left+pr.width/2-60,pr.top+20)}
-  if(d.type==='ck-css-hover'){
-    if(!inspectMode)return;var prop=d.prop;var lines=$('codeEditor').value.split('\n');
+  // CSS hover → highlight CSS line (inspect mode extra)
+  if(d.type==='ck-css-hover'&&inspectMode){
+    var prop=d.prop;var lines=$('codeEditor').value.split('\n');
     for(var i=0;i<lines.length;i++){if(lines[i].indexOf(prop)>=0&&lines[i].indexOf(':')>=0){hlCodeLine(i);break}}}
 });
+
+// Code → Preview: hover code line highlights element (always works)
 var _lastHL=-1;
 $('codeEditor').addEventListener('mousemove',function(e){
-  if(!inspectMode)return;var lineIdx=getLineFromMouse(e,this);
+  var lineIdx=getLineFromMouse(e,this);
   if(lineIdx===_lastHL)return;_lastHL=lineIdx;
   var lines=this.value.split('\n');if(lineIdx<0||lineIdx>=lines.length)return;
   var line=lines[lineIdx].trim();var tm=line.match(/<(\w[\w-]*)/);var im=line.match(/id=["']([^"']+)["']/);
@@ -1704,7 +1688,7 @@ $('codeEditor').addEventListener('mousemove',function(e){
 });
 $('codeEditor').addEventListener('mouseleave',function(){
   _lastHL=-1;var f=$('preview');if(f.contentWindow)f.contentWindow.postMessage({type:'ck-hl-clear'},'*');
-  if(!inspectMode)clearCodeHL()});
+  clearCodeHL()});
 $('codeEditor').addEventListener('input',function(){
   updateHighlight();checkCodeErrors(this.value);
   var val=this.value,pos=this.selectionStart;

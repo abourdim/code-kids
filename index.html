@@ -217,6 +217,77 @@ textarea#codeEditor::selection{background:rgba(34,197,94,0.25)}
 .hl-cm{color:var(--hl-comment);font-style:italic}
 .hl-line{display:block;white-space:pre-wrap;word-wrap:break-word;min-height:1.6em}
 .hl-line.active{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+.hl-line.flash{animation:codePulse .8s ease;box-shadow:inset 3px 0 0 #eab308}
+@keyframes codePulse{0%{background:rgba(234,179,8,0.3)}50%{background:rgba(234,179,8,0.15)}100%{background:transparent}}
+
+/* Inspect mode */
+.inspect-btn{padding:2px 5px;border-radius:4px;border:1px solid var(--card-border);background:rgba(255,255,255,0.03);
+  color:var(--muted);font-size:.6rem;cursor:pointer;transition:all .2s;line-height:1}
+.inspect-btn.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+
+/* Breadcrumb */
+.breadcrumb{padding:2px 10px;font-family:var(--mono);font-size:.58rem;color:var(--muted);
+  background:rgba(0,0,0,0.15);border-bottom:1px solid var(--border);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;min-height:16px;display:none}
+.breadcrumb.show{display:block}
+.breadcrumb b{color:var(--accent);font-weight:600}
+
+/* Event tooltip */
+.evt-tooltip{position:fixed;padding:4px 10px;background:rgba(234,179,8,0.9);color:#000;font-family:var(--font);
+  font-size:.65rem;font-weight:600;border-radius:6px;z-index:999;pointer-events:none;opacity:0;
+  transition:opacity .2s;white-space:nowrap}
+.evt-tooltip.show{opacity:1}
+
+/* Event log */
+.event-log{max-height:0;overflow:hidden;transition:max-height .3s;background:rgba(0,0,0,0.25);border-top:1px solid transparent}
+.event-log.open{max-height:100px;border-top-color:var(--border);overflow-y:auto}
+.event-log-toggle{display:flex;align-items:center;gap:4px;padding:2px 8px;font-size:.55rem;
+  color:var(--muted);cursor:pointer;background:rgba(0,0,0,0.15);user-select:none;border-top:1px solid var(--border)}
+.event-log-toggle:hover{color:var(--text)}
+.evt-item{padding:2px 8px;font-family:var(--mono);font-size:.58rem;color:var(--text);
+  border-bottom:1px solid rgba(255,255,255,0.03);display:flex;gap:6px;align-items:center}
+.evt-item .evt-type{color:#eab308;font-weight:600;min-width:55px}
+.evt-item .evt-el{color:var(--accent)}
+.evt-item .evt-time{color:var(--muted);margin-left:auto;font-size:.5rem}
+.evt-badge{background:#eab308;color:#000;font-size:.5rem;font-weight:700;padding:0 4px;border-radius:4px;min-width:12px;text-align:center}
+
+/* Autocomplete */
+.autocomplete{position:absolute;background:var(--panel);border:1px solid var(--card-border);border-radius:8px;
+  z-index:100;max-height:140px;overflow-y:auto;display:none;font-family:var(--mono);font-size:.72rem;
+  box-shadow:0 4px 20px var(--shadow);min-width:180px}
+.autocomplete.show{display:block}
+.ac-item{padding:4px 8px;cursor:pointer;display:flex;gap:8px;align-items:center;transition:background .1s}
+.ac-item:hover,.ac-item.sel{background:var(--accent-soft)}
+.ac-tag{color:var(--accent);font-weight:600;min-width:50px}
+.ac-desc{color:var(--muted);font-size:.6rem}
+
+/* Step-by-step */
+.step-bar{display:none;align-items:center;gap:5px;padding:4px 10px;background:rgba(168,85,247,0.08);
+  border-top:1px solid rgba(168,85,247,0.2)}
+.step-bar.show{display:flex}
+.step-btn{padding:3px 10px;border-radius:6px;border:1px solid rgba(168,85,247,0.3);background:rgba(168,85,247,0.1);
+  color:#a855f7;font-family:var(--font);font-size:.65rem;font-weight:600;cursor:pointer;transition:all .2s}
+.step-btn:hover{background:rgba(168,85,247,0.2)}
+.step-info{font-size:.62rem;color:#a855f7;flex:1}
+.hl-line.step-active{background:rgba(168,85,247,0.15);box-shadow:inset 3px 0 0 #a855f7}
+
+/* Error helper */
+.error-box{display:none;padding:8px 12px;background:rgba(239,68,68,0.08);border-top:1px solid rgba(239,68,68,0.2);
+  font-family:var(--font);font-size:.72rem;color:#fca5a5}
+.error-box.show{display:block}
+.error-box b{color:#ef4444}
+
+/* Try this! suggestions */
+.try-this{display:none;padding:6px 10px;background:rgba(34,197,94,0.06);border-top:1px solid rgba(34,197,94,0.15)}
+.try-this.show{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.try-this-label{font-size:.6rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.try-chip{padding:3px 8px;border-radius:999px;border:1px solid var(--accent-strong);background:var(--accent-soft);
+  color:var(--text);font-family:var(--font);font-size:.62rem;cursor:pointer;transition:all .2s}
+.try-chip:hover{background:var(--accent-strong);color:#fff}
+
+/* Color-coded element outlines */
+.hl-line[data-color]{border-left:3px solid}
+.ck-color-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:3px;vertical-align:middle}
 
 .action-bar{display:flex;gap:5px;padding:7px 10px;background:rgba(0,0,0,0.2);flex-wrap:wrap;align-items:center}
 .run-btn{flex:1;padding:9px;border:none;border-radius:999px;background:var(--btn-grad);color:#fff;
@@ -399,12 +470,15 @@ iframe#preview{flex:1;border:none;background:#fff;width:100%}
       <div class="panel-head">
         <span id="labelTry">TRY IT</span>
         <div class="panel-head-tools">
+          <button class="inspect-btn" id="inspectBtn" onclick="toggleInspect()" title="Inspect Mode">🔍</button>
+          <button class="tool-btn" id="stepBtn" onclick="toggleStepMode()" title="Step-by-step">👣</button>
           <span class="font-slider-label" id="fsLabel">13</span>
           <input type="range" class="font-slider" id="fontSlider" min="10" max="22" value="13" oninput="setFontSize(this.value)">
           <button class="tool-btn" onclick="readAloud()" title="Read aloud">🔊</button>
           <button class="tool-btn" onclick="exportHTML()" title="Export">💾</button>
         </div>
       </div>
+      <div class="breadcrumb" id="breadcrumb"></div>
       <div class="code-wrap" id="codeWrap">
         <div class="code-scroll" id="codeScroll">
           <div class="line-nums" id="lineNums"></div>
@@ -420,14 +494,33 @@ iframe#preview{flex:1;border:none;background:#fff;width:100%}
         <button class="sec-btn hint-btn" onclick="toggleHint()" id="hintBtn">💡</button>
         <button class="sec-btn" onclick="shareScreenshot()" title="Share">📸</button>
       </div>
+      <div class="step-bar" id="stepBar">
+        <button class="step-btn" onclick="stepPrev()">◀</button>
+        <span class="step-info" id="stepInfo">Line 1 of 10</span>
+        <button class="step-btn" onclick="stepNext()">▶ Next</button>
+        <button class="step-btn" onclick="toggleStepMode()">✕ Exit</button>
+      </div>
+      <div class="error-box" id="errorBox"></div>
+      <div class="try-this" id="tryThis">
+        <span class="try-this-label">Try this →</span>
+      </div>
       <div class="hint-box" id="hintBox"></div>
     </div>
     <div class="panel panel-preview">
-      <div class="panel-head"><span id="labelOut">RESULT</span></div>
+      <div class="panel-head">
+        <span id="labelOut">RESULT</span>
+        <div class="event-log-toggle" id="evtLogToggle" onclick="toggleEventLog()">
+          ⚡ Events <span class="evt-badge" id="evtBadge">0</span> ▾
+        </div>
+      </div>
+      <div class="event-log" id="eventLog"></div>
       <iframe id="preview" sandbox="allow-scripts allow-modals allow-same-origin" title="preview"></iframe>
     </div>
   </div>
 </main>
+<!-- Global overlays -->
+<div class="evt-tooltip" id="evtTooltip"></div>
+<div class="autocomplete" id="autocomplete"></div>
 
 <!-- MASCOT -->
 <div class="mascot" id="mascot" onclick="mascotTap()">🤖</div>
@@ -1162,11 +1255,6 @@ $('codeEditor').addEventListener('scroll',function(){
   $('codeHL').style.transform='translate('+(-sl)+'px,'+(-st)+'px)';
   $('lineNums').style.transform='translateY('+(-st)+'px)';
 });
-$('codeEditor').addEventListener('input',function(){updateHighlight()});
-$('codeEditor').addEventListener('click',function(){setTimeout(highlightActiveLine,10)});
-$('codeEditor').addEventListener('keyup',function(){setTimeout(highlightActiveLine,10)});
-$('codeEditor').addEventListener('mouseup',function(){setTimeout(highlightActiveLine,10)});
-$('codeEditor').addEventListener('focus',function(){setTimeout(highlightActiveLine,10)});
 
 /* ═════════════════════════════════════════════════════
    MASCOT
@@ -1406,6 +1494,10 @@ function loadCode(){
   code=beautifyCode(code);
   $('codeEditor').value=code;
   updateHighlight();
+  hideTrySuggestions();clearEventLog();
+  $('errorBox').classList.remove('show');
+  if(stepMode)toggleStepMode();
+  hideAutoComplete();
   // Run with interaction script injected
   runPreview(code);
 }
@@ -1446,6 +1538,9 @@ function runPreview(code){
    ═════════════════════════════════════════════════════ */
 function runCode(){
   var code=$('codeEditor').value;
+  clearEventLog();hideTrySuggestions();
+  checkCodeErrors(code);
+  if(stepMode){toggleStepMode()}
   runPreview(code);
 
   var wasNew=!completed[track][lessonIdx];
@@ -1457,6 +1552,7 @@ function runCode(){
     fireConfetti();
     mascotCheer();
     showToast();
+    showTrySuggestions();
     if(checkAchievements()){
       setTimeout(function(){showBubble('🏆 New achievement!')},1500)}
   }
@@ -1491,85 +1587,252 @@ function switchTheme(t){themeKey=t;render()}
 function switchTrack(t){track=t;lessonIdx=0;hintOpen=false;learnOpen=false;render();loadCode()}
 function showToast(){var t=$('toast');t.textContent=getUI().congrats;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
 
-/* Tab support in editor */
+/* Tab support + autocomplete in editor */
 $('codeEditor').addEventListener('keydown',function(e){
   if(e.key==='Tab'){e.preventDefault();var s=this.selectionStart,end=this.selectionEnd;
     this.value=this.value.substring(0,s)+'  '+this.value.substring(end);
-    this.selectionStart=this.selectionEnd=s+2;updateHighlight()}});
-
-/* ═══════ BIDIRECTIONAL CODE ↔ PREVIEW INTERACTION ═══════ */
-
-// Direction 1: Preview → Code (hover element in result highlights code line)
-window.addEventListener('message',function(e){
-  if(!e.data||!e.data.type)return;
-  if(e.data.type==='ck-hover'){
-    var tag=e.data.tag,id=e.data.id,txt=e.data.txt;
-    var code=$('codeEditor').value;
-    var lines=code.split('\n');
-    var bestLine=-1,bestScore=0;
-    lines.forEach(function(line,i){
-      var score=0;
-      var lo=line.toLowerCase();
-      if(tag&&lo.indexOf('<'+tag)>=0)score+=3;
-      if(id&&lo.indexOf('id="'+id+'"')>=0)score+=5;
-      if(id&&lo.indexOf("id='"+id+"'")>=0)score+=5;
-      if(txt&&txt.length>2&&lo.indexOf(txt.toLowerCase())>=0)score+=4;
-      if(score>bestScore){bestScore=score;bestLine=i}
-    });
-    if(bestLine>=0){
-      var all=$('codeHL').querySelectorAll('.hl-line');
-      all.forEach(function(el,i){el.classList.toggle('active',i===bestLine)});
-      // Highlight line number
-      var nums=$('lineNums').textContent.split('\n');
-      $('lineNums').innerHTML=nums.map(function(n,i){
-        return i===bestLine?'<span style="color:var(--accent)">'+n+'</span>':n}).join('\n');
-    }
-  }
-  if(e.data.type==='ck-out'){
-    $('codeHL').querySelectorAll('.hl-line.active').forEach(function(el){el.classList.remove('active')});
-    var nums=$('lineNums').textContent.split('\n');
-    $('lineNums').innerHTML=nums.join('\n');
-  }
+    this.selectionStart=this.selectionEnd=s+2;updateHighlight()}
+  if(e.key==='Escape'){hideAutoComplete()}
+  if(e.key==='ArrowDown'&&$('autocomplete').classList.contains('show')){e.preventDefault();acNav(1)}
+  if(e.key==='ArrowUp'&&$('autocomplete').classList.contains('show')){e.preventDefault();acNav(-1)}
+  if(e.key==='Enter'&&$('autocomplete').classList.contains('show')&&acSelIdx>=0){e.preventDefault();acAccept()}
 });
 
-// Direction 2: Code → Preview (hover code line highlights element in result)
-var _lastHoverLine=-1;
+/* ═══════ INSPECT MODE ═══════ */
+var inspectMode=false;
+function toggleInspect(){
+  inspectMode=!inspectMode;
+  $('inspectBtn').classList.toggle('on',inspectMode);
+  $('breadcrumb').classList.toggle('show',inspectMode);
+  if(!inspectMode){$('breadcrumb').innerHTML='';clearCodeHL();
+    var f=$('preview');if(f.contentWindow)f.contentWindow.postMessage({type:'ck-hl-clear'},'*')}
+}
+
+/* ═══════ COLOR-CODED ELEMENTS ═══════ */
+var EL_COLORS=['#22c55e','#3b82f6','#f59e0b','#ef4444','#a855f7','#06b6d4','#ec4899','#84cc16'];
+
+/* ═══════ EVENT LOG ═══════ */
+var eventLogItems=[],evtLogOpen=false,evtCount=0;
+function toggleEventLog(){evtLogOpen=!evtLogOpen;$('eventLog').classList.toggle('open',evtLogOpen)}
+function addEventLog(type,el,detail){
+  evtCount++;$('evtBadge').textContent=evtCount;
+  var now=new Date();var ts=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
+  eventLogItems.unshift({type:type,el:el,detail:detail||'',ts:ts});
+  if(eventLogItems.length>30)eventLogItems.pop();
+  var html='';eventLogItems.forEach(function(e){
+    html+='<div class="evt-item"><span class="evt-type">'+e.type+'</span><span class="evt-el">&lt;'+e.el+'&gt;</span>'
+    +(e.detail?'<span style="color:var(--muted);font-size:.5rem">'+e.detail+'</span>':'')
+    +'<span class="evt-time">'+e.ts+'</span></div>'});
+  $('eventLog').innerHTML=html;
+}
+function clearEventLog(){eventLogItems=[];evtCount=0;$('evtBadge').textContent='0';$('eventLog').innerHTML=''}
+
+/* ═══════ EVENT TOOLTIP ═══════ */
+function showEvtTooltip(text,x,y){
+  var t=$('evtTooltip');t.textContent='\u26A1 '+text;t.style.left=x+'px';t.style.top=(y-30)+'px';
+  t.classList.add('show');setTimeout(function(){t.classList.remove('show')},1200)}
+
+/* ═══════ FLASH CODE LINE ON EVENT ═══════ */
+function flashCodeLine(lineIdx){
+  var all=$('codeHL').querySelectorAll('.hl-line');
+  if(lineIdx>=0&&lineIdx<all.length){
+    var el=all[lineIdx];el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');
+    el.scrollIntoView({block:'nearest',behavior:'smooth'})}}
+function findEventLine(evtName){
+  var lines=$('codeEditor').value.split('\n');
+  for(var i=0;i<lines.length;i++){if(lines[i].toLowerCase().indexOf(evtName.toLowerCase())>=0)return i}
+  return -1}
+
+/* ═══════ BREADCRUMB ═══════ */
+function updateBreadcrumb(path){if(!inspectMode)return;$('breadcrumb').innerHTML=path;$('breadcrumb').classList.add('show')}
+
+/* ═══════ HELPERS ═══════ */
+function clearCodeHL(){$('codeHL').querySelectorAll('.hl-line.active').forEach(function(el){el.classList.remove('active')})}
+function hlCodeLine(lineIdx){
+  var all=$('codeHL').querySelectorAll('.hl-line');
+  all.forEach(function(el,i){el.classList.toggle('active',i===lineIdx)});
+  var nums=$('lineNums').textContent.split('\n');
+  $('lineNums').innerHTML=nums.map(function(n,i){
+    return i===lineIdx?'<span style="color:var(--accent)">'+n+'</span>':n}).join('\n');
+}
+function findBestLine(tag,id,txt){
+  var lines=$('codeEditor').value.split('\n');var best=-1,bestS=0;
+  lines.forEach(function(line,i){var s=0,lo=line.toLowerCase();
+    if(tag&&lo.indexOf('<'+tag)>=0)s+=3;
+    if(id&&lo.indexOf('id="'+id+'"')>=0)s+=5;
+    if(id&&lo.indexOf("id='"+id+"'")>=0)s+=5;
+    if(txt&&txt.length>2&&lo.indexOf(txt.toLowerCase())>=0)s+=4;
+    if(s>bestS){bestS=s;best=i}});return best}
+function getLineFromMouse(e,ta){
+  var rect=ta.getBoundingClientRect();var lineH=parseFloat(getComputedStyle(ta).lineHeight);
+  return Math.floor((e.clientY-rect.top+ta.scrollTop-10)/lineH)}
+
+/* ═══════ BIDIRECTIONAL INTERACTION ═══════ */
+window.addEventListener('message',function(e){
+  if(!e.data||!e.data.type)return;var d=e.data;
+  if(d.type==='ck-hover'){
+    if(!inspectMode)return;var line=findBestLine(d.tag,d.id,d.txt);
+    if(line>=0)hlCodeLine(line);if(d.path)updateBreadcrumb(d.path)}
+  if(d.type==='ck-out'){if(!inspectMode)return;clearCodeHL()}
+  if(d.type==='ck-click'){
+    var line=findBestLine(d.tag,d.id,d.txt);
+    if(line>=0){hlCodeLine(line);
+      var lines=$('codeEditor').value.split('\n');var pos=0;
+      for(var i=0;i<line;i++)pos+=lines[i].length+1;
+      $('codeEditor').focus();$('codeEditor').selectionStart=$('codeEditor').selectionEnd=pos;
+      var lineH=parseFloat(getComputedStyle($('codeEditor')).lineHeight);
+      $('codeEditor').scrollTop=Math.max(0,line*lineH-60)}}
+  if(d.type==='ck-event'){
+    var line=findEventLine(d.evt);if(line>=0)flashCodeLine(line);
+    addEventLog(d.evt,d.tag,d.detail||'');
+    var pr=$('preview').getBoundingClientRect();
+    showEvtTooltip(d.evt+' fired on <'+d.tag+'>!',pr.left+pr.width/2-60,pr.top+20)}
+  if(d.type==='ck-css-hover'){
+    if(!inspectMode)return;var prop=d.prop;var lines=$('codeEditor').value.split('\n');
+    for(var i=0;i<lines.length;i++){if(lines[i].indexOf(prop)>=0&&lines[i].indexOf(':')>=0){hlCodeLine(i);break}}}
+});
+var _lastHL=-1;
 $('codeEditor').addEventListener('mousemove',function(e){
-  var ta=this;
-  // Calculate which line the mouse is on
-  var rect=ta.getBoundingClientRect();
-  var lineH=parseFloat(getComputedStyle(ta).lineHeight);
-  var scrollTop=ta.scrollTop;
-  var y=e.clientY-rect.top+scrollTop-10; // 10px padding
-  var lineIdx=Math.floor(y/lineH);
-  if(lineIdx===_lastHoverLine)return;
-  _lastHoverLine=lineIdx;
-  var lines=ta.value.split('\n');
-  if(lineIdx<0||lineIdx>=lines.length)return;
-  var line=lines[lineIdx].trim();
-  // Parse tag name and id from this line
-  var tagMatch=line.match(/<(\w[\w-]*)/);
-  var idMatch=line.match(/id=["']([^"']+)["']/);
-  // Count how many tags of this type appear before this line to get index
-  var tag=tagMatch?tagMatch[1].toLowerCase():null;
-  var id=idMatch?idMatch[1]:null;
-  if(tag){
-    var idx=0;
-    for(var i=0;i<lineIdx;i++){
-      var prev=lines[i];
-      var re=new RegExp('<'+tag+'[\\s>]','gi');
-      var m=prev.match(re);if(m)idx+=m.length;
-    }
-    var iframe=$('preview');
-    if(iframe.contentWindow){
-      iframe.contentWindow.postMessage({type:'ck-hl-el',tag:tag,id:id,idx:idx},'*')}
-  }
+  if(!inspectMode)return;var lineIdx=getLineFromMouse(e,this);
+  if(lineIdx===_lastHL)return;_lastHL=lineIdx;
+  var lines=this.value.split('\n');if(lineIdx<0||lineIdx>=lines.length)return;
+  var line=lines[lineIdx].trim();var tm=line.match(/<(\w[\w-]*)/);var im=line.match(/id=["']([^"']+)["']/);
+  var tag=tm?tm[1].toLowerCase():null;var id=im?im[1]:null;
+  if(tag){var idx=0;for(var i=0;i<lineIdx;i++){var m=lines[i].match(new RegExp('<'+tag+'[\\s>]','gi'));if(m)idx+=m.length}
+    var f=$('preview');if(f.contentWindow)f.contentWindow.postMessage({type:'ck-hl-el',tag:tag,id:id,idx:idx},'*');
+    hlCodeLine(lineIdx)}
 });
 $('codeEditor').addEventListener('mouseleave',function(){
-  _lastHoverLine=-1;
-  var iframe=$('preview');
-  if(iframe.contentWindow){iframe.contentWindow.postMessage({type:'ck-hl-clear'},'*')}
+  _lastHL=-1;var f=$('preview');if(f.contentWindow)f.contentWindow.postMessage({type:'ck-hl-clear'},'*');
+  if(!inspectMode)clearCodeHL()});
+$('codeEditor').addEventListener('input',function(){
+  updateHighlight();checkCodeErrors(this.value);
+  var val=this.value,pos=this.selectionStart;
+  if(pos>0&&val[pos-1]!=='>'&&val.lastIndexOf('<',pos-1)>=0){
+    var ltIdx=val.lastIndexOf('<',pos-1);var between=val.substring(ltIdx,pos);
+    if(between.indexOf('>')<0)showAutoComplete();else hideAutoComplete()}else{hideAutoComplete()}
 });
+$('codeEditor').addEventListener('click',function(){setTimeout(highlightActiveLine,10)});
+$('codeEditor').addEventListener('keyup',function(){setTimeout(highlightActiveLine,10)});
+$('codeEditor').addEventListener('mouseup',function(){setTimeout(highlightActiveLine,10)});
+$('codeEditor').addEventListener('focus',function(){setTimeout(highlightActiveLine,10)});
+
+/* ═══════ AUTOCOMPLETE TAG HINTS ═══════ */
+var AC_TAGS=[
+  {t:'h1',d:'Big heading'},{t:'h2',d:'Medium heading'},{t:'h3',d:'Small heading'},
+  {t:'p',d:'Paragraph'},{t:'a',d:'Link'},{t:'img',d:'Image'},
+  {t:'div',d:'Container'},{t:'span',d:'Inline wrap'},{t:'ul',d:'Bullet list'},
+  {t:'ol',d:'Numbered list'},{t:'li',d:'List item'},{t:'table',d:'Table'},
+  {t:'tr',d:'Table row'},{t:'td',d:'Table cell'},{t:'input',d:'Input field'},
+  {t:'button',d:'Button'},{t:'select',d:'Dropdown'},{t:'option',d:'Choice'},
+  {t:'label',d:'Label'},{t:'br',d:'Line break'},{t:'hr',d:'Horizontal line'},
+  {t:'style',d:'CSS styles'},{t:'script',d:'JavaScript'},{t:'canvas',d:'Drawing'},
+  {t:'strong',d:'Bold'},{t:'em',d:'Italic'},{t:'body',d:'Page body'},
+  {t:'head',d:'Settings'},{t:'html',d:'Root'},{t:'title',d:'Page title'}];
+var acSelIdx=-1,acFiltered=[];
+function showAutoComplete(){
+  var ta=$('codeEditor'),pos=ta.selectionStart,val=ta.value;
+  var before=val.substring(0,pos);var ltIdx=before.lastIndexOf('<');
+  if(ltIdx<0){hideAutoComplete();return}
+  var typed=before.substring(ltIdx+1).replace('/','');
+  if(typed.indexOf('>')>=0||typed.indexOf(' ')>=0){hideAutoComplete();return}
+  acFiltered=AC_TAGS.filter(function(t){return t.t.indexOf(typed.toLowerCase())===0});
+  if(acFiltered.length===0||typed.length===0){hideAutoComplete();return}
+  acSelIdx=0;
+  var html=acFiltered.map(function(t,i){
+    return '<div class="ac-item'+(i===0?' sel':'')+'" onmousedown="acSelect('+i+')" data-i="'+i+'">'
+    +'<span class="ac-tag">&lt;'+t.t+'&gt;</span><span class="ac-desc">'+t.d+'</span></div>'}).join('');
+  var ac=$('autocomplete');ac.innerHTML=html;
+  var rect=ta.getBoundingClientRect();var lineH=parseFloat(getComputedStyle(ta).lineHeight);
+  var lines=before.split('\n');var cy=rect.top+(lines.length*lineH)-ta.scrollTop+5;var cx=rect.left+60;
+  ac.style.left=Math.min(cx,window.innerWidth-200)+'px';
+  ac.style.top=Math.min(cy,window.innerHeight-160)+'px';
+  ac.classList.add('show');
+}
+function hideAutoComplete(){$('autocomplete').classList.remove('show');acSelIdx=-1}
+function acNav(dir){
+  acSelIdx+=dir;if(acSelIdx<0)acSelIdx=acFiltered.length-1;if(acSelIdx>=acFiltered.length)acSelIdx=0;
+  $('autocomplete').querySelectorAll('.ac-item').forEach(function(el,i){el.classList.toggle('sel',i===acSelIdx)})}
+function acSelect(i){acSelIdx=i;acAccept()}
+function acAccept(){
+  if(acSelIdx<0||acSelIdx>=acFiltered.length)return;var tag=acFiltered[acSelIdx];
+  var ta=$('codeEditor'),pos=ta.selectionStart,val=ta.value;
+  var before=val.substring(0,pos);var ltIdx=before.lastIndexOf('<');
+  var selfClose=['br','hr','img','input'].indexOf(tag.t)>=0;
+  var insert=selfClose?tag.t+'>':tag.t+'></'+tag.t+'>';
+  ta.value=val.substring(0,ltIdx+1)+insert+val.substring(pos);
+  var newPos=ltIdx+1+tag.t.length+1;ta.selectionStart=ta.selectionEnd=newPos;
+  ta.focus();updateHighlight();hideAutoComplete()}
+
+/* ═══════ STEP-BY-STEP MODE ═══════ */
+var stepMode=false,stepLine=0,stepLines=[];
+function toggleStepMode(){
+  stepMode=!stepMode;$('stepBar').classList.toggle('show',stepMode);
+  $('stepBtn').style.background=stepMode?'rgba(168,85,247,0.2)':'';
+  if(stepMode){stepLines=$('codeEditor').value.split('\n');stepLine=0;renderStep()}
+  else{runPreview($('codeEditor').value);clearCodeHL();
+    $('codeHL').querySelectorAll('.hl-line').forEach(function(el){el.classList.remove('step-active')})}}
+function renderStep(){
+  var all=$('codeHL').querySelectorAll('.hl-line');
+  all.forEach(function(el,i){el.classList.toggle('step-active',i===stepLine);el.classList.remove('active')});
+  var partial=stepLines.slice(0,stepLine+1).join('\n');
+  var unclosed=[];var openRe=/<(\w+)(?:\s[^>]*)?>/g,closeRe=/<\/(\w+)>/g,m;
+  while(m=openRe.exec(partial)){var t=m[1].toLowerCase();if(['br','hr','img','input','meta','link'].indexOf(t)<0)unclosed.push(t)}
+  while(m=closeRe.exec(partial)){var t=m[1].toLowerCase();var idx=unclosed.lastIndexOf(t);if(idx>=0)unclosed.splice(idx,1)}
+  var closer='';for(var i=unclosed.length-1;i>=0;i--)closer+='</'+unclosed[i]+'>';
+  $('preview').srcdoc=partial+closer;
+  $('stepInfo').textContent='Line '+(stepLine+1)+' of '+stepLines.length;
+  var lineH=parseFloat(getComputedStyle($('codeEditor')).lineHeight);
+  $('codeEditor').scrollTop=Math.max(0,stepLine*lineH-60)}
+function stepNext(){if(stepLine<stepLines.length-1){stepLine++;renderStep()}}
+function stepPrev(){if(stepLine>0){stepLine--;renderStep()}}
+
+/* ═══════ ERROR HELPER ═══════ */
+function checkCodeErrors(code){
+  var errors=[];
+  var tags=['div','span','p','h1','h2','h3','h4','ul','ol','li','table','tr','td','button','a','label','select','option','form','section','header','footer','style','script','body','html','head','strong','em','title'];
+  tags.forEach(function(tag){
+    var opens=(code.match(new RegExp('<'+tag+'[\\s>]','gi'))||[]).length;
+    var closes=(code.match(new RegExp('</'+tag+'>','gi'))||[]).length;
+    if(opens>closes)errors.push('Oops! You opened <b>&lt;'+tag+'&gt;</b> '+opens+'x but only closed it '+closes+'x. Add <b>&lt;/'+tag+'&gt;</b>!')});
+  var box=$('errorBox');
+  if(errors.length>0){box.innerHTML='\uD83D\uDC1B '+errors[0];box.classList.add('show')}
+  else{box.classList.remove('show');box.innerHTML=''}}
+
+/* ═══════ TRY THIS! SUGGESTIONS ═══════ */
+var TRY_THIS=[
+  ['Change the heading text!','Make it say your name','Add another paragraph'],
+  ['Add a 4th list item','Change ol to ul','Nest a list inside a list'],
+  ['Change the link text','Add a second image','Make the link open a new tab'],
+  ['Try a different color','Make the background black','Add font-size: 30px'],
+  ['Add border-radius','Change width to 200px','Try a gradient background'],
+  ['Change the animation speed','Try rotate(180deg)','Add a bounce effect'],
+  ['Change button text','Add a second button','Try alert() instead'],
+  ['Show the sum instead','Add a multiply button','Change starting number'],
+  ['Add more monsters','Change the emoji','Make it faster']];
+function showTrySuggestions(){
+  var s=TRY_THIS[lessonIdx]||['Change a color!','Change some text!','Add a new element!'];
+  var html='<span class="try-this-label">Try this \u2192</span>';
+  s.forEach(function(x){html+='<span class="try-chip" onclick="showBubble(\''+x.replace(/'/g,"\\'")+'\')">'+x+'</span>'});
+  $('tryThis').innerHTML=html;$('tryThis').classList.add('show')}
+function hideTrySuggestions(){$('tryThis').classList.remove('show')}
+
+/* ═══════ INJECTED PREVIEW SCRIPT ═══════ */
+function getIxScript(){
+  return '<script>'
+    +'var _hEl=null;'
+    +'var _s=document.createElement("style");_s.textContent=".ck-hl{outline:2px solid currentColor!important;outline-offset:1px;transition:outline .15s}";document.head.appendChild(_s);'
+    +'var _palette=["#22c55e","#3b82f6","#f59e0b","#ef4444","#a855f7","#06b6d4","#ec4899","#84cc16"];'
+    +'function _colorAll(){var els=document.body.querySelectorAll("*");els.forEach(function(el,i){if(el.tagName==="SCRIPT"||el.tagName==="STYLE")return;el.dataset.ckIdx=i;el.dataset.ckColor=_palette[i%_palette.length]})}setTimeout(_colorAll,50);'
+    +'function _path(el){var p=[];while(el&&el!==document.body&&el!==document.documentElement){var s=el.tagName.toLowerCase();if(el.id)s+="#"+el.id;if(el.className&&typeof el.className==="string")s+="."+el.className.trim().split(/\\s+/).join(".");p.unshift(s);el=el.parentElement}p.unshift("body");return p.map(function(x,i){return i===p.length-1?"<b>"+x+"</b>":x}).join(" \\u203A ")}'
+    +'document.addEventListener("mouseover",function(e){var t=e.target;if(t===document.body||t===document.documentElement)return;if(_hEl)_hEl.style.outline="";_hEl=t;var c=t.dataset.ckColor||"#22c55e";t.style.outline="2px solid "+c;t.style.outlineOffset="1px";var tag=t.tagName.toLowerCase();var id=t.id||"";var txt=(t.innerText||"").substring(0,20).trim();parent.postMessage({type:"ck-hover",tag:tag,id:id,txt:txt,path:_path(t),color:c},"*")});'
+    +'document.addEventListener("mouseout",function(e){if(_hEl){_hEl.style.outline="";_hEl=null}parent.postMessage({type:"ck-out"},"*")});'
+    +'document.addEventListener("click",function(e){var t=e.target;parent.postMessage({type:"ck-click",tag:t.tagName.toLowerCase(),id:t.id||"",txt:(t.innerText||"").substring(0,20).trim()},"*")});'
+    +'["click","input","change","mouseover","mouseenter","submit","keydown","keyup"].forEach(function(evt){document.addEventListener(evt,function(e){var t=e.target;if(!t||t===document.body||t===document.documentElement)return;var a="on"+evt;if(t.getAttribute(a)||t.hasAttribute(a)){parent.postMessage({type:"ck-event",evt:a,tag:t.tagName.toLowerCase(),detail:evt==="input"?"value="+t.value:evt==="change"?"changed":""},"*")}},true)});'
+    +'document.addEventListener("mouseover",function(e){var t=e.target;if(t===document.body||t===document.documentElement)return;var cs=getComputedStyle(t);var props=["color","background-color","font-size","padding","margin","border","border-radius","width","height"];var a=[];props.forEach(function(p){var v=cs.getPropertyValue(p);if(v&&v!=="0px"&&v!=="none"&&v!=="normal"&&v!=="auto"&&v!=="rgba(0, 0, 0, 0)")a.push(p)});if(a.length>0)parent.postMessage({type:"ck-css-hover",prop:a[0],props:a},"*")});'
+    +'window.addEventListener("message",function(e){if(!e.data)return;if(e.data.type==="ck-hl-el"){document.querySelectorAll("[style*=outline]").forEach(function(x){x.style.outline=""});var tag=e.data.tag,id=e.data.id;var el=null;if(id){el=document.getElementById(id)}if(!el&&tag){var els=document.querySelectorAll(tag);if(e.data.idx>=0&&e.data.idx<els.length)el=els[e.data.idx]}if(el){var c=el.dataset.ckColor||"#22c55e";el.style.outline="2px solid "+c;el.style.outlineOffset="1px";el.scrollIntoView({block:"nearest"})}}if(e.data.type==="ck-hl-clear"){document.querySelectorAll("[style*=outline]").forEach(function(x){x.style.outline=""})}});'
+    +'<\/script>'}
+
 
 /* ═════════════════════════════════════════════════════
    WELCOME SCREEN

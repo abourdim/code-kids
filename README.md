@@ -1,197 +1,213 @@
-# 🚀 CodeKids v3 — Learn to Code!
+# 🚀 CodeKids v4
 
-**By XSCO** | Interactive coding platform for kids & beginners
+**A zero-dependency, single-file educational coding platform for kids aged 6–14.**
 
-![Version](https://img.shields.io/badge/version-3.0-22c55e)
-![Lessons](https://img.shields.io/badge/lessons-39-3b82f6)
-![Languages](https://img.shields.io/badge/languages-3-f97316)
-![Themes](https://img.shields.io/badge/themes-9-8b5cf6)
-![Dependencies](https://img.shields.io/badge/dependencies-0-ef4444)
+CodeKids teaches HTML, CSS, and JavaScript through 39 interactive lessons with a live code editor, instant preview, and gamification — all in one offline-ready HTML file.
+
+![Version](https://img.shields.io/badge/version-4.0-brightgreen) ![Dependencies](https://img.shields.io/badge/dependencies-0-blue) ![Lessons](https://img.shields.io/badge/lessons-39-orange) ![Languages](https://img.shields.io/badge/languages-3-purple)
 
 ---
 
-## ✨ What is CodeKids?
+## Quick Start
 
-CodeKids is a **zero-dependency, single-file** interactive coding playground that teaches HTML, CSS, JavaScript, UI controls, and science/tech concepts through **39 hands-on lessons** in **3 languages**.
-
-Just open `index.html` in any browser. No install. No server. Works offline.
-
----
-
-## 📖 Lesson Tracks
-
-### Track 1: Basics (27 lessons)
-
-#### Tier 1 — 🧱 Build It (HTML)
-| # | Lesson | What You Learn |
-|---|--------|---------------|
-| 1 | My First Page | HTML tags, headings, paragraphs |
-| 2 | Cool Lists | Ordered & unordered lists |
-| 3 | Images & Links | `<img>` and `<a>` tags |
-
-#### Tier 2 — 🎨 Style It (CSS)
-| # | Lesson | What You Learn |
-|---|--------|---------------|
-| 4 | Paint Your Page | Inline styles, colors |
-| 5 | Game Cards | CSS classes, gradients, hover effects |
-| 6 | Animations | @keyframes, spin, bounce, rainbow |
-
-#### Tier 3 — ⚡ Power It (JavaScript)
-| # | Lesson | What You Learn |
-|---|--------|---------------|
-| 7 | Click Power | onclick events, alerts |
-| 8 | Calculator | DOM manipulation, math operations |
-| 9 | Monster Clicker | Game loop, variables, upgrades |
-
-#### Tier 4 — 🎛️ Controls & Gadgets (18 lessons)
-| # | Lesson | What You Learn |
-|---|--------|---------------|
-| 10 | Slider Control | Range inputs, RGB color mixer |
-| 11 | Joystick | Drag controls, position tracking |
-| 12 | Bar Chart | Data visualization with DOM |
-| 13 | Gauge Meter | Canvas arc drawing, animated needle |
-| 14 | Toggle Switch | Boolean state, on/off UI |
-| 15 | Checkbox Group | Multi-select, pizza builder |
-| 16 | Radio Buttons | Single-select, theme picker |
-| 17 | Tooltip Slider | Floating tooltip follows thumb |
-| 18 | Stepper Counter | Plus/minus with min/max limits |
-| 19 | Star Rating | Click-to-rate, hover preview |
-| 20 | Color Picker | RGB sliders, hex output |
-| 21 | Stopwatch | Start/stop/lap, millisecond precision |
-| 22 | Thermometer | Temperature gauge, °C/°F conversion |
-| 23 | Progress Ring | SVG circle, animated progress |
-| 24 | Piano Keys | Web Audio API, keyboard shortcuts |
-| 25 | Radar Sweep | Canvas animation, polar coordinates |
-| 26 | Flashlight | Toggle, brightness, color temperature |
-| 27 | Drag & Drop | Reorderable list, drag events |
-
-### Track 2: Science & Tech (12 lessons)
-
-#### 🟢 Beginner
-| # | Lesson | What You Learn |
-|---|--------|---------------|
-| 1 | Ohm's Law Lab | V=I×R calculator, electron animation |
-| 2 | Morse Code | Text to dots/dashes, audio beeps |
-| 3 | Logic Gates | AND/OR/NOT/XOR toggle simulation |
-| 4 | Wave Playground | Sine/square/sawtooth waveforms |
-
-#### 🔵 Explorer
-| # | Lesson | What You Learn |
-|---|--------|---------------|
-| 5 | Robot Commander | Grid robot, command programming |
-| 6 | Star Map | 100+ real stars, constellation view |
-| 7 | Signal Lab | Wave mixing, AM/FM modulation |
-| 8 | Periodic Table | 118 elements, interactive grid |
-
-#### 🔴 Advanced
-| # | Lesson | What You Learn |
-|---|--------|---------------|
-| 9 | Spectrum Analyzer | Microphone FFT, live frequency display |
-| 10 | Fourier Visualizer | Harmonic decomposition, 8 sliders |
-| 11 | Satellite Tracker | ISS orbit, world map projection |
-| 12 | Circuit Builder | Drag/drop components, simulation |
+1. Download `index.html` and `logo.svg` into the same folder
+2. Open `index.html` in any modern browser
+3. That's it — no server, no install, no internet needed
 
 ---
 
-## 🌍 Languages
+## Features
 
-| Language | Direction | Font |
-|----------|-----------|------|
-| 🇬🇧 English | LTR | Fredoka |
-| 🇫🇷 Français | LTR | Fredoka |
-| 🇸🇦 العربية | RTL | Noto Sans Arabic |
+### Learning System
 
-All 39 lessons are fully translated. Code examples remain universal (HTML/CSS/JS are language-independent).
+**39 Lessons** across two tracks:
+
+- **Basics (27 lessons):** HTML foundations → CSS styling → JavaScript interactivity → advanced controls
+  - Build (HTML): My First Page, Cool Lists, Images & Links
+  - Style (CSS): Paint Your Page, Game Cards, Animations
+  - Power (JS): Click Power, Calculator, Monster Clicker
+  - Controls: Slider Control, Joystick, Bar Chart, Gauge Meter, Toggle Switch, Checkbox Swarm, Drag & Drop, and more
+- **Science (12 lessons):** Physics simulations and circuit building
+  - Ohm's Law, Free Fall, Pendulum, Spring, Wave, Projectile, Buoyancy, Friction, Gas Law, Doppler, Lenses, Circuit Builder
+
+**Learn Panel** — every lesson includes a kid-friendly explanation with highlighted key terms and a mini glossary of 2–3 new elements.
+
+**Code Challenges** — optional "Can you…?" tasks per lesson with auto-checking and bonus XP (+15 XP).
+
+**"Try This!" Suggestions** — after completing a lesson, three experiment ideas appear as clickable chips to encourage exploration.
+
+**Step-by-Step Mode** (👣) — walks through code line-by-line, progressively building the preview so kids see what each line does.
+
+**Auto-complete Tag Hints** — type `<` and get a dropdown of HTML tags with descriptions ("h1 = Big heading", "p = Paragraph").
+
+**Error Helper** — kid-friendly error detection: "Oops! You opened `<div>` 2x but only closed it 1x. Add `</div>`!"
+
+### Code Editor
+
+- **Syntax highlighting** — single-pass tokenizer with theme-adaptive colors for tags, attributes, strings, keywords, CSS properties, numbers, and comments
+- **Code beautifier** — auto-formats and indents lesson code on load with inline comments for beginners (`<!-- This tells the browser: "I am an HTML page!" -->`)
+- **Line numbers** — scroll-synced, with active line accent color
+- **Active line highlight** — current cursor line gets a visible accent background
+- **Font size slider** — adjustable 10–22px for comfort
+- **Tab support** — Tab key inserts 2 spaces
+
+### Inspect Mode (🔍)
+
+Toggle the magnifying glass button to activate a browser DevTools-like experience:
+
+- **Result → Code:** Hover any element in the preview to highlight the matching code line with color-coded outlines
+- **Code → Result:** Hover a code line to highlight the corresponding element in the preview
+- **Click to Jump:** Click any element in the Result panel and the cursor jumps to that line in the editor
+- **Breadcrumb Path:** Shows the element path (`body › div.card › h1`) when hovering
+- **Color-coded Elements:** 8-color palette applied to elements, matching between both panels
+- **CSS Property Linking:** Hovering a styled element highlights the relevant CSS property line in code
+
+### Event Tracking (⚡)
+
+Kids see cause and effect in real-time:
+
+- **Event flash** — when a button is clicked or a slider is moved in the preview, the `onclick`/`oninput` handler line flashes yellow with a pulse animation
+- **Event tooltip** — "⚡ onclick fired on \<button\>!" appears briefly near the preview
+- **Event log** — collapsible panel below the RESULT header showing all triggered events with timestamps, element names, and details (e.g., `oninput <input> value=42`)
+
+### Gamification
+
+- **XP & Levels** — earn 25 XP per lesson, 15 XP per challenge. 10 levels from Newbie to Grandmaster
+- **Streak counter** — fire emoji 🔥 pulses when streak ≥ 3
+- **Confetti** — 80-particle physics-based celebration on lesson completion
+- **9 Achievements** — First Code, High Five, Double Digits, Halfway Hero, Code Master, On Fire, Unstoppable, Basics Done, Scientist
+- **Mascot buddy** (🤖) — fixed-position companion with contextual encouragement and tap interaction
+
+### Multilingual
+
+Three fully translated languages:
+
+| Language | Code | Direction |
+|----------|------|-----------|
+| English  | EN   | LTR       |
+| French   | FR   | LTR       |
+| Arabic   | AR   | RTL       |
+
+All UI labels, lesson titles, descriptions, hints, learn panels, glossaries, challenges, level names, and achievement text are translated.
+
+### Themes
+
+9 built-in themes with one-click switching:
+
+| Theme | Style |
+|-------|-------|
+| 🌙 Stealth | Dark with green accents |
+| ⚡ Neon | Deep blue with cyan/magenta |
+| ☁️ Arctic | Light with blue accents |
+| 🌲 Forest | Dark green nature tones |
+| 🔥 Blaze | Dark with orange/yellow fire |
+| 🍬 Candy | Pink/pastel playful |
+| 🌊 Ocean | Deep blue marine |
+| 🌸 Sakura | Soft pink Japanese spring |
+| ⚙️ Cyber | Dark with lime green terminal |
+
+Dark themes include an animated starfield background.
+
+### Tools
+
+- **Read Aloud** (🔊) — browser speech synthesis, language-aware (en-US, fr-FR, ar-SA)
+- **Export** (💾) — download current code as a standalone `.html` file
+- **Screenshot/Share** (📸) — export preview as shareable HTML
+- **Parent Report Card** — modal showing lessons completed, XP, level, streak, and achievement progress per track
 
 ---
 
-## 🎨 Themes
-
-| Theme | Style | Accent |
-|-------|-------|--------|
-| 🌙 Stealth | Dark slate + starfield | Green `#22c55e` |
-| ⚡ Neon | Cyberpunk + starfield | Cyan `#00d4ff` |
-| ☁️ Arctic | Light & clean | Blue `#2563eb` |
-| 🔥 Blaze | Deep ember | Orange `#ff6600` |
-| 🌊 Ocean | Deep sea | Cyan `#00e5ff` |
-| 🐉 Dragon | Purple + starfield | Violet `#a855f7` |
-| 🤖 Cyber | Matrix terminal | Green `#00ff41` |
-| 🥷 Ninja | Dark stealth | Red `#ff4444` |
-| 🕌 Islamic Heritage | Deep green + gold + starfield | Gold `#d4af37` |
-
----
-
-## 🏗️ Architecture
-
-```
-codekids-v3/
-├── index.html   (788 lines, 102KB — the entire app)
-├── logo.svg     (XSCO brand logo)
-└── README.md    (this file)
-```
+## Technical Architecture
 
 ### Single-File Design
-- **Zero dependencies** — no npm, no CDN, no build step
-- **Zero server** — runs from `file://` protocol
-- **Offline-first** — works without internet (after first font load)
-- **102KB total** — smaller than most images
 
-### Technical Details
-- CSS custom properties for theming (20+ variables per theme)
-- Responsive grid/flexbox layout with mobile sidebar toggle
-- Sandboxed iframe for live code preview
-- Canvas-based starfield animation (dark themes only)
-- Web Audio API for Piano & Morse Code lessons
-- Full RTL support for Arabic (direction, borders, alignment)
-- `{{/SC}}` placeholder system to safely embed `<script>` in lessons
+Everything lives in one `index.html` file (~185KB, 1850 lines):
+
+- **CSS** (~500 lines) — all styles inline in `<style>`, using CSS custom properties for theming
+- **HTML** (~100 lines) — semantic structure: sidebar, main editor, preview, modals
+- **JavaScript** (~1250 lines) — all logic in one `<script>` block
+
+### Key Systems
+
+| System | Approach |
+|--------|----------|
+| Theming | CSS variables swapped via JS (`document.documentElement.style.setProperty`) |
+| Lessons | `mkI18N()` function returns nested object: `I18N[lang][track][idx].c` = code |
+| Metadata | `META_EN/FR/AR` objects parallel to lessons: learn text, glossary, challenges, difficulty |
+| Highlighting | Single-pass character tokenizer (no regex conflicts) |
+| Preview interaction | `postMessage` between parent and sandboxed iframe |
+| State | Simple variables: `lang`, `track`, `lessonIdx`, `completed{}`, `xp`, `level`, `streak` |
+| Animations | `requestAnimationFrame` for confetti and starfield |
+
+### Browser Compatibility
+
+Tested on modern browsers (Chrome, Firefox, Safari, Edge). Requires:
+
+- ES5+ JavaScript
+- CSS Custom Properties
+- `srcdoc` iframe attribute
+- `postMessage` API
+- `speechSynthesis` API (for read-aloud, gracefully degrades)
 
 ---
 
-## 🚀 Usage
+## File Structure
 
-```bash
-# Option 1: Just open it
-open index.html
-# (or double-click in file explorer)
-
-# Option 2: Local server (optional)
-python3 -m http.server 8000
-# → http://localhost:8000
+```
+codekids-v4/
+├── index.html    # The entire application (185KB)
+├── logo.svg      # CodeKids logo
+└── README.md     # This file
 ```
 
 ---
 
-## 📊 Stats
+## Customization
 
-| Metric | Value |
-|--------|-------|
-| Total lessons | 39 |
-| Total translated | 117 (39 × 3) |
-| Themes | 9 |
-| Languages | 3 |
-| File size | 102KB |
-| Lines of code | 788 |
-| Dependencies | 0 |
-| Build step | None |
+### Adding a Lesson
+
+1. Add the lesson code string to `mkI18N()` under the appropriate track and language
+2. Add metadata to `META_EN` (and `META_FR`/`META_AR` if translating):
+   ```javascript
+   { learn: "Explanation with <b>bold</b> terms",
+     gloss: [["<tag>", "What it does"]],
+     challenge: "Can you...?",
+     diff: 1,  // 1-3 stars
+     check: function(code){ return code.indexOf('something') >= 0 } }
+   ```
+3. The lesson automatically appears in the sidebar
+
+### Adding a Theme
+
+Add an entry to the `TH` object:
+```javascript
+mytheme: {
+  n: { en: "🎨 My Theme", fr: "🎨 Mon Thème", ar: "🎨 ثيمي" },
+  v: { "--bg": "#...", "--accent": "#...", /* ... all CSS vars */ },
+  stars: true  // animated starfield background
+}
+```
+
+### Adding a Language
+
+1. Add translations to `mkI18N()` for UI strings and lesson content
+2. Add metadata translations to `META_XX`
+3. Add `<option>` to the language `<select>` in HTML
+4. Add level name translations to `LEVEL_NAMES`
 
 ---
 
-## 📜 Version History
+## Roadmap Ideas
 
-| Version | Changes |
-|---------|---------|
-| v1.0 | React JSX prototype |
-| v1.1 | Converted to standalone HTML/CSS/JS |
-| v1.2 | Fixed `</script>` escaping bug |
-| v2.0 | Complete rebuild: dual-track, 25 lessons, 9 themes, 3 languages, micro:bit-inspired UI |
-| v3.0 | Expanded Controls to 18 gadgets (39 total lessons), `{{/SC}}` placeholder fix |
-
----
-
-## 📄 License
-
-© XSCO — All rights reserved.
+- Remix button (randomize colors/values in current lesson)
+- Code sound effects (toggle on/off)
+- Undo/Redo buttons
+- Animated connector lines between code and result
+- Peer sharing via QR codes
+- Custom lesson builder for teachers
 
 ---
 
-*Built with ❤️ for the next generation of coders.*
+## License
+
+Educational use. Built with ❤️ for young coders everywhere.
